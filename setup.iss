@@ -1,35 +1,50 @@
 ; ===================================================================
-;  Inno Setup Script for CursorCloak - Optimized
+;  Inno Setup Script for CursorCloak v1.0.0 - Background Mode Release
+;  Professional installer with enhanced features
 ; ===================================================================
 
 [Setup]
-; NOTE: The AppId is a unique identifier for your application.
-; Generate a new GUID if you make another app: https://www.guidgenerator.com/
+; App identification
 AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
 AppName=CursorCloak
 AppVersion=1.0.0
-AppVerName=CursorCloak 1.0.0
-AppPublisher=CursorCloak Project
+AppVerName=CursorCloak v1.0.0 - Background Mode Edition
+AppPublisher=CursorCloak Development Team
 AppPublisherURL=https://github.com/JAMPANIKOMAL/CursorCloak
 AppSupportURL=https://github.com/JAMPANIKOMAL/CursorCloak/issues
 AppUpdatesURL=https://github.com/JAMPANIKOMAL/CursorCloak/releases
+AppContact=https://github.com/JAMPANIKOMAL/CursorCloak/issues
+AppCopyright=© 2025 CursorCloak Project. All rights reserved.
+
+; Installation directories
 DefaultDirName={autopf}\CursorCloak
 DefaultGroupName=CursorCloak
 DisableProgramGroupPage=yes
-; This line ensures the installer will request administrator privileges.
+AllowNoIcons=yes
+
+; Installer settings
 PrivilegesRequired=admin
-; The final name of the installer file.
-OutputBaseFilename=CursorCloak_Setup
-; Where the installer will be created.
+OutputBaseFilename=CursorCloak_Setup_v1.0.0
 OutputDir=.\Installer
-Compression=lzma
+Compression=lzma2/ultra64
 SolidCompression=yes
 WizardStyle=modern
-; License and info files
+ArchitecturesAllowed=x64
+ArchitecturesInstallIn64BitMode=x64
+
+; UI and branding
 LicenseFile=LICENSE
 InfoBeforeFile=README.md
-; Uncomment the line below to add an icon (place icon file in Assets directory)
-; SetupIconFile=Assets\app-icon.ico
+; Uncomment when icon is available:
+; SetupIconFile=CursorCloak.UI\Resources\CursorCloak.ico
+
+; Installation behavior
+CloseApplications=yes
+RestartApplications=no
+CreateAppDir=yes
+DirExistsWarning=auto
+EnableDirDoesntExistWarning=yes
+UninstallDisplayIcon={app}\CursorCloak.UI.exe
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -71,4 +86,20 @@ procedure CursorMoveProc(X, Y: Integer);
 begin
   // This procedure is called when the mouse cursor is moved during installation
   // Can be used for custom animations or effects
+end;
+
+function InitializeSetup(): Boolean;
+begin
+  // Check if .NET 9.0 or later is installed
+  Result := True;
+  if not RegKeyExists(HKEY_LOCAL_MACHINE, 'SOFTWARE\Microsoft\NET Framework Setup\NDP\v4\Full') then
+  begin
+    MsgBox('Microsoft .NET Framework 4.7.2 or later is required. Please install it and run this setup again.', mbError, MB_OK);
+    Result := False;
+  end;
+end;
+
+procedure DeinitializeSetup();
+begin
+  // Cleanup code when setup exits
 end;

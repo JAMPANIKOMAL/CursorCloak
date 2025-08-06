@@ -34,12 +34,13 @@ function Test-Prerequisites {
     
     # Check InnoSetup if creating installer
     if ($CreateInstaller) {
-        $innoSetup = Get-Command "iscc.exe" -ErrorAction SilentlyContinue
-        if (-not $innoSetup) {
-            Write-Warning "InnoSetup not found. Installer creation will be skipped."
+        $innoSetupPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+        if (-not (Test-Path $innoSetupPath)) {
+            Write-Warning "InnoSetup not found at $innoSetupPath"
+            Write-Warning "Please install InnoSetup from https://jrsoftware.org/isdl.php"
             return $false
         }
-        Write-Host "   InnoSetup found" -ForegroundColor Green
+        Write-Host "   InnoSetup found at $innoSetupPath" -ForegroundColor Green
     }
     
     return $true
@@ -162,9 +163,9 @@ function New-Installer {
     New-Item -ItemType Directory -Path ".\Installer" -Force | Out-Null
     
     # Run InnoSetup
-    $innoSetup = Get-Command "iscc.exe" -ErrorAction SilentlyContinue
-    if ($innoSetup) {
-        & "iscc.exe" "setup.iss"
+    $innoSetupPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+    if (Test-Path $innoSetupPath) {
+        & $innoSetupPath "setup.iss"
         if ($LASTEXITCODE -eq 0) {
             Write-Host "   Installer created successfully" -ForegroundColor Green
         } else {
@@ -172,7 +173,7 @@ function New-Installer {
             exit 1
         }
     } else {
-        Write-Warning "InnoSetup not found. Please install InnoSetup to create installer."
+        Write-Warning "InnoSetup not found at $innoSetupPath. Please install InnoSetup to create installer."
     }
 }
 
