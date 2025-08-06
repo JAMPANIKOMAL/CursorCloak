@@ -46,6 +46,20 @@ DirExistsWarning=auto
 EnableDirDoesntExistWarning=yes
 UninstallDisplayIcon={app}\CursorCloak.UI.exe
 
+; Enhanced installer experience
+ShowLanguageDialog=no
+ShowUndisplayableLanguages=no
+AppReadmeFile={app}\README.md
+UsePreviousAppDir=yes
+UsePreviousGroup=yes
+AlwaysRestart=no
+RestartIfNeededByRun=no
+
+[Messages]
+; Custom messages for SmartScreen handling
+WelcomeLabel2=This installer may trigger Windows SmartScreen protection. This is normal for new applications.%n%nIf you see a SmartScreen warning:%n• Click "More info"%n• Then click "Run anyway"%n%nThis setup will install [name/ver] on your computer.
+FinishedLabel=Setup has finished installing [name] on your computer.%n%nThe application is ready to use with enhanced background mode features!
+
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
 

@@ -115,6 +115,8 @@ namespace CursorCloak.UI
                 {
                     CursorEngine.ShowSystemCursor();
                 }
+                
+                SaveSettings();
             }
             catch (Exception ex)
             {
