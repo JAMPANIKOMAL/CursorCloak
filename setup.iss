@@ -15,6 +15,7 @@ AppSupportURL=https://github.com/JAMPANIKOMAL/CursorCloak/issues
 AppUpdatesURL=https://github.com/JAMPANIKOMAL/CursorCloak/releases
 AppContact=https://github.com/JAMPANIKOMAL/CursorCloak/issues
 AppCopyright=© 2025 CursorCloak Project. All rights reserved.
+AppComments=Professional cursor management utility for Windows
 
 ; Installation directories
 DefaultDirName={autopf}\CursorCloak
@@ -32,14 +33,14 @@ WizardStyle=modern
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
 
-; SmartScreen mitigation
-UninstallDisplayName=CursorCloak - Cursor Hide/Show Utility
+; SmartScreen mitigation - Enhanced publisher information
+UninstallDisplayName=CursorCloak - Professional Cursor Management Utility
 VersionInfoVersion=1.0.0.0
-VersionInfoProductName=CursorCloak
-VersionInfoProductVersion=1.0.0
+VersionInfoProductName=CursorCloak Professional Edition
+VersionInfoProductVersion=1.0.0.0
 VersionInfoCompany=CursorCloak Open Source Project
-VersionInfoDescription=Hide and show mouse cursor with global hotkeys
-VersionInfoCopyright=© 2025 CursorCloak Project (Open Source)
+VersionInfoDescription=Professional cursor hide/show utility with global hotkeys
+VersionInfoCopyright=© 2025 CursorCloak Development Team (Open Source)
 
 ; UI and branding
 LicenseFile=LICENSE
