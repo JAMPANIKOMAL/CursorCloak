@@ -1,51 +1,61 @@
 # CursorCloak
 
-A Windows utility that allows you to hide and show the system mouse cursor using hotkeys. **Requires administrator privileges.**
+A professional Windows utility that allows you to hide and show the system mouse cursor using hotkeys. Features **background running mode** and **seamless Windows integration**. **Requires administrator privileges.**
 
 ## 📥 Download
 
-### Latest Release
+### Latest Release v1.0.0 - Background Mode Edition
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 
 **Quick Install:**
-1. [Download CursorCloak_Setup.exe](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak_Setup.exe)
-2. Run as administrator
-3. Follow the installation wizard
+1. [Download CursorCloak-v1.0.0-win-x64.zip](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak-v1.0.0-win-x64.zip)
+2. Extract and run `CursorCloak.UI.exe` as administrator
+3. Complete the welcome setup for personalized experience
 
 ### Alternative Downloads
-- [Portable Version (ZIP)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak-Portable.zip)
 - [View All Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+- [Source Code (ZIP)](https://github.com/JAMPANIKOMAL/CursorCloak/archive/refs/heads/main.zip)
 
 ## ✨ Features
 
-- **Cursor Hiding**: Hide/show system cursor with Alt+H/Alt+S hotkeys
-- **Persistent Settings**: Remembers your preferences between sessions
-- **Startup Integration**: Option to start with Windows
-- **Modern UI**: Clean, dark-themed WPF interface
-- **Administrator Protection**: Automatic privilege checking and error handling
+### 🔥 NEW in v1.0.0
+- **🔄 Background Running**: App continues running when closed (X button), keeping hotkeys active
+- **🎯 No Tray Icon**: Clean background operation without cluttering system tray
+- **👋 Welcome Experience**: First-run dialog for user configuration and preferences
+- **👤 User Profiles**: Customizable display name, organization, and personal settings
+- **🏁 Windows Startup**: Seamless integration with Windows startup (optional)
+- **📢 Smart Notifications**: Contextual notifications for important events
+
+### 🎮 Core Features
+- **⌨️ Global Hotkeys**: Hide/show system cursor with Alt+H/Alt+S hotkeys
+- **💾 Persistent Settings**: Remembers all preferences between sessions
+- **🎨 Modern UI**: Clean, dark-themed WPF interface with professional design
+- **🔐 Administrator Protection**: Automatic privilege checking and comprehensive error handling
+- **⚡ Lightweight**: Minimal system resource usage with efficient background operation
 
 ## 🚀 Quick Start
 
-### Option 1: Using Pre-built Installer (Recommended)
-1. Download the installer from [releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
-2. Run `CursorCloak_Setup.exe` as administrator
-3. Follow the installation wizard
-4. Launch CursorCloak from Start Menu
+### Option 1: Download & Run (Recommended)
+1. Download `CursorCloak-v1.0.0-win-x64.zip` from [releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
+2. Extract the ZIP file to your preferred location
+3. Right-click `CursorCloak.UI.exe` and select "Run as administrator"
+4. Complete the welcome setup with your preferences
+5. Click X to close - app continues running in background!
 
 ### Option 2: Building from Source
 1. Clone this repository
-2. Build with Visual Studio or dotnet CLI:
-   ```bash
-   .\build.ps1 -Publish -SelfContained
+2. Build with enhanced build script:
+   ```powershell
+   .\build.ps1 -Clean -Publish -SelfContained
    ```
-3. The executable will be in `.\publish\ui\`
-4. Run `CursorCloak.UI.exe` as administrator
+3. Executable will be in `.\publish\ui\`
+4. Run as administrator and enjoy!
 
 ## 📋 Requirements
 
 - **Windows 10 or later** (Windows 11 recommended)
-- **.NET 9.0 Runtime** (or use self-contained build)
-- **Administrator privileges** (required for cursor manipulation)
+- **.NET 9.0 Runtime** (included in self-contained builds)
+- **Administrator privileges** (required for global hotkeys and cursor manipulation)
 
 ## ⌨️ Hotkeys
 
