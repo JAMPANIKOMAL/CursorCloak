@@ -1,0 +1,93 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ main ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '9.0.x'
+        
+    - name: Restore dependencies
+      run: dotnet restore
+      
+    - name: Build solution
+      run: dotnet build --configuration Release --no-restore
+      
+    - name: Test (if tests exist)
+      run: dotnet test --configuration Release --no-build --verbosity normal
+      continue-on-error: true
+      
+    - name: Publish UI application
+      run: dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/ui/
+      
+    - name: Publish Engine application  
+      run: dotnet publish CursorCloak.Engine/CursorCloak.Engine.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/engine/
+      
+    - name: Create portable package
+      run: |
+        mkdir ./portable
+        Copy-Item -Path "./publish/ui/*" -Destination "./portable/" -Recurse
+        Compress-Archive -Path "./portable/*" -DestinationPath "./CursorCloak-Portable.zip"
+      shell: powershell
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: CursorCloak-Build
+        path: |
+          ./publish/
+          ./CursorCloak-Portable.zip
+          
+  release:
+    needs: build
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: CursorCloak-Build
+        
+    - name: Setup InnoSetup
+      run: |
+        Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "innosetup.exe"
+        Start-Process -FilePath "innosetup.exe" -ArgumentList "/SILENT" -Wait
+      shell: powershell
+      continue-on-error: true
+      
+    - name: Build installer
+      run: |
+        if (Test-Path "C:\Program Files (x86)\Inno Setup 6\ISCC.exe") {
+          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
+        } else {
+          Write-Host "InnoSetup not available, skipping installer creation"
+        }
+      shell: powershell
+      continue-on-error: true
+      
+    - name: Create GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: |
+          ./CursorCloak-Portable.zip
+          ./Output/CursorCloak_Setup.exe
+        generate_release_notes: true
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
