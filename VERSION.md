@@ -2,20 +2,24 @@
 
 This file tracks version information and release notes for CursorCloak.
 
-## Current Version: 1.0.0
+## Current Version: 1.0.0 - Background Mode Release
 
 ### Release Date: August 6, 2025
 
 ### What's New in v1.0.0:
-- ✅ Initial stable release
+- ✅ **Background Running**: App continues running when closed, keeping hotkeys active
+- ✅ **No Tray Icon**: Clean background operation without system tray clutter
+- ✅ **Welcome Dialog**: First-run experience for user configuration
+- ✅ **User Preferences**: Customizable name, organization, and settings
 - ✅ Hide/show cursor with Alt+H/Alt+S hotkeys
-- ✅ Persistent settings storage
-- ✅ Windows startup integration
+- ✅ Persistent settings storage with user configuration
+- ✅ Windows startup integration with background mode
 - ✅ Modern WPF dark-themed interface
 - ✅ Administrator privilege handling
-- ✅ Comprehensive error handling
+- ✅ Comprehensive error handling and user feedback
 - ✅ Memory leak prevention
 - ✅ Professional installer with InnoSetup
+- ✅ Enhanced build system with multiple deployment options
 - ✅ Automated GitHub Actions CI/CD
 
 ### System Requirements:

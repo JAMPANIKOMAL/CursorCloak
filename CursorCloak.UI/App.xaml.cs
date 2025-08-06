@@ -16,6 +16,9 @@ public partial class App : Application
     {
         try
         {
+            // Show welcome dialog for new users
+            UserConfig.ShowWelcomeDialog();
+            
             // Check if running as administrator
             bool isAdmin = false;
             try

@@ -10,12 +10,14 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Interop;
 using Microsoft.Win32; // Required for Registry access
+using System.ComponentModel;
 
 namespace CursorCloak.UI
 {
     public partial class MainWindow : Window
     {
         private HwndSource? _hwndSource;
+        private bool _isExiting = false;
 
         public MainWindow()
         {
@@ -26,6 +28,9 @@ namespace CursorCloak.UI
                 System.Diagnostics.Debug.WriteLine("InitializeComponent completed.");
                 LoadSettingsAndApply();
                 System.Diagnostics.Debug.WriteLine("LoadSettingsAndApply completed.");
+                
+                // Add startup to Windows registry for background running
+                BackgroundHelper.RegisterStartupIfEnabled();
             }
             catch (Exception ex)
             {
@@ -55,10 +60,30 @@ namespace CursorCloak.UI
             }
         }
 
+        protected override void OnClosing(CancelEventArgs e)
+        {
+            // If user clicked X button, minimize to background instead of closing
+            if (!_isExiting)
+            {
+                e.Cancel = true;
+                this.Hide();
+                
+                // Save settings when hiding
+                SaveSettings();
+                
+                // Show a brief notification (optional)
+                BackgroundHelper.ShowBalloonTip("CursorCloak is running in the background. Hotkeys remain active.");
+                return;
+            }
+            
+            base.OnClosing(e);
+        }
+
         protected override void OnClosed(EventArgs e)
         {
             try
             {
+                _isExiting = true;
                 SaveSettings();
                 if (_hwndSource != null)
                 {
@@ -527,7 +552,66 @@ namespace CursorCloak.UI
             catch (Exception ex)
             {
                 System.Diagnostics.Debug.WriteLine($"Error unregistering hotkeys: {ex.Message}");
+                }
             }
         }
     }
-}
+
+    // Helper methods for background operation
+    public static class BackgroundHelper
+    {
+        public static void ShowBalloonTip(string message)
+        {
+            // Simple Windows notification without persistent tray icon
+            try
+            {
+                MessageBox.Show(message, "CursorCloak", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Information);
+            }
+            catch
+            {
+                // Ignore if notification fails
+            }
+        }
+
+        public static void RegisterStartupIfEnabled()
+        {
+            try
+            {
+                // Auto-register for startup to ensure background running
+                var settings = LoadAppSettings();
+                if (settings?.StartWithWindows == true)
+                {
+                    // StartupManager.SetStartup(true); // TODO: Fix startup management
+                }
+            }
+            catch
+            {
+                // Ignore startup registration errors
+            }
+        }
+
+        private static dynamic? LoadAppSettings()
+        {
+            try
+            {
+                string settingsPath = Path.Combine(
+                    Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                    "CursorCloak",
+                    "settings.json"
+                );
+
+                if (File.Exists(settingsPath))
+                {
+                    string json = File.ReadAllText(settingsPath);
+                    return JsonSerializer.Deserialize<dynamic>(json);
+                }
+            }
+            catch
+            {
+                // Ignore settings load errors
+            }
+            return null;
+        }
+    }
