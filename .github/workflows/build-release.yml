@@ -29,26 +29,18 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
       continue-on-error: true
       
-    - name: Publish UI application (Framework Dependent)
-      run: dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained false --output ./publish/ui/
-      
     - name: Publish UI application (Self-Contained)
-      run: dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/ui-standalone/
+      run: dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/ui/
       
     - name: Publish Engine application  
       run: dotnet publish CursorCloak.Engine/CursorCloak.Engine.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/engine/
       
     - name: Create portable packages
       run: |
-        # Framework-dependent portable
+        # Self-contained portable
         New-Item -ItemType Directory -Path "./portable" -Force
         Copy-Item -Path "./publish/ui/*" -Destination "./portable/" -Recurse
-        Compress-Archive -Path "./portable/*" -DestinationPath "./CursorCloak-Portable-Framework.zip" -Force
-        
-        # Self-contained portable
-        New-Item -ItemType Directory -Path "./portable-standalone" -Force
-        Copy-Item -Path "./publish/ui-standalone/*" -Destination "./portable-standalone/" -Recurse
-        Compress-Archive -Path "./portable-standalone/*" -DestinationPath "./CursorCloak-Portable-Standalone.zip" -Force
+        Compress-Archive -Path "./portable/*" -DestinationPath "./CursorCloak-v1.2.0-win-x64.zip" -Force
       shell: powershell
       
     - name: Setup InnoSetup
@@ -88,9 +80,7 @@ jobs:
         path: |
           ./publish/
           ./portable/
-          ./portable-standalone/
-          ./CursorCloak-Portable-Framework.zip
-          ./CursorCloak-Portable-Standalone.zip
+          ./CursorCloak-v1.2.0-win-x64.zip
           ./Installer/CursorCloak_Setup.exe
           
   release:
@@ -110,8 +100,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ./CursorCloak-Portable-Framework.zip
-          ./CursorCloak-Portable-Standalone.zip
+          ./CursorCloak-v1.2.0-win-x64.zip
           ./Installer/CursorCloak_Setup.exe
         generate_release_notes: true
         draft: false
@@ -121,13 +110,11 @@ jobs:
           
           ### Download Options:
           - **Installer (Recommended)**: `CursorCloak_Setup.exe` - Full installer with shortcuts and uninstaller
-          - **Portable (Framework-dependent)**: `CursorCloak-Portable-Framework.zip` - Requires .NET 9.0 runtime
-          - **Portable (Standalone)**: `CursorCloak-Portable-Standalone.zip` - Includes .NET runtime (~100MB)
+          - **Portable (Self-Contained)**: `CursorCloak-v1.2.0-win-x64.zip` - Includes .NET runtime (~60MB)
           
           ### Requirements:
           - Windows 10/11
           - Administrator privileges
-          - .NET 9.0 runtime (for framework-dependent versions)
           
           ### Usage:
           - **Alt + H**: Hide cursor
