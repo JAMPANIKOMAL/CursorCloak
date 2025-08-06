@@ -76,11 +76,12 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 
 ### Build Commands
 ```bash
-# Using the build script (recommended)
-.\build.ps1                    # Basic build
-.\build.ps1 -Clean             # Clean and build
-.\build.ps1 -Publish           # Build and publish
-.\build.ps1 -Publish -SelfContained  # Self-contained deployment
+# Using the enhanced build script (recommended)
+.\build.ps1                                      # Basic build
+.\build.ps1 -Clean                              # Clean and build
+.\build.ps1 -Clean -Publish -SelfContained      # Self-contained deployment
+.\build.ps1 -Clean -Publish -CreateInstaller    # Build with installer
+.\build.ps1 -Clean -Publish -Test               # Build with tests
 
 # Manual build commands
 dotnet clean --configuration Release
@@ -89,6 +90,9 @@ dotnet build --configuration Release
 
 # Create self-contained deployment
 dotnet publish CursorCloak.UI\CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output .\publish\ui\
+
+# Test the built application
+.\test.ps1
 
 # Create installer (requires InnoSetup)
 # Compile setup.iss with InnoSetup Compiler
@@ -147,12 +151,15 @@ For more help, check our [Issues page](https://github.com/JAMPANIKOMAL/CursorClo
 ```
 CursorCloak/
 ├── .github/                 # GitHub workflows and templates
+│   ├── workflows/          # Automated CI/CD pipelines
+│   └── ISSUE_TEMPLATE/     # Bug report and feature request templates
 ├── CursorCloak.UI/          # WPF application
 ├── CursorCloak.Engine/      # Console engine
-├── Installer/               # Generated installers (ignored)
-├── build.ps1               # Build script
-├── setup.iss               # InnoSetup script
+├── build.ps1               # Enhanced build script with multiple options
+├── test.ps1                # Application testing script
+├── setup.iss               # InnoSetup installer script
 ├── LICENSE                 # MIT License
+├── VERSION.md              # Version tracking and release notes
 ├── CONTRIBUTING.md         # Contribution guidelines
 └── README.md               # This file
 ```

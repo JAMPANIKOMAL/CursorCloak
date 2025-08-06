@@ -29,18 +29,57 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
       continue-on-error: true
       
-    - name: Publish UI application
-      run: dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/ui/
+    - name: Publish UI application (Framework Dependent)
+      run: dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained false --output ./publish/ui/
+      
+    - name: Publish UI application (Self-Contained)
+      run: dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/ui-standalone/
       
     - name: Publish Engine application  
       run: dotnet publish CursorCloak.Engine/CursorCloak.Engine.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/engine/
       
-    - name: Create portable package
+    - name: Create portable packages
       run: |
-        mkdir ./portable
+        # Framework-dependent portable
+        New-Item -ItemType Directory -Path "./portable" -Force
         Copy-Item -Path "./publish/ui/*" -Destination "./portable/" -Recurse
-        Compress-Archive -Path "./portable/*" -DestinationPath "./CursorCloak-Portable.zip"
+        Compress-Archive -Path "./portable/*" -DestinationPath "./CursorCloak-Portable-Framework.zip" -Force
+        
+        # Self-contained portable
+        New-Item -ItemType Directory -Path "./portable-standalone" -Force
+        Copy-Item -Path "./publish/ui-standalone/*" -Destination "./portable-standalone/" -Recurse
+        Compress-Archive -Path "./portable-standalone/*" -DestinationPath "./CursorCloak-Portable-Standalone.zip" -Force
       shell: powershell
+      
+    - name: Setup InnoSetup
+      run: |
+        # Download and install Inno Setup
+        $url = "https://files.jrsoftware.org/is/6/innosetup-6.2.2.exe"
+        $output = "innosetup-installer.exe"
+        Write-Host "Downloading Inno Setup..."
+        Invoke-WebRequest -Uri $url -OutFile $output
+        Write-Host "Installing Inno Setup..."
+        Start-Process -FilePath $output -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait
+        Write-Host "Inno Setup installation completed"
+      shell: powershell
+      
+    - name: Build installer
+      run: |
+        $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+        if (Test-Path $isccPath) {
+          Write-Host "Building installer with Inno Setup..."
+          & $isccPath "setup.iss"
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Installer built successfully"
+          } else {
+            Write-Error "Installer build failed with exit code $LASTEXITCODE"
+          }
+        } else {
+          Write-Warning "Inno Setup not found at expected location: $isccPath"
+          Get-ChildItem "C:\Program Files (x86)\" -Name "*nno*" -Recurse -ErrorAction SilentlyContinue
+        }
+      shell: powershell
+      continue-on-error: true
       
     - name: Upload build artifacts
       uses: actions/upload-artifact@v4
@@ -48,7 +87,11 @@ jobs:
         name: CursorCloak-Build
         path: |
           ./publish/
-          ./CursorCloak-Portable.zip
+          ./portable/
+          ./portable-standalone/
+          ./CursorCloak-Portable-Framework.zip
+          ./CursorCloak-Portable-Standalone.zip
+          ./Installer/CursorCloak_Setup.exe
           
   release:
     needs: build
@@ -63,31 +106,33 @@ jobs:
       with:
         name: CursorCloak-Build
         
-    - name: Setup InnoSetup
-      run: |
-        Invoke-WebRequest -Uri "https://jrsoftware.org/download.php/is.exe" -OutFile "innosetup.exe"
-        Start-Process -FilePath "innosetup.exe" -ArgumentList "/SILENT" -Wait
-      shell: powershell
-      continue-on-error: true
-      
-    - name: Build installer
-      run: |
-        if (Test-Path "C:\Program Files (x86)\Inno Setup 6\ISCC.exe") {
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" setup.iss
-        } else {
-          Write-Host "InnoSetup not available, skipping installer creation"
-        }
-      shell: powershell
-      continue-on-error: true
-      
     - name: Create GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ./CursorCloak-Portable.zip
-          ./Output/CursorCloak_Setup.exe
+          ./CursorCloak-Portable-Framework.zip
+          ./CursorCloak-Portable-Standalone.zip
+          ./Installer/CursorCloak_Setup.exe
         generate_release_notes: true
         draft: false
         prerelease: false
+        body: |
+          ## CursorCloak Release
+          
+          ### Download Options:
+          - **Installer (Recommended)**: `CursorCloak_Setup.exe` - Full installer with shortcuts and uninstaller
+          - **Portable (Framework-dependent)**: `CursorCloak-Portable-Framework.zip` - Requires .NET 9.0 runtime
+          - **Portable (Standalone)**: `CursorCloak-Portable-Standalone.zip` - Includes .NET runtime (~100MB)
+          
+          ### Requirements:
+          - Windows 10/11
+          - Administrator privileges
+          - .NET 9.0 runtime (for framework-dependent versions)
+          
+          ### Usage:
+          - **Alt + H**: Hide cursor
+          - **Alt + S**: Show cursor
+          
+          Run as administrator for proper functionality.
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
