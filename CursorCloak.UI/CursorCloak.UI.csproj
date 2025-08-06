@@ -10,7 +10,7 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>Resources\app-icon.ico</ApplicationIcon>
     <AssemblyTitle>CursorCloak</AssemblyTitle>
-    <AssemblyDescription>Hide and show system cursor with hotkeys - Self-contained cursor management utility</AssemblyDescription>
+    <AssemblyDescription>Hide and show system cursor with hotkeys - Optimized cursor management utility</AssemblyDescription>
     <AssemblyCompany>CursorCloak Development Team</AssemblyCompany>
     <AssemblyProduct>CursorCloak</AssemblyProduct>
     <AssemblyVersion>1.2.0.0</AssemblyVersion>
@@ -19,7 +19,9 @@
     <SelfContained>true</SelfContained>
     <PublishSingleFile>true</PublishSingleFile>
     <PublishTrimmed>false</PublishTrimmed>
+    <PublishReadyToRun>false</PublishReadyToRun>
     <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
 
   <ItemGroup>

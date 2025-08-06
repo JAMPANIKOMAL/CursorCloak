@@ -1,14 +1,14 @@
 ; ===================================================================
-;  Inno Setup Script for CursorCloak v1.0.0 - Background Mode Release
-;  Professional installer with enhanced features
+;  Inno Setup Script for CursorCloak v1.2.0 - Self-Contained Release
+;  Professional installer with enhanced features and app icon
 ; ===================================================================
 
 [Setup]
 ; App identification
 AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
 AppName=CursorCloak
-AppVersion=1.0.0
-AppVerName=CursorCloak v1.0.0 - Background Mode Edition
+AppVersion=1.2.0
+AppVerName=CursorCloak v1.2.0 - Self-Contained Edition
 AppPublisher=CursorCloak Development Team
 AppPublisherURL=https://github.com/JAMPANIKOMAL/CursorCloak
 AppSupportURL=https://github.com/JAMPANIKOMAL/CursorCloak/issues
@@ -24,7 +24,7 @@ AllowNoIcons=yes
 
 ; Installer settings
 PrivilegesRequired=admin
-OutputBaseFilename=CursorCloak_Setup_v1.0.0
+OutputBaseFilename=CursorCloak_Setup_v1.2.0
 OutputDir=.\Installer
 Compression=lzma2/ultra64
 SolidCompression=yes
@@ -35,8 +35,7 @@ ArchitecturesInstallIn64BitMode=x64
 ; UI and branding
 LicenseFile=LICENSE
 InfoBeforeFile=README.md
-; Uncomment when icon is available:
-; SetupIconFile=CursorCloak.UI\Resources\CursorCloak.ico
+SetupIconFile=CursorCloak.UI\Resources\app-icon.ico
 
 ; Installation behavior
 CloseApplications=yes
@@ -68,15 +67,13 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Name: "launchafterinstall"; Description: "{cm:LaunchProgram,CursorCloak}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
-; Main application files
-Source: "CursorCloak.UI\bin\Release\net9.0-windows\CursorCloak.UI.exe"; DestDir: "{app}"; Flags: ignoreversion
-Source: "CursorCloak.UI\bin\Release\net9.0-windows\CursorCloak.UI.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "CursorCloak.UI\bin\Release\net9.0-windows\CursorCloak.UI.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "CursorCloak.UI\bin\Release\net9.0-windows\CursorCloak.UI.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+; Main application files - Self-contained single file
+Source: "CursorCloak.UI\bin\Release\net9.0-windows\win-x64\publish\CursorCloak.UI.exe"; DestDir: "{app}"; Flags: ignoreversion
 ; Documentation files
 Source: "README.md"; DestDir: "{app}"; Flags: ignoreversion
 Source: "LICENSE"; DestDir: "{app}"; Flags: ignoreversion
-Source: "TROUBLESHOOTING.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "RELEASE-NOTES-v1.2.0.md"; DestDir: "{app}"; Flags: ignoreversion
+Source: "VERSION.md"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]
 ; Creates a shortcut in the Start Menu.
