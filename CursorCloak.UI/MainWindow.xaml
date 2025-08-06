@@ -9,7 +9,8 @@
         WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize"
         Background="#0e1218" Foreground="#e6edf3"
         FontFamily="Segoe UI"
-        WindowStartupLocation="CenterScreen">
+        WindowStartupLocation="CenterScreen"
+        Icon="Resources/app-icon.ico">
 
     <Window.Resources>
         <!-- Style for our custom ToggleSwitch -->

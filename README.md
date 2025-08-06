@@ -1,6 +1,22 @@
-# CursorCloak
+# 🎯 CursorCloak - Professional Mouse Cursor Management for Windows
 
-A professional Windows utility that allows you to hide and show the system mouse cursor using hotkeys. Features **background running mode** and **seamless Windows integration**. **Requires administrator privileges.**
+**Hide and show your mouse cursor instantly with global hotkeys (Alt+H/Alt+S)**
+
+[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-blue?logo=windows&logoColor=white)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
+[![.NET](https://img.shields.io/badge/.NET-9.0-purple?logo=dotnet)](https://dotnet.microsoft.com/download)
+[![License](https://img.shields.io/badge/License-MIT-green?logo=opensourceinitiative&logoColor=white)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/JAMPANIKOMAL/CursorCloak?logo=github)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/JAMPANIKOMAL/CursorCloak/total?logo=github&color=brightgreen)](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+
+A professional Windows utility for **instant mouse cursor control** with global hotkeys. Perfect for presentations, screen recordings, focus work, and accessibility needs. Features **background running mode** and **seamless Windows integration**. 
+
+**🔥 Key Features:**
+- 🖱️ **Instant Cursor Control**: Alt+H to hide, Alt+S to show
+- 🎯 **Global Hotkeys**: Works system-wide in any application
+- 🔄 **Background Mode**: Runs silently without UI clutter
+- ⚡ **Zero Performance Impact**: Lightweight and efficient
+- 🛡️ **Professional Build**: Enhanced SmartScreen compatibility
+- 📦 **Multiple Deployment Options**: Choose what works for you
 
 *🤖 Enhanced with AI assistance using GitHub Copilot for optimal code quality and performance.*
 

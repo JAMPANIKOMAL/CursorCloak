@@ -40,7 +40,7 @@ jobs:
         # Self-contained portable
         New-Item -ItemType Directory -Path "./portable" -Force
         Copy-Item -Path "./publish/ui/*" -Destination "./portable/" -Recurse
-        Compress-Archive -Path "./portable/*" -DestinationPath "./CursorCloak-v1.2.0-win-x64.zip" -Force
+        Compress-Archive -Path "./portable/*" -DestinationPath "./CursorCloak-v1.0.0-win-x64.zip" -Force
       shell: powershell
       
     - name: Setup InnoSetup
@@ -80,7 +80,7 @@ jobs:
         path: |
           ./publish/
           ./portable/
-          ./CursorCloak-v1.2.0-win-x64.zip
+          ./CursorCloak-v1.0.0-win-x64.zip
           ./Installer/CursorCloak_Setup.exe
           
   release:
@@ -100,7 +100,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ./CursorCloak-v1.2.0-win-x64.zip
+          ./CursorCloak-v1.0.0-win-x64.zip
           ./Installer/CursorCloak_Setup.exe
         generate_release_notes: true
         draft: false
@@ -110,7 +110,7 @@ jobs:
           
           ### Download Options:
           - **Installer (Recommended)**: `CursorCloak_Setup.exe` - Full installer with shortcuts and uninstaller
-          - **Portable (Self-Contained)**: `CursorCloak-v1.2.0-win-x64.zip` - Includes .NET runtime (~60MB)
+          - **Portable (Self-Contained)**: `CursorCloak-v1.0.0-win-x64.zip` - Includes .NET runtime (~60MB)
           
           ### Requirements:
           - Windows 10/11
