@@ -126,9 +126,12 @@ function Publish-Applications {
     
     if ($SelfContained) {
         $publishArgs += "--self-contained", "true"
+        $publishArgs += "-p:PublishSingleFile=true"
+        $publishArgs += "-p:EnableCompressionInSingleFile=true"
         Write-Host "   Creating self-contained deployment" -ForegroundColor Gray
     } else {
         $publishArgs += "--self-contained", "false"
+        $publishArgs += "-p:PublishSingleFile=false"
         Write-Host "   Creating framework-dependent deployment" -ForegroundColor Gray
     }
     
