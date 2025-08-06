@@ -4,15 +4,17 @@ A professional Windows utility that allows you to hide and show the system mouse
 
 *🤖 Enhanced with AI assistance using GitHub Copilot for optimal code quality and performance.*
 
+**✨ NEW: Self-contained application - no .NET runtime required!**
+
 ## 📥 Download
 
-### Latest Release v1.1.0 - Optimized Edition
+### Latest Release v1.2.0 - Self-Contained Edition
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 
 **Quick Install:**
-1. [Download CursorCloak-v1.1.0-win-x64.zip](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak-v1.1.0-win-x64.zip)
+1. [Download CursorCloak-v1.2.0-win-x64.zip](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak-v1.2.0-win-x64.zip)
 2. Extract and run `CursorCloak.UI.exe` as administrator
-3. Ready to use - no setup required!
+3. **No .NET runtime needed** - works on any Windows 10/11 PC!
 
 ### Alternative Downloads
 - [View All Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
@@ -20,11 +22,11 @@ A professional Windows utility that allows you to hide and show the system mouse
 
 ## ✨ Features
 
-### 🔥 NEW in v1.1.0
-- **⚡ Streamlined Experience**: Removed welcome dialog for instant startup
-- **🔧 Enhanced Stability**: Improved error handling and memory management
-- **�️ Code Optimizations**: Fixed nullable warnings and enhanced resource cleanup
-- **🤖 AI-Enhanced**: Developed with GitHub Copilot assistance for superior code quality
+### 🔥 NEW in v1.2.0
+- **📦 Self-Contained**: No .NET runtime required - works on any Windows PC out of the box!
+- **🎨 Custom App Icon**: Professional mouse cursor icon with hide indicator
+- **📁 Single File**: Everything bundled into one executable for easy distribution
+- **🗑️ Optimized**: Removed unnecessary files and streamlined project structure
 
 ### 🎮 Core Features
 - **⌨️ Global Hotkeys**: Hide/show system cursor with Alt+H/Alt+S hotkeys
@@ -36,11 +38,11 @@ A professional Windows utility that allows you to hide and show the system mouse
 ## 🚀 Quick Start
 
 ### Option 1: Download & Run (Recommended)
-1. Download `CursorCloak-v1.1.0-win-x64.zip` from [releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
+1. Download `CursorCloak-v1.2.0-win-x64.zip` from [releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 2. Extract the ZIP file to your preferred location
 3. Right-click `CursorCloak.UI.exe` and select "Run as administrator"
 4. Start using immediately - Alt+H to hide, Alt+S to show cursor!
-5. Click X to close - app continues running in background!
+5. **No .NET runtime needed** - works on any Windows 10/11 PC!
 
 ### Option 2: Building from Source
 1. Clone this repository

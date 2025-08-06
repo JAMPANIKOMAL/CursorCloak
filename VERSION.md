@@ -2,19 +2,21 @@
 
 This file tracks version information and release notes for CursorCloak.
 
-## Current Version: 1.1.0 - Optimized Release
+## Current Version: 1.2.0 - Self-Contained Release
 
-### Release Date: August 6, 2025
+### Release Date: August 7, 2025
 
-### What's New in v1.1.0:
-- ✅ **Streamlined Experience**: Removed welcome dialog for faster startup
-- ✅ **Enhanced Background Mode**: Improved window management and memory handling
-- ✅ **Code Optimizations**: Fixed nullable reference warnings and improved error handling
-- ✅ **Better Resource Management**: Enhanced cleanup of GDI objects and icons
-- ✅ **Improved Stability**: Thread-safe initialization and comprehensive error checking
-- ✅ **AI-Assisted Development**: Enhanced with GitHub Copilot for optimal code quality
+### What's New in v1.2.0:
+- ✅ **Self-Contained Application**: No .NET runtime required - runs on any Windows PC!
+- ✅ **Custom App Icon**: Professional mouse cursor icon with hide indicator
+- ✅ **Single File Deployment**: Everything bundled into one executable
+- ✅ **Optimized Size**: Streamlined package without unnecessary files
+- ✅ **Clean Project Structure**: Removed redundant documentation and old releases
 
-### Core Features (from v1.0.0):
+### Core Features (Enhanced):
+- ✅ **No .NET Dependency**: Self-contained - works on Windows 10/11 without any prerequisites
+- ✅ **Professional Icon**: Custom-designed mouse cursor icon
+- ✅ **Single EXE**: All dependencies included in one file
 - ✅ **Background Running**: App continues running when closed, keeping hotkeys active
 - ✅ **No Tray Icon**: Clean background operation without system tray clutter
 - ✅ Hide/show cursor with Alt+H/Alt+S hotkeys
