@@ -2,15 +2,17 @@
 
 A professional Windows utility that allows you to hide and show the system mouse cursor using hotkeys. Features **background running mode** and **seamless Windows integration**. **Requires administrator privileges.**
 
+*🤖 Enhanced with AI assistance using GitHub Copilot for optimal code quality and performance.*
+
 ## 📥 Download
 
-### Latest Release v1.0.0 - Background Mode Edition
+### Latest Release v1.1.0 - Optimized Edition
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 
 **Quick Install:**
-1. [Download CursorCloak-v1.0.0-win-x64.zip](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak-v1.0.0-win-x64.zip)
+1. [Download CursorCloak-v1.1.0-win-x64.zip](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak-v1.1.0-win-x64.zip)
 2. Extract and run `CursorCloak.UI.exe` as administrator
-3. Complete the welcome setup for personalized experience
+3. Ready to use - no setup required!
 
 ### Alternative Downloads
 - [View All Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
@@ -18,13 +20,11 @@ A professional Windows utility that allows you to hide and show the system mouse
 
 ## ✨ Features
 
-### 🔥 NEW in v1.0.0
-- **🔄 Background Running**: App continues running when closed (X button), keeping hotkeys active
-- **🎯 No Tray Icon**: Clean background operation without cluttering system tray
-- **👋 Welcome Experience**: First-run dialog for user configuration and preferences
-- **👤 User Profiles**: Customizable display name, organization, and personal settings
-- **🏁 Windows Startup**: Seamless integration with Windows startup (optional)
-- **📢 Smart Notifications**: Contextual notifications for important events
+### 🔥 NEW in v1.1.0
+- **⚡ Streamlined Experience**: Removed welcome dialog for instant startup
+- **🔧 Enhanced Stability**: Improved error handling and memory management
+- **�️ Code Optimizations**: Fixed nullable warnings and enhanced resource cleanup
+- **🤖 AI-Enhanced**: Developed with GitHub Copilot assistance for superior code quality
 
 ### 🎮 Core Features
 - **⌨️ Global Hotkeys**: Hide/show system cursor with Alt+H/Alt+S hotkeys
@@ -36,10 +36,10 @@ A professional Windows utility that allows you to hide and show the system mouse
 ## 🚀 Quick Start
 
 ### Option 1: Download & Run (Recommended)
-1. Download `CursorCloak-v1.0.0-win-x64.zip` from [releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
+1. Download `CursorCloak-v1.1.0-win-x64.zip` from [releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 2. Extract the ZIP file to your preferred location
 3. Right-click `CursorCloak.UI.exe` and select "Run as administrator"
-4. Complete the welcome setup with your preferences
+4. Start using immediately - Alt+H to hide, Alt+S to show cursor!
 5. Click X to close - app continues running in background!
 
 ### Option 2: Building from Source
@@ -228,11 +228,21 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📈 Project Stats
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/JAMPANIKOMAL/CursorCloak)
-![GitHub all releases](https://img.shields.io/github/downloads/JAMPANIKOMAL/CursorCloak/total)
-![GitHub issues](https://img.shields.io/github/issues/JAMPANIKOMAL/CursorCloak)
-![GitHub license](https://img.shields.io/github/license/JAMPANIKOMAL/CursorCloak)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/JAMPANIKOMAL/CursorCloak?style=flat-square)
+![GitHub downloads](https://img.shields.io/github/downloads/JAMPANIKOMAL/CursorCloak/total?style=flat-square)
+![GitHub issues](https://img.shields.io/github/issues/JAMPANIKOMAL/CursorCloak?style=flat-square)
+![GitHub license](https://img.shields.io/github/license/JAMPANIKOMAL/CursorCloak?style=flat-square)
+![GitHub stars](https://img.shields.io/github/stars/JAMPANIKOMAL/CursorCloak?style=flat-square)
+![GitHub forks](https://img.shields.io/github/forks/JAMPANIKOMAL/CursorCloak?style=flat-square)
+
+### 🤖 AI-Enhanced Development
+This project has been enhanced with **GitHub Copilot** assistance to ensure:
+- Optimal code quality and performance
+- Best practices implementation
+- Comprehensive error handling
+- Memory management and resource cleanup
+- Modern C# and WPF patterns
 
 ---
 
-*Made with ❤️ for Windows users who need cursor control*
+*Made with ❤️ and 🤖 AI assistance for Windows users who need cursor control*

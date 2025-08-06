@@ -63,17 +63,5 @@ namespace CursorCloak.UI
                 System.Diagnostics.Debug.WriteLine($"Failed to save user config: {ex.Message}");
             }
         }
-
-        public static void ShowWelcomeDialog()
-        {
-            var config = Load();
-            
-            if ((DateTime.Now - config.FirstRun).TotalDays < 1)
-            {
-                var welcome = new WelcomeDialog(config);
-                welcome.ShowDialog();
-                config.Save();
-            }
-        }
     }
 }
