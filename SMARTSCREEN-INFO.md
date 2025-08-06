@@ -2,60 +2,65 @@
 
 ## What is Windows SmartScreen?
 
-Windows SmartScreen is a security feature that helps protect your PC by checking downloaded files and applications against a database of known malicious software.
+Windows SmartScreen is a security feature that helps protect your PC by checking files and apps downloaded from the internet. When you download and run CursorCloak, you might see a SmartScreen warning because:
 
-## Why does CursorCloak trigger SmartScreen?
+1. **The application is not digitally signed** - Digital code signing certificates cost hundreds of dollars annually, which is not feasible for free open-source projects
+2. **Low download frequency** - New applications need to build reputation over time
+3. **Not from Microsoft Store** - Sideloaded applications trigger additional scrutiny
 
-CursorCloak may trigger SmartScreen warnings because:
+## How to Install CursorCloak Safely
 
-1. **Not Digitally Signed**: The executable is not digitally signed with an Extended Validation (EV) certificate
-2. **New Application**: SmartScreen uses reputation-based protection - new applications without widespread usage may be flagged
-3. **Open Source**: Most open-source applications don't have expensive code signing certificates
+### Method 1: Installer (Recommended)
+1. Download `CursorCloak_Setup_v1.0.0.exe` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+2. Right-click the installer → **Properties** → **Digital Signatures** tab (to verify it's from the correct source)
+3. Run the installer as administrator
+4. If SmartScreen appears:
+   - Click **"More info"**
+   - Click **"Run anyway"**
+5. Follow the installation wizard
 
-## How to safely install CursorCloak:
+### Method 2: Portable Version (Framework-Dependent)
+1. Download `CursorCloak-v1.0.0-win-x64.zip` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+2. Extract to any folder
+3. Requires .NET 9.0 Runtime: `winget install Microsoft.DotNet.Runtime.9`
+4. Right-click `CursorCloak.UI.exe` → **"Run as administrator"**
 
-### Method 1: Through SmartScreen Warning
-1. Run the installer (`CursorCloak_Setup_v1.2.0.exe`)
-2. If SmartScreen appears, click **"More info"**
-3. Click **"Run anyway"** button
-4. Proceed with installation
+### Method 3: Portable Self-Contained Version
+1. Download `CursorCloak-v1.0.0-win-x64-selfcontained.zip` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+2. Extract to any folder (no .NET required)
+3. Right-click `CursorCloak.UI.exe` → **"Run as administrator"**
 
-### Method 2: Temporary Disable SmartScreen (Advanced Users)
-1. Open Windows Security (Windows Defender)
-2. Go to App & Browser Control
-3. Turn off SmartScreen for apps and files temporarily
-4. Install CursorCloak
-5. **Remember to turn SmartScreen back on**
+## Why CursorCloak is Safe
 
-### Method 3: Portable Version
-If you prefer to avoid the installer:
-1. Download the ZIP version from GitHub releases
-2. Extract `CursorCloak.UI.exe`
-3. Right-click and "Run as administrator"
+✅ **Open Source**: Full source code available on [GitHub](https://github.com/JAMPANIKOMAL/CursorCloak)
+✅ **No Network Access**: Application works completely offline
+✅ **No Data Collection**: No telemetry, analytics, or personal data collection
+✅ **Minimal Permissions**: Only requires administrator access for cursor manipulation
+✅ **Transparent**: All build scripts and processes are publicly available
 
-## Is CursorCloak Safe?
+## Alternative Solutions
 
-✅ **YES** - CursorCloak is completely safe:
+### If you prefer not to bypass SmartScreen:
 
-- **Open Source**: Full source code available at https://github.com/JAMPANIKOMAL/CursorCloak
-- **No Malware**: Uses only standard Windows APIs for cursor management
-- **No Network Access**: Doesn't connect to the internet or send data
-- **No Data Collection**: Doesn't collect or transmit personal information
-- **Local Settings Only**: Stores preferences locally in your user folder
+1. **Compile from Source**: Build the application yourself using Visual Studio 2022
+2. **Wait for Reputation**: As more users download and use CursorCloak, SmartScreen warnings will decrease
+3. **Use Windows Subsystem for Linux**: Run a Linux cursor utility instead
 
-## For Developers
+## Building from Source (Advanced)
 
 To build a signed version yourself:
-1. Obtain a code signing certificate
-2. Sign the executable using `signtool.exe`
-3. Create the installer with signed files
 
-## Need Help?
+1. Clone the repository: `git clone https://github.com/JAMPANIKOMAL/CursorCloak.git`
+2. Open in Visual Studio 2022
+3. Build in Release configuration
+4. Optionally sign with your own certificate
 
-- **Documentation**: Check README.md in the installation folder
-- **Issues**: https://github.com/JAMPANIKOMAL/CursorCloak/issues
-- **Source Code**: https://github.com/JAMPANIKOMAL/CursorCloak
+## Reporting Issues
+
+If you experience any security concerns or issues:
+- [Report on GitHub Issues](https://github.com/JAMPANIKOMAL/CursorCloak/issues)
+- Check existing discussions in the repository
 
 ---
 
-**Remember**: SmartScreen warnings are normal for new, unsigned applications. The source code is publicly available for security review.
+**Remember**: SmartScreen warnings are common for legitimate open-source software. Always download from the official GitHub repository to ensure authenticity.
