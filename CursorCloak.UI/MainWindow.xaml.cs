@@ -1,12 +1,15 @@
 ﻿/* =================================================================================== */
-/* FILE 2: MainWindow.xaml.cs (The NEW Code-Behind Logic)                             */
-/* Includes logic for the new custom title bar and buttons.                           */
+/* FILE 2: MainWindow.xaml.cs (Milestone 3 - Persistence Logic)                       */
+/* This file now contains the logic for saving/loading settings and UI interaction.   */
 /* =================================================================================== */
 using System;
-using System.Windows;
-using System.Windows.Input; // Required for MouseButtonEventArgs
-using System.Windows.Interop;
+using System.IO;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using System.Text.Json;
+using System.Windows;
+using System.Windows.Interop;
+using Microsoft.Win32; // Required for Registry access
 
 namespace CursorCloak.UI
 {
@@ -17,6 +20,7 @@ namespace CursorCloak.UI
         public MainWindow()
         {
             InitializeComponent();
+            LoadSettingsAndApply();
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -29,12 +33,50 @@ namespace CursorCloak.UI
 
         protected override void OnClosed(EventArgs e)
         {
+            SaveSettings();
             _hwndSource.RemoveHook(HwndHook);
             HotKeyManager.UnregisterHotKeys(_hwndSource.Handle);
             base.OnClosed(e);
         }
 
-        // --- Hotkey Message Listener ---
+        private void MainToggle_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainToggle.IsChecked == true)
+            {
+                CursorEngine.HideSystemCursor();
+            }
+            else
+            {
+                CursorEngine.ShowSystemCursor();
+            }
+        }
+
+        private void StartupCheck_Click(object sender, RoutedEventArgs e)
+        {
+            StartupManager.SetStartup(StartupCheck.IsChecked == true);
+        }
+
+        private void LoadSettingsAndApply()
+        {
+            var settings = SettingsManager.Load();
+            MainToggle.IsChecked = settings.IsHidingEnabled;
+            StartupCheck.IsChecked = settings.StartWithWindows;
+
+            if (settings.IsHidingEnabled)
+            {
+                CursorEngine.HideSystemCursor();
+            }
+        }
+
+        private void SaveSettings()
+        {
+            var settings = new Settings
+            {
+                IsHidingEnabled = MainToggle.IsChecked == true,
+                StartWithWindows = StartupCheck.IsChecked == true
+            };
+            SettingsManager.Save(settings);
+        }
 
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
@@ -45,10 +87,12 @@ namespace CursorCloak.UI
                 if (id == HotKeyManager.HIDE_HOTKEY_ID)
                 {
                     CursorEngine.HideSystemCursor();
+                    MainToggle.IsChecked = true; // Sync UI
                 }
                 else if (id == HotKeyManager.SHOW_HOTKEY_ID)
                 {
                     CursorEngine.ShowSystemCursor();
+                    MainToggle.IsChecked = false; // Sync UI
                 }
                 handled = true;
             }
@@ -56,8 +100,73 @@ namespace CursorCloak.UI
         }
     }
 
-    // --- Engine and Hotkey Manager (No Changes) ---
+    // --- Settings Management ---
+    public class Settings
+    {
+        public bool IsHidingEnabled { get; set; }
+        public bool StartWithWindows { get; set; }
+    }
 
+    public static class SettingsManager
+    {
+        private static readonly string _settingsFilePath = Path.Combine(
+            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+            "CursorCloak", "settings.json");
+
+        public static void Save(Settings settings)
+        {
+            try
+            {
+                Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath));
+                string json = JsonSerializer.Serialize(settings);
+                File.WriteAllText(_settingsFilePath, json);
+            }
+            catch (Exception ex) { /* Handle potential saving errors */ }
+        }
+
+        public static Settings Load()
+        {
+            try
+            {
+                if (File.Exists(_settingsFilePath))
+                {
+                    string json = File.ReadAllText(_settingsFilePath);
+                    return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
+                }
+            }
+            catch (Exception ex) { /* Handle potential loading errors */ }
+            return new Settings(); // Return default settings if file doesn't exist or is corrupt
+        }
+    }
+
+    // --- Startup Management ---
+    public static class StartupManager
+    {
+        private const string RegistryKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
+        private const string AppName = "CursorCloak";
+
+        public static void SetStartup(bool isEnabled)
+        {
+            try
+            {
+                RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, true);
+                if (isEnabled)
+                {
+                    // Get the path to the currently running .exe file
+                    string exePath = Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe");
+                    key.SetValue(AppName, $"\"{exePath}\"");
+                }
+                else
+                {
+                    key.DeleteValue(AppName, false);
+                }
+                key.Close();
+            }
+            catch (Exception ex) { /* Handle potential registry access errors */ }
+        }
+    }
+
+    // --- Engine and Hotkey Manager ---
     public static class CursorEngine
     {
         [DllImport("user32.dll", SetLastError = true)]
@@ -70,14 +179,14 @@ namespace CursorCloak.UI
         public static extern IntPtr CreateBitmap(int nWidth, int nHeight, uint cPlanes, uint cBitsPerPel, byte[] lpvBits);
         [DllImport("user32.dll")]
         public static extern IntPtr CopyIcon(IntPtr hIcon);
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
 
         private const uint OCR_NORMAL = 32512;
         private const uint OCR_IBEAM = 32513;
         private const uint OCR_HAND = 32649;
-
-        private static readonly IntPtr originalNormalCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_NORMAL));
-        private static readonly IntPtr originalIBeamCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_IBEAM));
-        private static readonly IntPtr originalHandCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_HAND));
+        private const uint SPI_SETCURSORS = 0x0057;
+        private const uint SPIF_SENDWININICHANGE = 0x02;
 
         public static void HideSystemCursor()
         {
@@ -95,9 +204,9 @@ namespace CursorCloak.UI
 
         public static void ShowSystemCursor()
         {
-            SetSystemCursor(CopyIcon(originalNormalCursor), OCR_NORMAL);
-            SetSystemCursor(CopyIcon(originalIBeamCursor), OCR_IBEAM);
-            SetSystemCursor(CopyIcon(originalHandCursor), OCR_HAND);
+            // *** FIX: This is the new, more reliable method to restore the cursor ***
+            // It tells Windows to reload the current user's cursor scheme from the registry.
+            SystemParametersInfo(SPI_SETCURSORS, 0, IntPtr.Zero, SPIF_SENDWININICHANGE);
         }
 
         [StructLayout(LayoutKind.Sequential)]
