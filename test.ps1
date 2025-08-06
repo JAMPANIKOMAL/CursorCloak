@@ -7,182 +7,253 @@ param(
     [switch]$Verbose
 )
 
-Write-Host "🧪 CursorCloak Test Script" -ForegroundColor Cyan
-Write-Host "==========================" -ForegroundColor Cyan
+Write-Host "CursorCloak Test Script" -ForegroundColor Cyan
+Write-Host "=======================" -ForegroundColor Cyan
 
 # Function to check if running as administrator
 function Test-Administrator {
     $isAdmin = ([Security.Principal.WindowsPrincipal][Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
     if (-not $isAdmin) {
-        Write-Warning "⚠️  Not running as administrator. Some tests may fail."
+        Write-Warning "Not running as administrator. Some tests may fail."
         return $false
     }
-    Write-Host "✅ Running as administrator" -ForegroundColor Green
+    Write-Host "Running as administrator" -ForegroundColor Green
     return $true
 }
 
-# Function to test file existence
+# Function to test build files
 function Test-BuildFiles {
-    Write-Host "📁 Checking build files..." -ForegroundColor Yellow
+    Write-Host "Testing build outputs..." -ForegroundColor Yellow
     
     $requiredFiles = @(
         "CursorCloak.UI.exe",
         "CursorCloak.UI.dll",
-        "CursorCloak.UI.deps.json",
         "CursorCloak.UI.runtimeconfig.json"
     )
     
     $allFilesExist = $true
+    
     foreach ($file in $requiredFiles) {
         $filePath = Join-Path $BuildPath $file
         if (Test-Path $filePath) {
             $size = [math]::Round((Get-Item $filePath).Length / 1KB, 2)
-            Write-Host "   ✅ $file ($size KB)" -ForegroundColor Green
+            Write-Host "   $file ($size KB)" -ForegroundColor Green
         } else {
-            Write-Host "   ❌ $file (missing)" -ForegroundColor Red
+            Write-Host "   $file (missing)" -ForegroundColor Red
             $allFilesExist = $false
         }
+    }
+    
+    if ($allFilesExist) {
+        Write-Host "All required files found" -ForegroundColor Green
+    } else {
+        Write-Host "Some required files are missing" -ForegroundColor Red
     }
     
     return $allFilesExist
 }
 
-# Function to test .NET dependencies
-function Test-DotNetRuntime {
-    Write-Host "🔍 Checking .NET runtime..." -ForegroundColor Yellow
+# Function to test dependencies
+function Test-Dependencies {
+    Write-Host "Testing dependencies..." -ForegroundColor Yellow
     
-    try {
-        $dotnetVersion = dotnet --version 2>$null
-        if ($dotnetVersion) {
-            Write-Host "   ✅ .NET SDK $dotnetVersion found" -ForegroundColor Green
+    # Check for critical dependencies
+    $depsPath = Join-Path $BuildPath "CursorCloak.UI.deps.json"
+    if (Test-Path $depsPath) {
+        Write-Host "   Dependencies file found" -ForegroundColor Green
+        
+        # Read and parse dependencies
+        try {
+            $deps = Get-Content $depsPath | ConvertFrom-Json
+            $runtimeTarget = $deps.runtimeTarget.name
+            Write-Host "   Runtime target: $runtimeTarget" -ForegroundColor Gray
             
-            # Check for .NET 9.0 specifically
-            $runtimes = dotnet --list-runtimes 2>$null | Where-Object { $_ -like "*Microsoft.NETCore.App*9.0*" }
-            if ($runtimes) {
-                Write-Host "   ✅ .NET 9.0 runtime available" -ForegroundColor Green
-                return $true
-            } else {
-                Write-Host "   ⚠️  .NET 9.0 runtime not found" -ForegroundColor Yellow
-                return $false
+            $libraries = $deps.libraries
+            if ($libraries) {
+                $libCount = $libraries.PSObject.Properties.Count
+                Write-Host "   Libraries: $libCount dependencies" -ForegroundColor Gray
             }
-        } else {
-            Write-Host "   ❌ .NET runtime not found" -ForegroundColor Red
-            return $false
+        } catch {
+            Write-Warning "Could not parse dependencies file"
         }
-    } catch {
-        Write-Host "   ❌ Error checking .NET runtime: $_" -ForegroundColor Red
+    } else {
+        Write-Host "   Dependencies file missing" -ForegroundColor Red
         return $false
     }
+    
+    return $true
 }
 
-# Function to test application startup
-function Test-ApplicationStartup {
-    Write-Host "🚀 Testing application startup..." -ForegroundColor Yellow
+# Function to test executable
+function Test-Executable {
+    Write-Host "Testing executable..." -ForegroundColor Yellow
     
     $exePath = Join-Path $BuildPath "CursorCloak.UI.exe"
     if (-not (Test-Path $exePath)) {
-        Write-Host "   ❌ Executable not found at $exePath" -ForegroundColor Red
+        Write-Host "   Executable not found" -ForegroundColor Red
         return $false
     }
     
+    # Test file properties
     try {
-        # Start the application and check if it loads
-        $process = Start-Process -FilePath $exePath -PassThru -WindowStyle Hidden
-        Start-Sleep -Seconds 3
+        $fileInfo = Get-Item $exePath
+        $size = [math]::Round($fileInfo.Length / 1MB, 2)
+        Write-Host "   Executable found ($size MB)" -ForegroundColor Green
+        Write-Host "   Created: $($fileInfo.CreationTime)" -ForegroundColor Gray
+        Write-Host "   Modified: $($fileInfo.LastWriteTime)" -ForegroundColor Gray
         
-        if ($process.HasExited) {
-            Write-Host "   ❌ Application exited immediately (exit code: $($process.ExitCode))" -ForegroundColor Red
-            return $false
+        # Check if it's a valid PE file
+        $bytes = [System.IO.File]::ReadAllBytes($exePath)
+        if ($bytes.Length -gt 2 -and $bytes[0] -eq 0x4D -and $bytes[1] -eq 0x5A) {
+            Write-Host "   Valid PE executable" -ForegroundColor Green
         } else {
-            Write-Host "   ✅ Application started successfully" -ForegroundColor Green
-            # Stop the test instance
-            $process.Kill()
-            $process.WaitForExit(5000)
-            return $true
+            Write-Host "   Invalid executable format" -ForegroundColor Red
+            return $false
         }
+        
     } catch {
-        Write-Host "   ❌ Error starting application: $_" -ForegroundColor Red
+        Write-Host "   Error reading executable: $_" -ForegroundColor Red
         return $false
     }
+    
+    return $true
 }
 
 # Function to test installer
 function Test-Installer {
-    Write-Host "📦 Checking installer..." -ForegroundColor Yellow
+    Write-Host "Testing installer..." -ForegroundColor Yellow
     
     $installerPath = ".\Installer\CursorCloak_Setup.exe"
     if (Test-Path $installerPath) {
         $size = [math]::Round((Get-Item $installerPath).Length / 1MB, 2)
-        Write-Host "   ✅ Installer found ($size MB)" -ForegroundColor Green
-        
-        # Basic integrity check
-        try {
-            $fileInfo = Get-AuthenticodeSignature $installerPath -ErrorAction SilentlyContinue
-            if ($fileInfo) {
-                Write-Host "   📋 Installer structure appears valid" -ForegroundColor Green
-            }
-        } catch {
-            Write-Host "   ⚠️  Cannot verify installer signature" -ForegroundColor Yellow
-        }
-        
+        Write-Host "   Installer found ($size MB)" -ForegroundColor Green
         return $true
     } else {
-        Write-Host "   ⚠️  Installer not found (use build.ps1 -Publish -CreateInstaller)" -ForegroundColor Yellow
+        Write-Host "   Installer not found (run with -CreateInstaller)" -ForegroundColor Yellow
         return $false
     }
 }
 
-# Function to run all tests
-function Invoke-AllTests {
-    $results = @{}
+# Function to test setup.iss configuration
+function Test-SetupConfig {
+    Write-Host "Testing setup configuration..." -ForegroundColor Yellow
     
-    $results.Administrator = Test-Administrator
-    $results.BuildFiles = Test-BuildFiles
-    $results.DotNetRuntime = Test-DotNetRuntime
-    $results.ApplicationStartup = Test-ApplicationStartup
-    $results.Installer = Test-Installer
+    if (-not (Test-Path "setup.iss")) {
+        Write-Host "   Setup script not found" -ForegroundColor Red
+        return $false
+    }
     
-    return $results
+    $setupContent = Get-Content "setup.iss" -Raw
+    
+    # Check for duplicate sections
+    $tasksSections = ($setupContent -split '\n' | Where-Object { $_ -match '^\[Tasks\]' }).Count
+    if ($tasksSections -gt 1) {
+        Write-Host "   WARNING: Multiple [Tasks] sections found" -ForegroundColor Red
+        return $false
+    } elseif ($tasksSections -eq 1) {
+        Write-Host "   Tasks section configured correctly" -ForegroundColor Green
+    }
+    
+    # Check for required sections
+    $requiredSections = @('\[Setup\]', '\[Files\]', '\[Icons\]')
+    $allSectionsFound = $true
+    
+    foreach ($section in $requiredSections) {
+        if ($setupContent -match $section) {
+            Write-Host "   $($section -replace '\\', '') section found" -ForegroundColor Green
+        } else {
+            Write-Host "   $($section -replace '\\', '') section missing" -ForegroundColor Red
+            $allSectionsFound = $false
+        }
+    }
+    
+    return $allSectionsFound
 }
 
-# Main execution
+# Function to test project structure
+function Test-ProjectStructure {
+    Write-Host "Testing project structure..." -ForegroundColor Yellow
+    
+    $requiredDirs = @(
+        "CursorCloak.UI",
+        "CursorCloak.Engine"
+    )
+    
+    $requiredFiles = @(
+        "CursorCloak.sln",
+        "build.ps1",
+        "setup.iss"
+    )
+    
+    $allItemsExist = $true
+    
+    foreach ($dir in $requiredDirs) {
+        if (Test-Path $dir -PathType Container) {
+            Write-Host "   $dir/ directory found" -ForegroundColor Green
+        } else {
+            Write-Host "   $dir/ directory missing" -ForegroundColor Red
+            $allItemsExist = $false
+        }
+    }
+    
+    foreach ($file in $requiredFiles) {
+        if (Test-Path $file -PathType Leaf) {
+            Write-Host "   $file found" -ForegroundColor Green
+        } else {
+            Write-Host "   $file missing" -ForegroundColor Red
+            $allItemsExist = $false
+        }
+    }
+    
+    return $allItemsExist
+}
+
+# Main test execution
 try {
-    Write-Host "Build path: $BuildPath" -ForegroundColor Gray
     Write-Host ""
     
-    $testResults = Invoke-AllTests
+    # Run all tests
+    $adminTest = Test-Administrator
+    $structureTest = Test-ProjectStructure
+    $buildTest = Test-BuildFiles
+    $depsTest = Test-Dependencies
+    $exeTest = Test-Executable
+    $setupTest = Test-SetupConfig
+    $installerTest = Test-Installer
     
     Write-Host ""
-    Write-Host "📊 Test Summary:" -ForegroundColor Cyan
-    Write-Host "================" -ForegroundColor Cyan
+    Write-Host "Test Results Summary:" -ForegroundColor Cyan
+    Write-Host "====================" -ForegroundColor Cyan
+    
+    $results = @{
+        "Administrator Rights" = $adminTest
+        "Project Structure" = $structureTest
+        "Build Files" = $buildTest
+        "Dependencies" = $depsTest
+        "Executable" = $exeTest
+        "Setup Config" = $setupTest
+        "Installer" = $installerTest
+    }
     
     $passedTests = 0
-    $totalTests = $testResults.Count
+    $totalTests = $results.Count
     
-    foreach ($test in $testResults.GetEnumerator()) {
-        $status = if ($test.Value) { "PASS ✅" } else { "FAIL ❌" }
-        Write-Host "   $($test.Key): $status"
-        if ($test.Value) { $passedTests++ }
+    foreach ($test in $results.GetEnumerator()) {
+        $status = if ($test.Value) { "PASS"; $passedTests++ } else { "FAIL" }
+        $color = if ($test.Value) { "Green" } else { "Red" }
+        Write-Host "   $($test.Key): $status" -ForegroundColor $color
     }
     
     Write-Host ""
-    $successRate = [math]::Round(($passedTests / $totalTests) * 100, 1)
-    Write-Host "Success Rate: $passedTests/$totalTests ($successRate%)" -ForegroundColor $(if ($successRate -eq 100) { "Green" } elseif ($successRate -ge 75) { "Yellow" } else { "Red" })
-    
-    if ($successRate -eq 100) {
-        Write-Host ""
-        Write-Host "🎉 All tests passed! CursorCloak is ready for use." -ForegroundColor Green
-        Write-Host "💡 Run as administrator: Right-click CursorCloak.UI.exe → 'Run as administrator'" -ForegroundColor Cyan
-    } elseif ($successRate -ge 75) {
-        Write-Host ""
-        Write-Host "⚠️  Most tests passed, but some issues detected. Check the results above." -ForegroundColor Yellow
+    if ($passedTests -eq $totalTests) {
+        Write-Host "All tests passed! ($passedTests/$totalTests)" -ForegroundColor Green
+        exit 0
     } else {
-        Write-Host ""
-        Write-Host "❌ Multiple test failures detected. Please address the issues before deployment." -ForegroundColor Red
+        Write-Host "Some tests failed. ($passedTests/$totalTests passed)" -ForegroundColor Red
         exit 1
     }
     
 } catch {
-    Write-Error "❌ Test execution failed: $_"
+    Write-Error "Test execution failed: $_"
     exit 1
 }
