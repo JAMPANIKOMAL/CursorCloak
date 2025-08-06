@@ -11,13 +11,21 @@ A professional Windows utility that allows you to hide and show the system mouse
 ### Latest Release v1.2.0 - Self-Contained Edition
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 
-**Quick Install:**
+**Installation Options:**
+
+**🔧 Windows Installer (Recommended):**
+1. [Download CursorCloak_Setup_v1.2.0.exe](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.2.0/CursorCloak_Setup_v1.2.0.exe) (Full Installer)
+2. Run as administrator and follow the setup wizard
+3. Automatic shortcuts and uninstaller included!
+
+**📦 Portable ZIP:**
 1. [Download CursorCloak-v1.2.0-win-x64.zip](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.2.0/CursorCloak-v1.2.0-win-x64.zip) (57 MB)
 2. Extract and run `CursorCloak.UI.exe` as administrator
-3. **No .NET runtime needed** - works on any Windows 10/11 PC!
 
 **Alternative Download:**
 - [Optimized Build](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.2.0/CursorCloak-v1.2.0-win-x64-optimized.zip) (57 MB)
+
+**No .NET runtime needed** - works on any Windows 10/11 PC!
 
 ### Alternative Downloads
 - [View All Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
@@ -40,12 +48,20 @@ A professional Windows utility that allows you to hide and show the system mouse
 
 ## 🚀 Quick Start
 
-### Option 1: Download & Run (Recommended)
+### Option 1: Windows Installer (Recommended)
+1. Download [CursorCloak_Setup_v1.2.0.exe](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.2.0/CursorCloak_Setup_v1.2.0.exe)
+2. Run the installer as administrator
+3. Follow the setup wizard (choose installation directory, shortcuts)
+4. Launch automatically after installation
+5. **Complete installation with shortcuts and uninstaller!**
+
+### Option 2: Portable ZIP
 1. Download [CursorCloak-v1.2.0-win-x64.zip](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.2.0/CursorCloak-v1.2.0-win-x64.zip) (57 MB)
 2. Extract the ZIP file to your preferred location
 3. Right-click `CursorCloak.UI.exe` and select "Run as administrator"
 4. Start using immediately - Alt+H to hide, Alt+S to show cursor!
-5. **No .NET runtime needed** - works on any Windows 10/11 PC!
+
+**No .NET runtime needed** - works on any Windows 10/11 PC!
 
 ### Option 2: Building from Source
 1. Clone this repository

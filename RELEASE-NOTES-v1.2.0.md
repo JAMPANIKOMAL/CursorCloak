@@ -26,7 +26,14 @@
 
 ## 📥 Installation
 
-### Super Simple Install
+### Option 1: Windows Installer (Recommended)
+1. Download `CursorCloak_Setup_v1.2.0.exe` 
+2. Run the installer as administrator
+3. Choose installation directory and shortcuts
+4. Launch automatically after installation
+5. **No .NET runtime needed** - installer includes everything!
+
+### Option 2: Portable ZIP
 1. Download `CursorCloak-v1.2.0-win-x64.zip` (single file)
 2. Extract `CursorCloak.UI.exe`
 3. Right-click → "Run as administrator"
