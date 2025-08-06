@@ -5,16 +5,16 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 ## 📥 Download
 
 ### Latest Release
-[![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/your-username/CursorCloak/releases/latest)
+[![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/yourusername/CursorCloak/releases/latest)
 
 **Quick Install:**
-1. [Download CursorCloak_Setup.exe](https://github.com/your-username/CursorCloak/releases/latest/download/CursorCloak_Setup.exe)
+1. [Download CursorCloak_Setup.exe](https://github.com/yourusername/CursorCloak/releases/latest/download/CursorCloak_Setup.exe)
 2. Run as administrator
 3. Follow the installation wizard
 
 ### Alternative Downloads
-- [Portable Version (ZIP)](https://github.com/your-username/CursorCloak/releases/latest/download/CursorCloak-Portable.zip)
-- [View All Releases](https://github.com/your-username/CursorCloak/releases)
+- [Portable Version (ZIP)](https://github.com/yourusername/CursorCloak/releases/latest/download/CursorCloak-Portable.zip)
+- [View All Releases](https://github.com/yourusername/CursorCloak/releases)
 
 ## ✨ Features
 
@@ -27,7 +27,7 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 ## 🚀 Quick Start
 
 ### Option 1: Using Pre-built Installer (Recommended)
-1. Download the installer from [releases](https://github.com/your-username/CursorCloak/releases/latest)
+1. Download the installer from [releases](https://github.com/yourusername/CursorCloak/releases/latest)
 2. Run `CursorCloak_Setup.exe` as administrator
 3. Follow the installation wizard
 4. Launch CursorCloak from Start Menu
@@ -36,9 +36,9 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 1. Clone this repository
 2. Build with Visual Studio or dotnet CLI:
    ```bash
-   dotnet build --configuration Release
+   .\build.ps1 -Publish -SelfContained
    ```
-3. The executable will be in `CursorCloak.UI\bin\Release\net9.0-windows\`
+3. The executable will be in `.\publish\ui\`
 4. Run `CursorCloak.UI.exe` as administrator
 
 ## 📋 Requirements
@@ -76,15 +76,19 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 
 ### Build Commands
 ```bash
-# Clean and restore
+# Using the build script (recommended)
+.\build.ps1                    # Basic build
+.\build.ps1 -Clean             # Clean and build
+.\build.ps1 -Publish           # Build and publish
+.\build.ps1 -Publish -SelfContained  # Self-contained deployment
+
+# Manual build commands
 dotnet clean --configuration Release
 dotnet restore
-
-# Build
 dotnet build --configuration Release
 
 # Create self-contained deployment
-dotnet publish CursorCloak.UI\CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output .\Publish\
+dotnet publish CursorCloak.UI\CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output .\publish\ui\
 
 # Create installer (requires InnoSetup)
 # Compile setup.iss with InnoSetup Compiler
@@ -135,18 +139,21 @@ Configuration options:
 - Try moving mouse to refresh state
 - Restart application if cursor gets stuck
 
-For more help, check our [Issues page](https://github.com/your-username/CursorCloak/issues) or create a new issue.
+For more help, check our [Issues page](https://github.com/yourusername/CursorCloak/issues) or create a new issue.
 
 ## 👨‍💻 Development
 
 ### Project Structure
 ```
 CursorCloak/
+├── .github/                 # GitHub workflows and templates
 ├── CursorCloak.UI/          # WPF application
 ├── CursorCloak.Engine/      # Console engine
-├── Installer/               # Generated installers
+├── Installer/               # Generated installers (ignored)
+├── build.ps1               # Build script
 ├── setup.iss               # InnoSetup script
 ├── LICENSE                 # MIT License
+├── CONTRIBUTING.md         # Contribution guidelines
 └── README.md               # This file
 ```
 
@@ -198,16 +205,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🤝 Support
 
-- **Bug Reports**: [Create an issue](https://github.com/your-username/CursorCloak/issues/new?assignees=&labels=bug&template=bug_report.md)
-- **Feature Requests**: [Request a feature](https://github.com/your-username/CursorCloak/issues/new?assignees=&labels=enhancement&template=feature_request.md)
-- **Questions**: [Start a discussion](https://github.com/your-username/CursorCloak/discussions)
+- **Bug Reports**: [Create an issue](https://github.com/yourusername/CursorCloak/issues/new?assignees=&labels=bug&template=bug_report.md)
+- **Feature Requests**: [Request a feature](https://github.com/yourusername/CursorCloak/issues/new?assignees=&labels=enhancement&template=feature_request.md)
+- **Questions**: [Start a discussion](https://github.com/yourusername/CursorCloak/discussions)
 
 ## 📈 Project Stats
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/your-username/CursorCloak)
-![GitHub all releases](https://img.shields.io/github/downloads/your-username/CursorCloak/total)
-![GitHub issues](https://img.shields.io/github/issues/your-username/CursorCloak)
-![GitHub license](https://img.shields.io/github/license/your-username/CursorCloak)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/yourusername/CursorCloak)
+![GitHub all releases](https://img.shields.io/github/downloads/yourusername/CursorCloak/total)
+![GitHub issues](https://img.shields.io/github/issues/yourusername/CursorCloak)
+![GitHub license](https://img.shields.io/github/license/yourusername/CursorCloak)
 
 ---
 
