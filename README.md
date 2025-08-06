@@ -5,16 +5,16 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 ## 📥 Download
 
 ### Latest Release
-[![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/yourusername/CursorCloak/releases/latest)
+[![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 
 **Quick Install:**
-1. [Download CursorCloak_Setup.exe](https://github.com/yourusername/CursorCloak/releases/latest/download/CursorCloak_Setup.exe)
+1. [Download CursorCloak_Setup.exe](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak_Setup.exe)
 2. Run as administrator
 3. Follow the installation wizard
 
 ### Alternative Downloads
-- [Portable Version (ZIP)](https://github.com/yourusername/CursorCloak/releases/latest/download/CursorCloak-Portable.zip)
-- [View All Releases](https://github.com/yourusername/CursorCloak/releases)
+- [Portable Version (ZIP)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak-Portable.zip)
+- [View All Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
 
 ## ✨ Features
 
@@ -27,7 +27,7 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 ## 🚀 Quick Start
 
 ### Option 1: Using Pre-built Installer (Recommended)
-1. Download the installer from [releases](https://github.com/yourusername/CursorCloak/releases/latest)
+1. Download the installer from [releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 2. Run `CursorCloak_Setup.exe` as administrator
 3. Follow the installation wizard
 4. Launch CursorCloak from Start Menu
@@ -139,7 +139,7 @@ Configuration options:
 - Try moving mouse to refresh state
 - Restart application if cursor gets stuck
 
-For more help, check our [Issues page](https://github.com/yourusername/CursorCloak/issues) or create a new issue.
+For more help, check our [Issues page](https://github.com/JAMPANIKOMAL/CursorCloak/issues) or create a new issue.
 
 ## 👨‍💻 Development
 
@@ -205,16 +205,16 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🤝 Support
 
-- **Bug Reports**: [Create an issue](https://github.com/yourusername/CursorCloak/issues/new?assignees=&labels=bug&template=bug_report.md)
-- **Feature Requests**: [Request a feature](https://github.com/yourusername/CursorCloak/issues/new?assignees=&labels=enhancement&template=feature_request.md)
-- **Questions**: [Start a discussion](https://github.com/yourusername/CursorCloak/discussions)
+- **Bug Reports**: [Create an issue](https://github.com/JAMPANIKOMAL/CursorCloak/issues/new?assignees=&labels=bug&template=bug_report.md)
+- **Feature Requests**: [Request a feature](https://github.com/JAMPANIKOMAL/CursorCloak/issues/new?assignees=&labels=enhancement&template=feature_request.md)
+- **Questions**: [Start a discussion](https://github.com/JAMPANIKOMAL/CursorCloak/discussions)
 
 ## 📈 Project Stats
 
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/yourusername/CursorCloak)
-![GitHub all releases](https://img.shields.io/github/downloads/yourusername/CursorCloak/total)
-![GitHub issues](https://img.shields.io/github/issues/yourusername/CursorCloak)
-![GitHub license](https://img.shields.io/github/license/yourusername/CursorCloak)
+![GitHub release (latest by date)](https://img.shields.io/github/v/release/JAMPANIKOMAL/CursorCloak)
+![GitHub all releases](https://img.shields.io/github/downloads/JAMPANIKOMAL/CursorCloak/total)
+![GitHub issues](https://img.shields.io/github/issues/JAMPANIKOMAL/CursorCloak)
+![GitHub license](https://img.shields.io/github/license/JAMPANIKOMAL/CursorCloak)
 
 ---
 
