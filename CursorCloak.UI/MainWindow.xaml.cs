@@ -17,10 +17,6 @@ namespace CursorCloak.UI
         public MainWindow()
         {
             InitializeComponent();
-            
-            // Wire up events
-            MainToggle.Checked += MainToggle_CheckedChanged;
-            MainToggle.Unchecked += MainToggle_CheckedChanged;
         }
 
         protected override void OnSourceInitialized(EventArgs e)
@@ -33,39 +29,9 @@ namespace CursorCloak.UI
 
         protected override void OnClosed(EventArgs e)
         {
-            _hwndSource?.RemoveHook(HwndHook);
+            _hwndSource.RemoveHook(HwndHook);
             HotKeyManager.UnregisterHotKeys(_hwndSource.Handle);
             base.OnClosed(e);
-        }
-
-        // Window Controls
-        private void TitleBar_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ButtonState == MouseButtonState.Pressed)
-                this.DragMove();
-        }
-
-        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.WindowState = WindowState.Minimized;
-        }
-
-        private void CloseButton_Click(object sender, RoutedEventArgs e)
-        {
-            this.Close();
-        }
-
-        private void MainToggle_CheckedChanged(object sender, RoutedEventArgs e)
-        {
-            // Update cursor state based on toggle
-            if (MainToggle.IsChecked == true)
-            {
-                CursorEngine.HideSystemCursor();
-            }
-            else
-            {
-                CursorEngine.ShowSystemCursor();
-            }
         }
 
         // --- Hotkey Message Listener ---
@@ -79,12 +45,10 @@ namespace CursorCloak.UI
                 if (id == HotKeyManager.HIDE_HOTKEY_ID)
                 {
                     CursorEngine.HideSystemCursor();
-                    MainToggle.IsChecked = true;
                 }
                 else if (id == HotKeyManager.SHOW_HOTKEY_ID)
                 {
                     CursorEngine.ShowSystemCursor();
-                    MainToggle.IsChecked = false;
                 }
                 handled = true;
             }
