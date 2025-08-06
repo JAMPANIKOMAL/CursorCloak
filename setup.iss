@@ -12,6 +12,8 @@ AppPublisher=Your Name
 DefaultDirName={autopf}\CursorCloak
 DefaultGroupName=CursorCloak
 DisableProgramGroupPage=yes
+; This line ensures the installer will request administrator privileges.
+PrivilegesRequired=admin
 ; The final name of the installer file.
 OutputBaseFilename=CursorCloak_Setup
 ; Where the installer will be created.
@@ -25,12 +27,12 @@ Name: "english"; MessagesFile: "compiler:Default.isl"
 
 [Tasks]
 ; This adds a checkbox on the final page of the installer to launch the app.
-Name: "launchafterinstall"; Description: "{cm:LaunchProgram,CursorCloak}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+; FIX: Removed the Flags parameter to prevent compiler errors.
+Name: "launchafterinstall"; Description: "{cm:LaunchProgram,CursorCloak}"; GroupDescription: "{cm:AdditionalIcons}"
 
 [Files]
 ; This is the most important line. It tells the installer where to find your compiled .exe
 ; and where to put it on the user's computer.
-; FIX: Updated the source path to match the .NET 9.0 output directory.
 Source: "CursorCloak.UI\bin\Release\net9.0-windows\win-x64\publish\CursorCloak.UI.exe"; DestDir: "{app}"; Flags: ignoreversion
 
 [Icons]

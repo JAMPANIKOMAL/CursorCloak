@@ -1,6 +1,6 @@
 ﻿<!-- =================================================================================== -->
 <!--  FILE 1: MainWindow.xaml (The NEW UI Design)                                        -->
-<!--  A complete redesign for a more beautiful, modern, and functional UI.               -->
+<!--  This file defines the layout and appearance of our application window.               -->
 <!-- =================================================================================== -->
 <Window x:Class="CursorCloak.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
@@ -59,7 +59,7 @@
                 <TextBlock Grid.Column="0" Text="CURSOR HIDING" Foreground="#ccc" FontWeight="SemiBold" 
                            VerticalAlignment="Center" FontSize="14"/>
                 <CheckBox Grid.Column="1" x:Name="MainToggle" Style="{StaticResource StyledToggleSwitch}" 
-                          HorizontalAlignment="Right"/>
+                          HorizontalAlignment="Right" Click="MainToggle_Click"/>
             </Grid>
 
             <!-- Hotkey Settings -->
@@ -78,7 +78,7 @@
 
             <!-- Startup Option -->
             <CheckBox x:Name="StartupCheck" Content="Start with Windows" 
-                      Foreground="#ccc" FontSize="14"/>
+                      Foreground="#ccc" FontSize="14" Click="StartupCheck_Click"/>
         </StackPanel>
     </Grid>
 </Window>

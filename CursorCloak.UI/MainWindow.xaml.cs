@@ -15,7 +15,7 @@ namespace CursorCloak.UI
 {
     public partial class MainWindow : Window
     {
-        private HwndSource _hwndSource;
+        private HwndSource? _hwndSource;
 
         public MainWindow()
         {
@@ -26,56 +26,129 @@ namespace CursorCloak.UI
         protected override void OnSourceInitialized(EventArgs e)
         {
             base.OnSourceInitialized(e);
-            _hwndSource = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
-            _hwndSource.AddHook(HwndHook);
-            HotKeyManager.RegisterHotKeys(_hwndSource.Handle);
+            try
+            {
+                _hwndSource = HwndSource.FromHwnd(new WindowInteropHelper(this).Handle);
+                _hwndSource.AddHook(HwndHook);
+                
+                // Initialize the engine and hotkeys only when the window is ready
+                CursorEngine.Initialize();
+                HotKeyManager.RegisterHotKeys(_hwndSource.Handle);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to initialize application: {ex.Message}", "Initialization Error", 
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
         protected override void OnClosed(EventArgs e)
         {
-            SaveSettings();
-            _hwndSource.RemoveHook(HwndHook);
-            HotKeyManager.UnregisterHotKeys(_hwndSource.Handle);
-            base.OnClosed(e);
+            try
+            {
+                SaveSettings();
+                if (_hwndSource != null)
+                {
+                    _hwndSource.RemoveHook(HwndHook);
+                    HotKeyManager.UnregisterHotKeys(_hwndSource.Handle);
+                }
+                CursorEngine.Cleanup();
+            }
+            catch (Exception ex)
+            {
+                // Log error but don't show UI since we're closing
+                System.Diagnostics.Debug.WriteLine($"Error during cleanup: {ex.Message}");
+            }
+            finally
+            {
+                base.OnClosed(e);
+            }
         }
 
         private void MainToggle_Click(object sender, RoutedEventArgs e)
         {
-            if (MainToggle.IsChecked == true)
+            try
             {
-                CursorEngine.HideSystemCursor();
+                if (MainToggle.IsChecked == true)
+                {
+                    CursorEngine.HideSystemCursor();
+                }
+                else
+                {
+                    CursorEngine.ShowSystemCursor();
+                }
             }
-            else
+            catch (Exception ex)
             {
-                CursorEngine.ShowSystemCursor();
+                MessageBox.Show($"Failed to toggle cursor visibility: {ex.Message}", "Error", 
+                              MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Reset toggle to previous state
+                MainToggle.IsChecked = !MainToggle.IsChecked;
             }
         }
 
         private void StartupCheck_Click(object sender, RoutedEventArgs e)
         {
-            StartupManager.SetStartup(StartupCheck.IsChecked == true);
+            try
+            {
+                StartupManager.SetStartup(StartupCheck.IsChecked == true);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to update startup settings: {ex.Message}", "Error", 
+                              MessageBoxButton.OK, MessageBoxImage.Warning);
+                // Reset checkbox to previous state
+                StartupCheck.IsChecked = !StartupCheck.IsChecked;
+            }
         }
 
         private void LoadSettingsAndApply()
         {
-            var settings = SettingsManager.Load();
-            MainToggle.IsChecked = settings.IsHidingEnabled;
-            StartupCheck.IsChecked = settings.StartWithWindows;
-
-            if (settings.IsHidingEnabled)
+            try
             {
-                CursorEngine.HideSystemCursor();
+                var settings = SettingsManager.Load();
+                MainToggle.IsChecked = settings.IsHidingEnabled;
+                StartupCheck.IsChecked = settings.StartWithWindows;
+
+                if (settings.IsHidingEnabled)
+                {
+                    // We delay the actual hiding until the window is initialized
+                    this.SourceInitialized += (s, a) => 
+                    {
+                        try
+                        {
+                            CursorEngine.HideSystemCursor();
+                        }
+                        catch (Exception ex)
+                        {
+                            System.Diagnostics.Debug.WriteLine($"Failed to hide cursor on startup: {ex.Message}");
+                            MainToggle.IsChecked = false;
+                        }
+                    };
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Failed to load settings: {ex.Message}", "Settings Error", 
+                              MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
 
         private void SaveSettings()
         {
-            var settings = new Settings
+            try
             {
-                IsHidingEnabled = MainToggle.IsChecked == true,
-                StartWithWindows = StartupCheck.IsChecked == true
-            };
-            SettingsManager.Save(settings);
+                var settings = new Settings
+                {
+                    IsHidingEnabled = MainToggle.IsChecked == true,
+                    StartWithWindows = StartupCheck.IsChecked == true
+                };
+                SettingsManager.Save(settings);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Failed to save settings: {ex.Message}");
+            }
         }
 
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
@@ -83,18 +156,25 @@ namespace CursorCloak.UI
             const int WM_HOTKEY = 0x0312;
             if (msg == WM_HOTKEY)
             {
-                int id = wParam.ToInt32();
-                if (id == HotKeyManager.HIDE_HOTKEY_ID)
+                try
                 {
-                    CursorEngine.HideSystemCursor();
-                    MainToggle.IsChecked = true; // Sync UI
+                    int id = wParam.ToInt32();
+                    if (id == HotKeyManager.HIDE_HOTKEY_ID)
+                    {
+                        CursorEngine.HideSystemCursor();
+                        MainToggle.IsChecked = true; // Sync UI
+                    }
+                    else if (id == HotKeyManager.SHOW_HOTKEY_ID)
+                    {
+                        CursorEngine.ShowSystemCursor();
+                        MainToggle.IsChecked = false; // Sync UI
+                    }
+                    handled = true;
                 }
-                else if (id == HotKeyManager.SHOW_HOTKEY_ID)
+                catch (Exception ex)
                 {
-                    CursorEngine.ShowSystemCursor();
-                    MainToggle.IsChecked = false; // Sync UI
+                    System.Diagnostics.Debug.WriteLine($"Error handling hotkey: {ex.Message}");
                 }
-                handled = true;
             }
             return IntPtr.Zero;
         }
@@ -117,11 +197,27 @@ namespace CursorCloak.UI
         {
             try
             {
-                Directory.CreateDirectory(Path.GetDirectoryName(_settingsFilePath));
-                string json = JsonSerializer.Serialize(settings);
+                var directory = Path.GetDirectoryName(_settingsFilePath);
+                if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory))
+                {
+                    Directory.CreateDirectory(directory);
+                }
+                
+                string json = JsonSerializer.Serialize(settings, new JsonSerializerOptions { WriteIndented = true });
                 File.WriteAllText(_settingsFilePath, json);
             }
-            catch (Exception ex) { /* Handle potential saving errors */ }
+            catch (UnauthorizedAccessException)
+            {
+                throw new InvalidOperationException("Access denied when trying to save settings. Please run as administrator or check folder permissions.");
+            }
+            catch (DirectoryNotFoundException)
+            {
+                throw new InvalidOperationException("Could not create settings directory. Please check your system permissions.");
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to save settings: {ex.Message}", ex);
+            }
         }
 
         public static Settings Load()
@@ -131,10 +227,27 @@ namespace CursorCloak.UI
                 if (File.Exists(_settingsFilePath))
                 {
                     string json = File.ReadAllText(_settingsFilePath);
-                    return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
+                    if (!string.IsNullOrWhiteSpace(json))
+                    {
+                        var settings = JsonSerializer.Deserialize<Settings>(json);
+                        return settings ?? new Settings();
+                    }
                 }
             }
-            catch (Exception ex) { /* Handle potential loading errors */ }
+            catch (JsonException)
+            {
+                // If JSON is corrupted, delete it and return defaults
+                try
+                {
+                    File.Delete(_settingsFilePath);
+                }
+                catch { /* Ignore if we can't delete */ }
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error loading settings: {ex.Message}");
+            }
+            
             return new Settings(); // Return default settings if file doesn't exist or is corrupt
         }
     }
@@ -149,26 +262,50 @@ namespace CursorCloak.UI
         {
             try
             {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, true);
-                if (isEnabled)
+                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, true))
                 {
-                    // Get the path to the currently running .exe file
-                    string exePath = Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe");
-                    key.SetValue(AppName, $"\"{exePath}\"");
+                    if (key == null)
+                    {
+                        throw new InvalidOperationException("Could not access Windows startup registry key.");
+                    }
+
+                    if (isEnabled)
+                    {
+                        string exePath = Assembly.GetExecutingAssembly().Location.Replace(".dll", ".exe");
+                        if (!File.Exists(exePath))
+                        {
+                            // Fallback for different deployment scenarios
+                            exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty;
+                        }
+                        
+                        if (string.IsNullOrEmpty(exePath) || !File.Exists(exePath))
+                        {
+                            throw new InvalidOperationException("Could not determine application executable path.");
+                        }
+                        
+                        key.SetValue(AppName, $"\"{exePath}\"", RegistryValueKind.String);
+                    }
+                    else
+                    {
+                        key.DeleteValue(AppName, false);
+                    }
                 }
-                else
-                {
-                    key.DeleteValue(AppName, false);
-                }
-                key.Close();
             }
-            catch (Exception ex) { /* Handle potential registry access errors */ }
+            catch (UnauthorizedAccessException)
+            {
+                throw new InvalidOperationException("Access denied when trying to modify startup settings. Please run as administrator.");
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to update startup settings: {ex.Message}", ex);
+            }
         }
     }
 
     // --- Engine and Hotkey Manager ---
     public static class CursorEngine
     {
+        // --- API Imports ---
         [DllImport("user32.dll", SetLastError = true)]
         private static extern IntPtr LoadCursor(IntPtr hInstance, int lpCursorName);
         [DllImport("user32.dll", SetLastError = true)]
@@ -179,6 +316,10 @@ namespace CursorCloak.UI
         public static extern IntPtr CreateBitmap(int nWidth, int nHeight, uint cPlanes, uint cBitsPerPel, byte[] lpvBits);
         [DllImport("user32.dll")]
         public static extern IntPtr CopyIcon(IntPtr hIcon);
+        [DllImport("user32.dll")]
+        public static extern bool DestroyIcon(IntPtr hIcon);
+        [DllImport("gdi32.dll")]
+        public static extern bool DeleteObject(IntPtr hObject);
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
 
@@ -188,25 +329,138 @@ namespace CursorCloak.UI
         private const uint SPI_SETCURSORS = 0x0057;
         private const uint SPIF_SENDWININICHANGE = 0x02;
 
-        public static void HideSystemCursor()
+        // Removed readonly and initialized in a separate method
+        private static IntPtr originalNormalCursor;
+        private static IntPtr originalIBeamCursor;
+        private static IntPtr originalHandCursor;
+        private static IntPtr blankCursorHandle;
+        private static bool isInitialized = false;
+        private static readonly object initLock = new object();
+
+        public static void Initialize()
+        {
+            lock (initLock)
+            {
+                if (isInitialized) return;
+                
+                try
+                {
+                    originalNormalCursor = LoadCursor(IntPtr.Zero, (int)OCR_NORMAL);
+                    originalIBeamCursor = LoadCursor(IntPtr.Zero, (int)OCR_IBEAM);
+                    originalHandCursor = LoadCursor(IntPtr.Zero, (int)OCR_HAND);
+                    
+                    if (originalNormalCursor == IntPtr.Zero || originalIBeamCursor == IntPtr.Zero || originalHandCursor == IntPtr.Zero)
+                    {
+                        throw new InvalidOperationException("Failed to load system cursors.");
+                    }
+                    
+                    // Create the blank cursor
+                    CreateBlankCursor();
+                    
+                    isInitialized = true;
+                }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException($"Failed to initialize cursor engine: {ex.Message}", ex);
+                }
+            }
+        }
+
+        private static void CreateBlankCursor()
         {
             var andMask = new byte[32 * 4];
             var xorMask = new byte[32 * 4];
-            for (int i = 0; i < andMask.Length; i++) { andMask[i] = 0xFF; xorMask[i] = 0x00; }
+            for (int i = 0; i < andMask.Length; i++) 
+            { 
+                andMask[i] = 0xFF; 
+                xorMask[i] = 0x00; 
+            }
 
-            ICONINFO iconInfo = new ICONINFO { fIcon = false, xHotspot = 0, yHotspot = 0, hbmMask = CreateBitmap(32, 32, 1, 1, andMask), hbmColor = CreateBitmap(32, 32, 1, 32, xorMask) };
-            IntPtr blankCursorHandle = CreateIconIndirect(ref iconInfo);
+            IntPtr maskBitmap = CreateBitmap(32, 32, 1, 1, andMask);
+            IntPtr colorBitmap = CreateBitmap(32, 32, 1, 32, xorMask);
+            
+            if (maskBitmap == IntPtr.Zero || colorBitmap == IntPtr.Zero)
+            {
+                if (maskBitmap != IntPtr.Zero) DeleteObject(maskBitmap);
+                if (colorBitmap != IntPtr.Zero) DeleteObject(colorBitmap);
+                throw new InvalidOperationException("Failed to create cursor bitmaps.");
+            }
 
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_NORMAL);
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_IBEAM);
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_HAND);
+            ICONINFO iconInfo = new ICONINFO 
+            { 
+                fIcon = false, 
+                xHotspot = 0, 
+                yHotspot = 0, 
+                hbmMask = maskBitmap, 
+                hbmColor = colorBitmap 
+            };
+            
+            blankCursorHandle = CreateIconIndirect(ref iconInfo);
+            
+            // Clean up bitmaps
+            DeleteObject(maskBitmap);
+            DeleteObject(colorBitmap);
+            
+            if (blankCursorHandle == IntPtr.Zero)
+            {
+                throw new InvalidOperationException("Failed to create blank cursor.");
+            }
+        }
+
+        public static void HideSystemCursor()
+        {
+            if (!isInitialized) Initialize();
+            
+            try
+            {
+                SetSystemCursor(CopyIcon(blankCursorHandle), OCR_NORMAL);
+                SetSystemCursor(CopyIcon(blankCursorHandle), OCR_IBEAM);
+                SetSystemCursor(CopyIcon(blankCursorHandle), OCR_HAND);
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to hide system cursor: {ex.Message}", ex);
+            }
         }
 
         public static void ShowSystemCursor()
         {
-            // *** FIX: This is the new, more reliable method to restore the cursor ***
-            // It tells Windows to reload the current user's cursor scheme from the registry.
-            SystemParametersInfo(SPI_SETCURSORS, 0, IntPtr.Zero, SPIF_SENDWININICHANGE);
+            if (!isInitialized) Initialize();
+            
+            try
+            {
+                if (!SystemParametersInfo(SPI_SETCURSORS, 0, IntPtr.Zero, SPIF_SENDWININICHANGE))
+                {
+                    throw new InvalidOperationException("Failed to restore system cursors.");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to show system cursor: {ex.Message}", ex);
+            }
+        }
+
+        public static void Cleanup()
+        {
+            lock (initLock)
+            {
+                try
+                {
+                    if (blankCursorHandle != IntPtr.Zero)
+                    {
+                        DestroyIcon(blankCursorHandle);
+                        blankCursorHandle = IntPtr.Zero;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    System.Diagnostics.Debug.WriteLine($"Error during cursor cleanup: {ex.Message}");
+                }
+                finally
+                {
+                    isInitialized = false;
+                }
+            }
         }
 
         [StructLayout(LayoutKind.Sequential)]
@@ -228,14 +482,39 @@ namespace CursorCloak.UI
 
         public static void RegisterHotKeys(IntPtr handle)
         {
-            RegisterHotKey(handle, HIDE_HOTKEY_ID, MOD_ALT, VK_H);
-            RegisterHotKey(handle, SHOW_HOTKEY_ID, MOD_ALT, VK_S);
+            try
+            {
+                if (!RegisterHotKey(handle, HIDE_HOTKEY_ID, MOD_ALT, VK_H))
+                {
+                    int error = Marshal.GetLastWin32Error();
+                    throw new InvalidOperationException($"Failed to register hide hotkey (Alt+H). Error code: {error}");
+                }
+                
+                if (!RegisterHotKey(handle, SHOW_HOTKEY_ID, MOD_ALT, VK_S))
+                {
+                    int error = Marshal.GetLastWin32Error();
+                    // Clean up the first hotkey if second fails
+                    UnregisterHotKey(handle, HIDE_HOTKEY_ID);
+                    throw new InvalidOperationException($"Failed to register show hotkey (Alt+S). Error code: {error}");
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new InvalidOperationException($"Failed to register hotkeys: {ex.Message}", ex);
+            }
         }
 
         public static void UnregisterHotKeys(IntPtr handle)
         {
-            UnregisterHotKey(handle, HIDE_HOTKEY_ID);
-            UnregisterHotKey(handle, SHOW_HOTKEY_ID);
+            try
+            {
+                UnregisterHotKey(handle, HIDE_HOTKEY_ID);
+                UnregisterHotKey(handle, SHOW_HOTKEY_ID);
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"Error unregistering hotkeys: {ex.Message}");
+            }
         }
     }
 }

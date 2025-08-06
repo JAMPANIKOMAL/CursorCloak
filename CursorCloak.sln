@@ -4,6 +4,8 @@ VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursorCloak.Engine", "CursorCloak.Engine\CursorCloak.Engine.csproj", "{1E0E41FC-E116-0E0E-A298-56E4848D4075}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursorCloak.UI", "CursorCloak.UI\CursorCloak.UI.csproj", "{2F1F42FC-F227-1F1F-B399-67F5959E5186}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -14,6 +16,10 @@ Global
 		{1E0E41FC-E116-0E0E-A298-56E4848D4075}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1E0E41FC-E116-0E0E-A298-56E4848D4075}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1E0E41FC-E116-0E0E-A298-56E4848D4075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F1F42FC-F227-1F1F-B399-67F5959E5186}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F1F42FC-F227-1F1F-B399-67F5959E5186}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F1F42FC-F227-1F1F-B399-67F5959E5186}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F1F42FC-F227-1F1F-B399-67F5959E5186}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

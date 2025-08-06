@@ -59,45 +59,69 @@ public class CursorCloakEngine
         Console.WriteLine("Press Alt + S to SHOW cursor.");
         Console.WriteLine("Press Ctrl + C in this window to exit.");
         
-        originalNormalCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_NORMAL));
-        originalIBeamCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_IBEAM));
-        originalHandCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_HAND));
+        try
+        {
+            // Store original cursor handles
+            originalNormalCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_NORMAL));
+            originalIBeamCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_IBEAM));
+            originalHandCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_HAND));
 
-        // Register HIDE hotkey
-        if (!RegisterHotKey(IntPtr.Zero, HIDE_HOTKEY_ID, MOD_ALT, VK_H))
-        {
-            Console.WriteLine("Error: Could not register Alt + H hotkey.");
-            return;
-        }
-        // Register SHOW hotkey
-        if (!RegisterHotKey(IntPtr.Zero, SHOW_HOTKEY_ID, MOD_ALT, VK_S))
-        {
-            Console.WriteLine("Error: Could not register Alt + S hotkey.");
-            UnregisterHotKey(IntPtr.Zero, HIDE_HOTKEY_ID); // Clean up the first one
-            return;
-        }
-
-        MSG msg;
-        while (GetMessage(out msg, IntPtr.Zero, 0, 0))
-        {
-            if (msg.message == 0x0312) // WM_HOTKEY message
+            if (originalNormalCursor == IntPtr.Zero || originalIBeamCursor == IntPtr.Zero || originalHandCursor == IntPtr.Zero)
             {
-                int id = msg.wParam.ToInt32();
-                if (id == HIDE_HOTKEY_ID)
+                Console.WriteLine("Error: Failed to copy original cursor handles.");
+                return;
+            }
+
+            // Register HIDE hotkey
+            if (!RegisterHotKey(IntPtr.Zero, HIDE_HOTKEY_ID, MOD_ALT, VK_H))
+            {
+                Console.WriteLine("Error: Could not register Alt + H hotkey.");
+                return;
+            }
+            // Register SHOW hotkey
+            if (!RegisterHotKey(IntPtr.Zero, SHOW_HOTKEY_ID, MOD_ALT, VK_S))
+            {
+                Console.WriteLine("Error: Could not register Alt + S hotkey.");
+                UnregisterHotKey(IntPtr.Zero, HIDE_HOTKEY_ID); // Clean up the first one
+                return;
+            }
+
+            MSG msg;
+            while (GetMessage(out msg, IntPtr.Zero, 0, 0))
+            {
+                if (msg.message == 0x0312) // WM_HOTKEY message
                 {
-                    HideSystemCursor();
-                }
-                else if (id == SHOW_HOTKEY_ID)
-                {
-                    ShowSystemCursor();
+                    int id = msg.wParam.ToInt32();
+                    if (id == HIDE_HOTKEY_ID)
+                    {
+                        HideSystemCursor();
+                    }
+                    else if (id == SHOW_HOTKEY_ID)
+                    {
+                        ShowSystemCursor();
+                    }
                 }
             }
         }
-
-        // IMPORTANT: Always restore the cursor before exiting
-        ShowSystemCursor();
-        UnregisterHotKey(IntPtr.Zero, HIDE_HOTKEY_ID);
-        UnregisterHotKey(IntPtr.Zero, SHOW_HOTKEY_ID);
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Fatal error: {ex.Message}");
+        }
+        finally
+        {
+            // IMPORTANT: Always restore the cursor before exiting
+            ShowSystemCursor();
+            UnregisterHotKey(IntPtr.Zero, HIDE_HOTKEY_ID);
+            UnregisterHotKey(IntPtr.Zero, SHOW_HOTKEY_ID);
+            
+            // Clean up copied cursor handles
+            if (originalNormalCursor != IntPtr.Zero)
+                DestroyIcon(originalNormalCursor);
+            if (originalIBeamCursor != IntPtr.Zero)
+                DestroyIcon(originalIBeamCursor);
+            if (originalHandCursor != IntPtr.Zero)
+                DestroyIcon(originalHandCursor);
+        }
     }
 
     /// <summary>
@@ -105,32 +129,62 @@ public class CursorCloakEngine
     /// </summary>
     private static void HideSystemCursor()
     {
-        // *** FIX for Black Box: Create a proper transparent cursor ***
-        // An AND mask of all 1s (0xFF) preserves the screen color.
-        // An XOR mask of all 0s (0x00) writes no color. Result = transparent.
-        var andMask = new byte[32 * 4];
-        var xorMask = new byte[32 * 4];
-        for (int i = 0; i < andMask.Length; i++)
+        try
         {
-            andMask[i] = 0xFF;
-            xorMask[i] = 0x00;
+            // *** FIX for Black Box: Create a proper transparent cursor ***
+            // An AND mask of all 1s (0xFF) preserves the screen color.
+            // An XOR mask of all 0s (0x00) writes no color. Result = transparent.
+            var andMask = new byte[32 * 4];
+            var xorMask = new byte[32 * 4];
+            for (int i = 0; i < andMask.Length; i++)
+            {
+                andMask[i] = 0xFF;
+                xorMask[i] = 0x00;
+            }
+
+            IntPtr maskBitmap = CreateBitmap(32, 32, 1, 1, andMask);
+            IntPtr colorBitmap = CreateBitmap(32, 32, 1, 32, xorMask);
+            
+            if (maskBitmap == IntPtr.Zero || colorBitmap == IntPtr.Zero)
+            {
+                Console.WriteLine("Error: Failed to create cursor bitmaps.");
+                return;
+            }
+
+            ICONINFO iconInfo = new ICONINFO
+            {
+                fIcon = false, // This defines it as a cursor, not an icon
+                xHotspot = 0,
+                yHotspot = 0,
+                hbmMask = maskBitmap,
+                hbmColor = colorBitmap
+            };
+            
+            IntPtr blankCursorHandle = CreateIconIndirect(ref iconInfo);
+            
+            // Clean up bitmaps after creating the cursor
+            DeleteObject(maskBitmap);
+            DeleteObject(colorBitmap);
+            
+            if (blankCursorHandle == IntPtr.Zero)
+            {
+                Console.WriteLine("Error: Failed to create blank cursor.");
+                return;
+            }
+
+            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_NORMAL);
+            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_IBEAM);
+            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_HAND);
+
+            // Clean up the original blank cursor handle
+            DestroyIcon(blankCursorHandle);
+
+            Console.WriteLine("Cursor is now Hidden");
         }
-
-        ICONINFO iconInfo = new ICONINFO
+        catch (Exception ex)
         {
-            fIcon = false, // This defines it as a cursor, not an icon
-            xHotspot = 0,
-            yHotspot = 0,
-            hbmMask = CreateBitmap(32, 32, 1, 1, andMask),
-            hbmColor = CreateBitmap(32, 32, 1, 32, xorMask)
-        };
-        IntPtr blankCursorHandle = CreateIconIndirect(ref iconInfo);
-
-        SetSystemCursor(CopyIcon(blankCursorHandle), OCR_NORMAL);
-        SetSystemCursor(CopyIcon(blankCursorHandle), OCR_IBEAM);
-        SetSystemCursor(CopyIcon(blankCursorHandle), OCR_HAND);
-
-        Console.WriteLine("Cursor is now Hidden");
+            Console.WriteLine($"Error hiding cursor: {ex.Message}");
+        }
     }
 
     /// <summary>
@@ -138,13 +192,25 @@ public class CursorCloakEngine
     /// </summary>
     private static void ShowSystemCursor()
     {
-        SetSystemCursor(CopyIcon(originalNormalCursor), OCR_NORMAL);
-        SetSystemCursor(CopyIcon(originalIBeamCursor), OCR_IBEAM);
-        SetSystemCursor(CopyIcon(originalHandCursor), OCR_HAND);
-        
-        SystemParametersInfo(SPI_SETCURSORS, 0, IntPtr.Zero, SPIF_SENDWININICHANGE);
-        
-        Console.WriteLine("Cursor is now Visible");
+        try
+        {
+            // First try to restore using the saved handles
+            if (originalNormalCursor != IntPtr.Zero)
+                SetSystemCursor(CopyIcon(originalNormalCursor), OCR_NORMAL);
+            if (originalIBeamCursor != IntPtr.Zero)
+                SetSystemCursor(CopyIcon(originalIBeamCursor), OCR_IBEAM);
+            if (originalHandCursor != IntPtr.Zero)
+                SetSystemCursor(CopyIcon(originalHandCursor), OCR_HAND);
+            
+            // Then refresh the system cursor settings
+            SystemParametersInfo(SPI_SETCURSORS, 0, IntPtr.Zero, SPIF_SENDWININICHANGE);
+            
+            Console.WriteLine("Cursor is now Visible");
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Error showing cursor: {ex.Message}");
+        }
     }
 
     // --- More advanced API imports needed for creating a blank cursor ---
@@ -157,6 +223,12 @@ public class CursorCloakEngine
 
     [DllImport("user32.dll")]
     public static extern IntPtr CopyIcon(IntPtr hIcon);
+
+    [DllImport("user32.dll")]
+    public static extern bool DestroyIcon(IntPtr hIcon);
+
+    [DllImport("gdi32.dll")]
+    public static extern bool DeleteObject(IntPtr hObject);
     
     [StructLayout(LayoutKind.Sequential)]
     public struct ICONINFO
