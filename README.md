@@ -1,6 +1,6 @@
 # CursorCloak
 
-A Windows utility that allows you to hide and show the system mouse cursor using hotkeys.
+A Windows utility that allows you to hide and show the system mouse cursor using hotkeys. **Requires administrator privileges.**
 
 ## Features
 
@@ -8,18 +8,27 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 - **Persistent Settings**: Remembers your preferences between sessions
 - **Startup Integration**: Option to start with Windows
 - **Modern UI**: Clean, dark-themed WPF interface
+- **Administrator Protection**: Automatic privilege checking and error handling
 
 ## Quick Start
 
-1. Build the solution in Release mode:
-   ```
-   dotnet build --configuration Release
-   ```
+### Option 1: Using Pre-built Installer
+1. Download the installer from releases
+2. Run `CursorCloak_Setup.exe` as administrator
+3. Follow the installation wizard
+4. Launch CursorCloak from Start Menu
 
-2. Run the UI application:
-   ```
-   CursorCloak.UI\bin\Release\net9.0-windows\CursorCloak.UI.exe
-   ```
+### Option 2: Building from Source
+1. Clone this repository
+2. Run as administrator: `build.bat` or `build.ps1`
+3. The executable will be in `CursorCloak.UI\bin\Release\net9.0-windows\`
+4. Run `CursorCloak.UI.exe` as administrator
+
+## Requirements
+
+- **Windows 10 or later** (Windows 11 recommended)
+- **.NET 9.0 Runtime** (or use self-contained build)
+- **Administrator privileges** (required for cursor manipulation)
 
 ## Hotkeys
 
@@ -28,26 +37,139 @@ A Windows utility that allows you to hide and show the system mouse cursor using
 
 ## Architecture
 
-The solution consists of two projects:
-
-### CursorCloak.UI
-- WPF application with the user interface
-- Settings management and persistence
+### CursorCloak.UI (WPF Application)
+- User interface and settings management
 - Windows startup integration
 - Global hotkey handling
+- Persistent configuration storage
 
-### CursorCloak.Engine
-- Console application with core cursor manipulation logic
+### CursorCloak.Engine (Console Application)
+- Core cursor manipulation logic
 - Windows API integration for cursor management
 - Low-level system interactions
+- Standalone hotkey testing
 
-## Recent Fixes (Error 0xc000041d Resolution)
+## Building and Deployment
 
-The application was experiencing fatal crashes with exception code `0xc000041d`. The following fixes were implemented:
+### Prerequisites
+- .NET 9.0 SDK
+- Windows 10/11
+- Administrator privileges
+- InnoSetup (for creating installers)
 
-### 1. Global Exception Handling
-- Added application-wide exception handlers in `App.xaml.cs`
-- Implemented graceful error reporting and recovery
+### Build Commands
+```bash
+# Using build scripts (recommended)
+build.bat          # Batch script
+build.ps1          # PowerShell script
+
+# Manual build
+dotnet clean --configuration Release
+dotnet restore
+dotnet build --configuration Release
+
+# Create self-contained deployment
+dotnet publish CursorCloak.UI\CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output .\Publish\
+
+# Create installer (requires InnoSetup)
+# Right-click setup.iss and select "Compile"
+```
+
+## Installation and Setup
+
+### Using the Installer
+1. Run `CursorCloak_Setup.exe` as administrator
+2. Choose installation directory (default: `C:\Program Files\CursorCloak`)
+3. Select optional shortcuts (desktop, start menu)
+4. Complete installation
+5. Launch automatically if selected
+
+### Manual Installation
+1. Copy built files to desired directory
+2. Ensure all .dll files are in the same directory as the .exe
+3. Run as administrator for first-time setup
+4. Configure startup options through the UI
+
+## Configuration
+
+Settings are stored in:
+```
+%APPDATA%\CursorCloak\settings.json
+```
+
+Configuration options:
+- **IsHidingEnabled**: Whether cursor hiding is active
+- **StartWithWindows**: Launch automatically on Windows startup
+
+## Troubleshooting
+
+### Common Issues
+
+**Error 0xc000041d (Fatal Exception)**
+- Ensure running as administrator
+- Verify .NET 9.0 runtime is installed
+- Check Windows Event Viewer for detailed errors
+- See `TROUBLESHOOTING.md` for comprehensive solutions
+
+**Hotkeys Not Working**
+- Check for conflicts with other applications
+- Ensure application has proper focus
+- Verify administrator privileges
+
+**Cursor Won't Hide/Show**
+- Some applications override cursor visibility
+- Try moving mouse to refresh state
+- Restart application if cursor gets stuck
+
+For detailed troubleshooting, see `TROUBLESHOOTING.md`.
+
+## Development
+
+### Project Structure
+```
+CursorCloak/
+├── CursorCloak.UI/          # WPF application
+├── CursorCloak.Engine/      # Console engine
+├── Assets/                  # Icons and resources
+├── Installer/              # Generated installers
+├── setup.iss              # InnoSetup script
+├── build.bat              # Windows build script
+├── build.ps1              # PowerShell build script
+└── README.md              # This file
+```
+
+### Code Quality
+- Comprehensive error handling throughout
+- Resource management for GDI objects
+- Thread-safe operations
+- Memory leak prevention
+- Administrator privilege checking
+
+### Contributing
+1. Ensure builds pass without warnings
+2. Test on clean Windows installation
+3. Verify administrator privilege handling
+4. Test installer creation and deployment
+5. Update documentation for any changes
+
+## Security Considerations
+
+- **Administrator Privileges**: Required for system cursor manipulation
+- **Code Signing**: Consider signing executables for production
+- **Antivirus**: May flag cursor manipulation as suspicious
+- **System Integration**: Modifies global cursor state
+
+## License
+
+This project is provided as-is for educational and utility purposes.
+
+## Version History
+
+- **1.0.0**: Initial release with comprehensive error handling
+  - Fixed fatal crash issues (error 0xc000041d)
+  - Added administrator privilege checking
+  - Improved resource management
+  - Enhanced build and deployment process
 - Added dispatcher unhandled exception handling
 
 ### 2. Resource Management

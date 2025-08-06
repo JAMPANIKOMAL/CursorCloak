@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using System.Data;
+using System.Security.Principal;
 using System.Windows;
 using System.Windows.Threading;
 
@@ -13,11 +14,48 @@ public partial class App : Application
 {
     protected override void OnStartup(StartupEventArgs e)
     {
-        // Set up global exception handlers
-        this.DispatcherUnhandledException += App_DispatcherUnhandledException;
-        AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-        
-        base.OnStartup(e);
+        try
+        {
+            // Check if running as administrator
+            bool isAdmin = false;
+            try
+            {
+                var identity = WindowsIdentity.GetCurrent();
+                var principal = new WindowsPrincipal(identity);
+                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
+            }
+            catch
+            {
+                // If we can't check, assume not admin
+                isAdmin = false;
+            }
+
+            if (!isAdmin)
+            {
+                MessageBox.Show("CursorCloak requires administrator privileges to function properly.\n\n" +
+                              "Please run the application as administrator.",
+                              "Administrator Required", MessageBoxButton.OK, MessageBoxImage.Warning);
+                Environment.Exit(1);
+                return;
+            }
+
+            // Set up global exception handlers
+            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+            
+            // Add diagnostic logging
+            System.Diagnostics.Debug.WriteLine("CursorCloak.UI starting...");
+            
+            base.OnStartup(e);
+        }
+        catch (Exception ex)
+        {
+            // Log startup failure
+            System.Diagnostics.Debug.WriteLine($"Startup failed: {ex}");
+            MessageBox.Show($"Failed to start application: {ex.Message}", "Startup Error", 
+                          MessageBoxButton.OK, MessageBoxImage.Error);
+            Environment.Exit(1);
+        }
     }
 
     private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

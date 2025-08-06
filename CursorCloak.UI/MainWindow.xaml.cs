@@ -19,8 +19,21 @@ namespace CursorCloak.UI
 
         public MainWindow()
         {
-            InitializeComponent();
-            LoadSettingsAndApply();
+            try
+            {
+                System.Diagnostics.Debug.WriteLine("MainWindow constructor starting...");
+                InitializeComponent();
+                System.Diagnostics.Debug.WriteLine("InitializeComponent completed.");
+                LoadSettingsAndApply();
+                System.Diagnostics.Debug.WriteLine("LoadSettingsAndApply completed.");
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Debug.WriteLine($"MainWindow constructor failed: {ex}");
+                MessageBox.Show($"Failed to initialize main window: {ex.Message}", "Constructor Error", 
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+                throw; // Re-throw to prevent partial initialization
+            }
         }
 
         protected override void OnSourceInitialized(EventArgs e)
