@@ -12,13 +12,15 @@ A professional Windows utility that allows you to hide and show the system mouse
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 
 **Quick Install:**
-1. [Download CursorCloak-v1.2.0-win-x64.zip](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest/download/CursorCloak-v1.2.0-win-x64.zip)
+1. Go to [Releases Page](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest) and download `CursorCloak-v1.2.0-win-x64.zip`
 2. Extract and run `CursorCloak.UI.exe` as administrator
 3. **No .NET runtime needed** - works on any Windows 10/11 PC!
 
 ### Alternative Downloads
 - [View All Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
 - [Source Code (ZIP)](https://github.com/JAMPANIKOMAL/CursorCloak/archive/refs/heads/main.zip)
+
+> **Note**: If you don't see v1.2.0 release assets, please build from source using the instructions below or download the source code.
 
 ## ✨ Features
 
@@ -38,7 +40,7 @@ A professional Windows utility that allows you to hide and show the system mouse
 ## 🚀 Quick Start
 
 ### Option 1: Download & Run (Recommended)
-1. Download `CursorCloak-v1.2.0-win-x64.zip` from [releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
+1. Go to [releases page](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest) and download `CursorCloak-v1.2.0-win-x64.zip`
 2. Extract the ZIP file to your preferred location
 3. Right-click `CursorCloak.UI.exe` and select "Run as administrator"
 4. Start using immediately - Alt+H to hide, Alt+S to show cursor!
