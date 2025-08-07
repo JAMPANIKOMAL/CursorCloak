@@ -3,7 +3,7 @@
 ; ===================================================================
 [Setup]
 ; App identification
-AppId={11e15daa-a0a7-437c-af53-73b31ab26d83}
+AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}}
 AppName=CursorCloak
 AppVersion=1.0.2
 AppVerName=CursorCloak v1.0.2 - Enhanced Release
