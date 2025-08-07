@@ -3,14 +3,7 @@
 ;  Enhanced uninstaller with comprehensive cleanup
 ; ===================================================================
 
-[Messages]
-; Custom messages for SmartScreen handling and professional presentation
-WelcomeLabel2=This installer will install CursorCloak v1.0.2 on your computer.%n%n🛡️ SECURITY NOTICE:%nThis is an open-source application. Windows may show a SmartScreen warning because this software is not commercially signed.%n%n📋 IF SMARTSCREEN APPEARS:%n1. Click "More info"%n2. Click "Run anyway"%n%n✅ CursorCloak is safe to install:%n• 100%% open source - view code on GitHub%n• No network access required%n• No data collection or telemetry%n• Transparent build process%n%n🔗 Source: https://github.com/JAMPANIKOMAL/CursorCloak
 
-WizardInfoBefore=CursorCloak Information
-InfoBeforeLabel=CursorCloak v1.0.2 - Professional Cursor Management%n%n🎯 WHAT IS CURSORCLOAK?%nA lightweight utility that lets you hide and show your mouse cursor using simple keyboard shortcuts.%n%n🚀 KEY FEATURES:%n• Alt+H to hide cursor anywhere on Windows%n• Alt+S to show cursor again%n• Runs silently in background%n• No system tray clutter%n• Saves settings automatically%n• Works with all applications%n%n💻 TECHNICAL INFO:%n• Works on Windows 10/11%n• Requires administrator privileges%n• Two versions: Framework-dependent and Self-contained%n• Clean, modern WPF interface%n%n⚙️ AFTER INSTALLATION:%n1. Launch CursorCloak as administrator%n2. Use Alt+H/Alt+S hotkeys anywhere%n3. Close window to run in background%n4. Settings persist between sessions%n%n📚 Full documentation in installation folder.
-
-FinishedLabel=CursorCloak v1.0.2 has been successfully installed!%n%n🎉 READY TO USE:%n• Launch CursorCloak as administrator%n• Press Alt+H to hide cursor%n• Press Alt+S to show cursor%n• Close window to run in background%n%n📚 NEED HELP?%n• Check README.md in installation folder%n• Visit: https://github.com/JAMPANIKOMAL/CursorCloak%n• Report issues on GitHub%n%n🔧 REMEMBER:%nAlways run as administrator for proper functionality!
 
 [Setup]
 ; App identification
@@ -74,12 +67,12 @@ RestartIfNeededByRun=no
 
 [Messages]
 ; Custom messages for SmartScreen handling and professional presentation
-WelcomeLabel2=This installer will install CursorCloak v1.0.0 on your computer.%n%n�️ SECURITY NOTICE:%nThis is an open-source application. Windows may show a SmartScreen warning because this software is not commercially signed.%n%n📋 IF SMARTSCREEN APPEARS:%n1. Click "More info"%n2. Click "Run anyway"%n%n✅ CursorCloak is safe to install:%n• 100%% open source - view code on GitHub%n• No network access required%n• No data collection or telemetry%n• Transparent build process%n%n� Source: https://github.com/JAMPANIKOMAL/CursorCloak
+WelcomeLabel2=This installer will install CursorCloak v1.0.2 on your computer.%n%n🛡️ SECURITY NOTICE:%nThis is an open-source application. Windows may show a SmartScreen warning because this software is not commercially signed.%n%n📋 IF SMARTSCREEN APPEARS:%n1. Click "More info"%n2. Click "Run anyway"%n%n✅ CursorCloak is safe to install:%n• 100%% open source - view code on GitHub%n• No network access required%n• No data collection or telemetry%n• Transparent build process%n%n🔗 Source: https://github.com/JAMPANIKOMAL/CursorCloak
 
 WizardInfoBefore=CursorCloak Information
-InfoBeforeLabel=CursorCloak v1.0.0 - Professional Cursor Management%n%n🎯 WHAT IS CURSORCLOAK?%nA lightweight utility that lets you hide and show your mouse cursor using simple keyboard shortcuts.%n%n🚀 KEY FEATURES:%n• Alt+H to hide cursor anywhere on Windows%n• Alt+S to show cursor again%n• Runs silently in background%n• No system tray clutter%n• Saves settings automatically%n• Works with all applications%n%n💻 TECHNICAL INFO:%n• Works on Windows 10/11%n• Requires administrator privileges%n• Two versions: Framework-dependent and Self-contained%n• Clean, modern WPF interface%n%n⚙️ AFTER INSTALLATION:%n1. Launch CursorCloak as administrator%n2. Use Alt+H/Alt+S hotkeys anywhere%n3. Close window to run in background%n4. Settings persist between sessions%n%n� Full documentation in installation folder.
+InfoBeforeLabel=CursorCloak v1.0.2 - Professional Cursor Management%n%n🎯 WHAT IS CURSORCLOAK?%nA lightweight utility that lets you hide and show your mouse cursor using simple keyboard shortcuts.%n%n🚀 KEY FEATURES:%n• Alt+H to hide cursor anywhere on Windows%n• Alt+S to show cursor again%n• Runs silently in background%n• No system tray clutter%n• Saves settings automatically%n• Works with all applications%n%n💻 TECHNICAL INFO:%n• Works on Windows 10/11%n• Requires administrator privileges%n• Two versions: Framework-dependent and Self-contained%n• Clean, modern WPF interface%n%n⚙️ AFTER INSTALLATION:%n1. Launch CursorCloak as administrator%n2. Use Alt+H/Alt+S hotkeys anywhere%n3. Close window to run in background%n4. Settings persist between sessions%n%n📚 Full documentation in installation folder.
 
-FinishedLabel=CursorCloak v1.0.0 has been successfully installed!%n%n🎉 READY TO USE:%n• Launch CursorCloak as administrator%n• Press Alt+H to hide cursor%n• Press Alt+S to show cursor%n• Close window to run in background%n%n📚 NEED HELP?%n• Check README.md in installation folder%n• Visit: https://github.com/JAMPANIKOMAL/CursorCloak%n• Report issues on GitHub%n%n🔧 REMEMBER:%nAlways run as administrator for proper functionality!
+FinishedLabel=CursorCloak v1.0.2 has been successfully installed!%n%n🎉 READY TO USE:%n• Launch CursorCloak as administrator%n• Press Alt+H to hide cursor%n• Press Alt+S to show cursor%n• Close window to run in background%n%n📚 NEED HELP?%n• Check README.md in installation folder%n• Visit: https://github.com/JAMPANIKOMAL/CursorCloak%n• Report issues on GitHub%n%n🔧 REMEMBER:%nAlways run as administrator for proper functionality!
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
