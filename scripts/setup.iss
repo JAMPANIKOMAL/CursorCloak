@@ -1,9 +1,13 @@
+
 ;  Inno Setup Script for CursorCloak v1.0.2 - Enhanced Release
 ;  Enhanced uninstaller with comprehensive cleanup
 ; ===================================================================
+
+
+
 [Setup]
 ; App identification
-AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}}
+AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
 AppName=CursorCloak
 AppVersion=1.0.2
 AppVerName=CursorCloak v1.0.2 - Enhanced Release
@@ -125,39 +129,39 @@ begin
   // Create a custom page to show application information
   InfoPage := CreateOutputMsgMemoPage(wpLicense,
     'Application Information', 'CursorCloak v1.0.2 - Enhanced Release',
-    'Please review the information below about CursorCloak:');
+    'Please review the information below about CursorCloak:', '');
 
   // Add application information
-  InfoPage.RichEditViewer.Lines.Add('CURSORCLOAK v1.0.2 - ENHANCED RELEASE');
+  InfoPage.RichEditViewer.Lines.Add('🎯 CURSORCLOAK v1.0.2 - ENHANCED RELEASE');
   InfoPage.RichEditViewer.Lines.Add('Release Date: August 7, 2025');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('WHAT''S NEW IN v1.0.2:');
-  InfoPage.RichEditViewer.Lines.Add('- Enhanced CI/CD pipeline with improved InnoSetup handling');
-  InfoPage.RichEditViewer.Lines.Add('- Better release automation and version management');
-  InfoPage.RichEditViewer.Lines.Add('- Improved error handling and logging in build process');
-  InfoPage.RichEditViewer.Lines.Add('- More robust installer creation with fallback mechanisms');
-  InfoPage.RichEditViewer.Lines.Add('- Professional build system enhancements');
+  InfoPage.RichEditViewer.Lines.Add('✨ WHAT''S NEW IN v1.0.2:');
+  InfoPage.RichEditViewer.Lines.Add('• Enhanced CI/CD pipeline with improved InnoSetup handling');
+  InfoPage.RichEditViewer.Lines.Add('• Better release automation and version management');
+  InfoPage.RichEditViewer.Lines.Add('• Improved error handling and logging in build process');
+  InfoPage.RichEditViewer.Lines.Add('• More robust installer creation with fallback mechanisms');
+  InfoPage.RichEditViewer.Lines.Add('• Professional build system enhancements');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('WHAT IS CURSORCLOAK?');
+  InfoPage.RichEditViewer.Lines.Add('📋 WHAT IS CURSORCLOAK?');
   InfoPage.RichEditViewer.Lines.Add('A professional Windows utility for hiding and showing the mouse cursor');
   InfoPage.RichEditViewer.Lines.Add('using global keyboard shortcuts. Perfect for presentations, screenshots,');
   InfoPage.RichEditViewer.Lines.Add('screen recordings, and distraction-free computing.');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('KEY FEATURES:');
-  InfoPage.RichEditViewer.Lines.Add('- Global Hotkeys: Alt+H to hide, Alt+S to show cursor');
-  InfoPage.RichEditViewer.Lines.Add('- Background Mode: Continues running when window is closed');
-  InfoPage.RichEditViewer.Lines.Add('- Persistent Settings: Remembers preferences between sessions');
-  InfoPage.RichEditViewer.Lines.Add('- No Tray Clutter: Clean operation without system tray icons');
-  InfoPage.RichEditViewer.Lines.Add('- Admin Protection: Handles Windows privileges automatically');
-  InfoPage.RichEditViewer.Lines.Add('- Modern Interface: Clean, dark-themed WPF design');
+  InfoPage.RichEditViewer.Lines.Add('🚀 KEY FEATURES:');
+  InfoPage.RichEditViewer.Lines.Add('• ⌨️ Global Hotkeys: Alt+H to hide, Alt+S to show cursor');
+  InfoPage.RichEditViewer.Lines.Add('• 🔄 Background Mode: Continues running when window is closed');
+  InfoPage.RichEditViewer.Lines.Add('• 💾 Persistent Settings: Remembers preferences between sessions');
+  InfoPage.RichEditViewer.Lines.Add('• 🎯 No Tray Clutter: Clean operation without system tray icons');
+  InfoPage.RichEditViewer.Lines.Add('• 🔐 Admin Protection: Handles Windows privileges automatically');
+  InfoPage.RichEditViewer.Lines.Add('• 🎨 Modern Interface: Clean, dark-themed WPF design');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('SYSTEM REQUIREMENTS:');
-  InfoPage.RichEditViewer.Lines.Add('- Windows 10 or Windows 11 (x64)');
-  InfoPage.RichEditViewer.Lines.Add('- .NET 9.0 Runtime (will be prompted to install if missing)');
-  InfoPage.RichEditViewer.Lines.Add('- Administrator privileges for cursor manipulation');
-  InfoPage.RichEditViewer.Lines.Add('- Approximately 50MB disk space');
+  InfoPage.RichEditViewer.Lines.Add('💻 SYSTEM REQUIREMENTS:');
+  InfoPage.RichEditViewer.Lines.Add('• Windows 10 or Windows 11 (x64)');
+  InfoPage.RichEditViewer.Lines.Add('• .NET 9.0 Runtime (will be prompted to install if missing)');
+  InfoPage.RichEditViewer.Lines.Add('• Administrator privileges for cursor manipulation');
+  InfoPage.RichEditViewer.Lines.Add('• Approximately 50MB disk space');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('GETTING STARTED:');
+  InfoPage.RichEditViewer.Lines.Add('📚 GETTING STARTED:');
   InfoPage.RichEditViewer.Lines.Add('1. Launch CursorCloak from Start Menu or Desktop');
   InfoPage.RichEditViewer.Lines.Add('2. Right-click and select "Run as administrator"');
   InfoPage.RichEditViewer.Lines.Add('3. Configure your preferences in the settings');
@@ -165,11 +169,11 @@ begin
   InfoPage.RichEditViewer.Lines.Add('5. Use Alt+S to show cursor again');
   InfoPage.RichEditViewer.Lines.Add('6. Close the window to run in background mode');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('SUPPORT & INFORMATION:');
-  InfoPage.RichEditViewer.Lines.Add('- Documentation: README.md (installed with application)');
-  InfoPage.RichEditViewer.Lines.Add('- Source Code: https://github.com/JAMPANIKOMAL/CursorCloak');
-  InfoPage.RichEditViewer.Lines.Add('- Bug Reports: GitHub Issues section');
-  InfoPage.RichEditViewer.Lines.Add('- Latest Updates: GitHub Releases page');
+  InfoPage.RichEditViewer.Lines.Add('🔗 SUPPORT & INFORMATION:');
+  InfoPage.RichEditViewer.Lines.Add('• Documentation: README.md (installed with application)');
+  InfoPage.RichEditViewer.Lines.Add('• Source Code: https://github.com/JAMPANIKOMAL/CursorCloak');
+  InfoPage.RichEditViewer.Lines.Add('• Bug Reports: GitHub Issues section');
+  InfoPage.RichEditViewer.Lines.Add('• Latest Updates: GitHub Releases page');
 end;
 
 procedure CursorMoveProc(X, Y: Integer);
@@ -185,12 +189,11 @@ begin
   // Check Windows version (Windows 10 or later required)
   if GetWindowsVersion < $0A000000 then
   begin
-    MsgBox('CursorCloak requires Windows 10 or later.' + #13#10 +
+    MsgBox('CursorCloak requires Windows 10 or later.' + #13#10 + 
            'Your current Windows version is not supported.' + #13#10 + #13#10 +
-           'Please upgrade to Windows 10 or Windows 11 to use CursorCloak.',
+           'Please upgrade to Windows 10 or Windows 11 to use CursorCloak.', 
            mbError, MB_OK);
     Result := False;
-    Exit;
   end;
   
   // Note: We don't check for .NET here as it will be handled during first run
