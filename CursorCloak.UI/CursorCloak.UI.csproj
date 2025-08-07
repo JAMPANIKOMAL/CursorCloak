@@ -32,4 +32,8 @@
     <Resource Include="Resources\app-icon.png" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Windows.Forms" Version="6.0.0" />
+  </ItemGroup>
+
 </Project>

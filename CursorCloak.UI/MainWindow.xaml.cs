@@ -10,6 +10,8 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Interop;
 using Microsoft.Win32; // Required for Registry access
+using System.Windows.Forms; // Required for NotifyIcon
+using System.Drawing; // Required for SystemIcons
 
 namespace CursorCloak.UI
 {
@@ -17,30 +19,103 @@ namespace CursorCloak.UI
     {
         private HwndSource? _hwndSource;
         private bool _allowClose = false;
+        private NotifyIcon? _notifyIcon;
 
         public MainWindow()
         {
             InitializeComponent();
             LoadSettingsAndApply();
+            InitializeSystemTray();
             
             // Handle background mode - minimize to system tray when closed
             this.Closing += MainWindow_Closing;
+            this.StateChanged += MainWindow_StateChanged;
+        }
+
+        private void InitializeSystemTray()
+        {
+            _notifyIcon = new NotifyIcon();
+            
+            // Try to load the icon from resources or use a default system icon
+            try
+            {
+                var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "app-icon.ico");
+                if (File.Exists(iconPath))
+                {
+                    _notifyIcon.Icon = new System.Drawing.Icon(iconPath);
+                }
+                else
+                {
+                    // Use a default system icon if our icon file is not found
+                    _notifyIcon.Icon = SystemIcons.Application;
+                }
+            }
+            catch
+            {
+                _notifyIcon.Icon = SystemIcons.Application;
+            }
+            
+            _notifyIcon.Text = "CursorCloak - Click to show";
+            _notifyIcon.Visible = false;
+            
+            // Create context menu for tray icon
+            var contextMenu = new ContextMenuStrip();
+            contextMenu.Items.Add("Show CursorCloak", null, (s, e) => ShowWindow());
+            contextMenu.Items.Add("-");
+            contextMenu.Items.Add("Hide Cursor (Alt+H)", null, (s, e) => {
+                CursorEngine.HideSystemCursor();
+                MainToggle.IsChecked = true;
+            });
+            contextMenu.Items.Add("Show Cursor (Alt+S)", null, (s, e) => {
+                CursorEngine.ShowSystemCursor();
+                MainToggle.IsChecked = false;
+            });
+            contextMenu.Items.Add("-");
+            contextMenu.Items.Add("Exit", null, (s, e) => ExitApplication());
+            
+            _notifyIcon.ContextMenuStrip = contextMenu;
+            _notifyIcon.DoubleClick += (s, e) => ShowWindow();
+        }
+
+        private void ShowWindow()
+        {
+            this.Show();
+            this.WindowState = WindowState.Normal;
+            this.ShowInTaskbar = true;
+            this.Activate();
+            _notifyIcon!.Visible = false;
+        }
+
+        private void ExitApplication()
+        {
+            _allowClose = true;
+            _notifyIcon?.Dispose();
+            System.Windows.Application.Current.Shutdown();
+        }
+        
+        private void MainWindow_StateChanged(object? sender, EventArgs e)
+        {
+            if (this.WindowState == WindowState.Minimized)
+            {
+                this.ShowInTaskbar = false;
+                this.Hide(); // Completely hide the window from Task View
+                _notifyIcon!.Visible = true;
+                
+                if (UserConfig.Load().ShowNotifications)
+                {
+                    _notifyIcon.ShowBalloonTip(2000, "CursorCloak", "Application minimized to system tray", ToolTipIcon.Info);
+                }
+            }
         }
         
         private void MainWindow_Closing(object? sender, System.ComponentModel.CancelEventArgs e)
         {
             if (!_allowClose)
             {
-                // Don't actually close, just hide the window (background mode)
+                // Don't actually close, just minimize to system tray
                 e.Cancel = true;
                 this.WindowState = WindowState.Minimized;
-                this.ShowInTaskbar = false;
-                
-                if (UserConfig.Load().ShowNotifications)
-                {
-                    // Could add a system tray notification here
-                    System.Diagnostics.Debug.WriteLine("CursorCloak running in background...");
-                }
+                // The StateChanged event handler will take care of hiding from taskbar and showing tray icon
             }
         }
 
@@ -60,6 +135,7 @@ namespace CursorCloak.UI
             SaveSettings();
             _hwndSource?.RemoveHook(HwndHook);
             HotKeyManager.UnregisterHotKeys(_hwndSource?.Handle ?? IntPtr.Zero);
+            _notifyIcon?.Dispose();
             base.OnClosed(e);
         }
 
