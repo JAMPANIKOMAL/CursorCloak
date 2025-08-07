@@ -103,10 +103,17 @@ jobs:
         foreach ($path in $possiblePaths) {
           if (Test-Path $path) {
             Write-Host "InnoSetup found at: $path" -ForegroundColor Green
-            & $path 2>&1 | Out-Null  # Test execution
-            if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 1) {  # ISCC returns 1 when no script provided
-              $isccFound = $true
-              break
+            # Test execution - ISCC shows usage and exits with code 1 when no script provided (this is normal)
+            try {
+              $output = & $path 2>&1
+              # If it runs and shows usage, it's working correctly
+              if ($output -match "Usage:|scriptfile\.iss" -or $LASTEXITCODE -eq 1) {
+                Write-Host "InnoSetup executable verified successfully" -ForegroundColor Green
+                $isccFound = $true
+                break
+              }
+            } catch {
+              Write-Host "Failed to execute ISCC at $path" -ForegroundColor Yellow
             }
           }
         }
