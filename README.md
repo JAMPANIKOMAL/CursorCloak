@@ -22,18 +22,25 @@ A professional Windows utility for **instant mouse cursor control** with global 
 
 ## 📥 Download
 
-### Latest Release v1.0.0 - Professional Edition
+### Latest Release v1.0.1 - Enhanced Patch Release
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
+
+**🆕 What's New in v1.0.1:**
+- ✅ **Fixed "Start with Windows" functionality** - Now properly saves and applies settings
+- 🗑️ **Professional Uninstaller** - Complete cleanup including registry entries and user data
+- 🔧 **Enhanced Registry Management** - Better startup entry handling with validation
+- 🛡️ **Improved Error Handling** - More robust file and registry operations
+- ✨ **Better User Feedback** - Clear notifications for startup setting changes
 
 **Choose Your Installation Method (4 Options Available):**
 
 **🔧 Windows Installers:**
-1. [**CursorCloak_Setup_v1.0.0.exe**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.0/CursorCloak_Setup_v1.0.0.exe) - Framework-dependent installer (requires .NET 9.0)
-2. [**CursorCloak_Setup_v1.0.0_SelfContained.exe**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.0/CursorCloak_Setup_v1.0.0_SelfContained.exe) - Self-contained installer (no .NET required)
+1. [**CursorCloak_Setup_v1.0.1.exe**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.1/CursorCloak_Setup_v1.0.1.exe) - Framework-dependent installer (requires .NET 9.0)
+2. [**CursorCloak_Setup_v1.0.1_SelfContained.exe**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.1/CursorCloak_Setup_v1.0.1_SelfContained.exe) - Self-contained installer (no .NET required)
 
 **📦 Portable Versions:**
-3. [**CursorCloak-v1.0.0-win-x64.zip**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.0/CursorCloak-v1.0.0-win-x64.zip) - Framework-dependent portable (~5MB, requires .NET 9.0)
-4. [**CursorCloak-v1.0.0-win-x64-selfcontained.zip**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.0/CursorCloak-v1.0.0-win-x64-selfcontained.zip) - Self-contained portable (~60MB, no .NET required)
+3. [**CursorCloak-v1.0.1-win-x64.zip**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.1/CursorCloak-v1.0.1-win-x64.zip) - Framework-dependent portable (~5MB, requires .NET 9.0)
+4. [**CursorCloak-v1.0.1-win-x64-selfcontained.zip**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.1/CursorCloak-v1.0.1-win-x64-selfcontained.zip) - Self-contained portable (~60MB, no .NET required)
 
 **🛡️ SmartScreen Notice:** Windows may show a security warning because this app isn't commercially signed. Click "More info" → "Run anyway". See [SMARTSCREEN-INFO.md](SMARTSCREEN-INFO.md) for details.
 
@@ -153,6 +160,32 @@ dotnet publish CursorCloak.UI\CursorCloak.UI.csproj --configuration Release --ru
 2. Ensure all .dll files are in the same directory as the .exe
 3. Run as administrator for first-time setup
 4. Configure startup options through the UI
+
+## 🗑️ Uninstallation
+
+### Using the Uninstaller (Recommended)
+CursorCloak v1.0.1+ includes a professional uninstaller that completely removes all traces:
+
+1. **Windows Settings**: Go to Settings → Apps → CursorCloak → Uninstall
+2. **Control Panel**: Programs and Features → CursorCloak → Uninstall
+3. **Start Menu**: CursorCloak folder → "Uninstall CursorCloak"
+
+**What the uninstaller removes:**
+- ✅ All application files and folders
+- ✅ Windows startup registry entries
+- ✅ User settings and configuration files (`%APPDATA%\CursorCloak`)
+- ✅ Desktop and Start Menu shortcuts
+- ✅ Stops any running instances
+- ✅ Complete registry cleanup
+
+### Manual Removal (if needed)
+If using portable version or for manual cleanup:
+
+1. **Stop the application**: Close CursorCloak completely
+2. **Remove startup entry**: Run as admin: `reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "CursorCloak" /f`
+3. **Delete application folder**: Remove the CursorCloak installation directory
+4. **Remove user data**: Delete `%APPDATA%\CursorCloak` folder
+5. **Remove shortcuts**: Check Desktop and Start Menu for any remaining shortcuts
 
 ## 🔧 Configuration
 

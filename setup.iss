@@ -1,21 +1,21 @@
 ; ===================================================================
-;  Inno Setup Script for CursorCloak v1.0.0 - Professional Release
-;  SmartScreen-optimized installer with enhanced security messaging
+;  Inno Setup Script for CursorCloak v1.0.1 - Patch Release
+;  Enhanced uninstaller with comprehensive cleanup
 ; ===================================================================
 
 [Setup]
 ; App identification
 AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
 AppName=CursorCloak
-AppVersion=1.0.0
-AppVerName=CursorCloak v1.0.0 - Professional Edition
+AppVersion=1.0.1
+AppVerName=CursorCloak v1.0.1 - Patch Release
 AppPublisher=CursorCloak Development Team
 AppPublisherURL=https://github.com/JAMPANIKOMAL/CursorCloak
 AppSupportURL=https://github.com/JAMPANIKOMAL/CursorCloak/issues
 AppUpdatesURL=https://github.com/JAMPANIKOMAL/CursorCloak/releases
 AppContact=https://github.com/JAMPANIKOMAL/CursorCloak/issues
 AppCopyright=© 2025 CursorCloak Project. All rights reserved.
-AppComments=Professional cursor management utility for Windows
+AppComments=Professional cursor management utility for Windows - Enhanced patch release
 
 ; Installation directories
 DefaultDirName={autopf}\CursorCloak
@@ -25,7 +25,7 @@ AllowNoIcons=yes
 
 ; Installer settings
 PrivilegesRequired=admin
-OutputBaseFilename=CursorCloak_Setup_v1.0.0
+OutputBaseFilename=CursorCloak_Setup_v1.0.1
 OutputDir=.\Installer
 Compression=lzma2/ultra64
 SolidCompression=yes
@@ -35,9 +35,9 @@ ArchitecturesInstallIn64BitMode=x64
 
 ; SmartScreen mitigation - Enhanced publisher information
 UninstallDisplayName=CursorCloak - Professional Cursor Management Utility
-VersionInfoVersion=1.0.0.0
+VersionInfoVersion=1.0.1.0
 VersionInfoProductName=CursorCloak Professional Edition
-VersionInfoProductVersion=1.0.0.0
+VersionInfoProductVersion=1.0.1.0
 VersionInfoCompany=CursorCloak Open Source Project
 VersionInfoDescription=Professional cursor hide/show utility with global hotkeys
 VersionInfoCopyright=© 2025 CursorCloak Development Team (Open Source)
@@ -107,6 +107,16 @@ Filename: "{app}\CursorCloak.UI.exe"; Description: "{cm:LaunchProgram,CursorCloa
 [UninstallDelete]
 ; Clean up settings directory on uninstall
 Type: filesandordirs; Name: "{userappdata}\CursorCloak"
+; Clean up any log files that might have been created
+Type: files; Name: "{app}\*.log"
+; Clean up temporary files
+Type: files; Name: "{tmp}\CursorCloak*"
+
+[UninstallRun]
+; Remove startup registry entry before uninstalling
+Filename: "{cmd}"; Parameters: "/C reg delete ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"" /v ""CursorCloak"" /f"; Flags: runhidden; StatusMsg: "Removing startup entry..."
+; Terminate any running instances
+Filename: "{cmd}"; Parameters: "/C taskkill /f /im ""CursorCloak.UI.exe"" /t"; Flags: runhidden; StatusMsg: "Stopping CursorCloak..."
 
 [Code]
 var
@@ -116,12 +126,19 @@ procedure InitializeWizard();
 begin
   // Create a custom page to show application information
   InfoPage := CreateOutputMsgMemoPage(wpLicense,
-    'Application Information', 'CursorCloak v1.0.0 - Professional Cursor Management',
+    'Application Information', 'CursorCloak v1.0.1 - Enhanced Patch Release',
     'Please review the information below about CursorCloak:', '');
     
   // Add application information
-  InfoPage.RichEditViewer.Lines.Add('🎯 CURSORCLOAK v1.0.0 - PROFESSIONAL EDITION');
+  InfoPage.RichEditViewer.Lines.Add('🎯 CURSORCLOAK v1.0.1 - PATCH RELEASE');
   InfoPage.RichEditViewer.Lines.Add('Release Date: August 7, 2025');
+  InfoPage.RichEditViewer.Lines.Add('');
+  InfoPage.RichEditViewer.Lines.Add('✨ WHAT''S NEW IN v1.0.1:');
+  InfoPage.RichEditViewer.Lines.Add('• Fixed "Start with Windows" functionality - now properly saves settings');
+  InfoPage.RichEditViewer.Lines.Add('• Enhanced professional uninstaller with complete cleanup');
+  InfoPage.RichEditViewer.Lines.Add('• Improved registry management and error handling');
+  InfoPage.RichEditViewer.Lines.Add('• Better startup verification and user feedback');
+  InfoPage.RichEditViewer.Lines.Add('• Comprehensive removal of all application traces');
   InfoPage.RichEditViewer.Lines.Add('');
   InfoPage.RichEditViewer.Lines.Add('📋 WHAT IS CURSORCLOAK?');
   InfoPage.RichEditViewer.Lines.Add('A professional Windows utility for hiding and showing the mouse cursor');

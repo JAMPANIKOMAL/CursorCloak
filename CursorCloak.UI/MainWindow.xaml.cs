@@ -208,7 +208,24 @@ namespace CursorCloak.UI
 
         private void StartupCheck_Click(object sender, RoutedEventArgs e)
         {
-            StartupManager.SetStartup(StartupCheck.IsChecked == true);
+            bool isEnabled = StartupCheck.IsChecked == true;
+            StartupManager.SetStartup(isEnabled);
+            
+            // Save the settings to persist the change
+            SaveSettings();
+            
+            // Verify the startup setting was applied correctly
+            bool actuallyEnabled = StartupManager.IsStartupEnabled();
+            if (actuallyEnabled != isEnabled)
+            {
+                // If the setting didn't apply, revert the checkbox and notify user
+                StartupCheck.IsChecked = actuallyEnabled;
+                System.Windows.MessageBox.Show(
+                    "Unable to modify startup settings. Please run as administrator to change startup behavior.",
+                    "Startup Settings", 
+                    MessageBoxButton.OK, 
+                    MessageBoxImage.Warning);
+            }
         }
 
         private void LoadSettingsAndApply()
@@ -337,6 +354,46 @@ namespace CursorCloak.UI
             {
                 // Silently handle potential registry access errors
                 System.Diagnostics.Debug.WriteLine("Failed to modify startup registry entry");
+            }
+        }
+
+        public static bool IsStartupEnabled()
+        {
+            try
+            {
+                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, false))
+                {
+                    if (key != null)
+                    {
+                        object? value = key.GetValue(AppName);
+                        return value != null;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Silently handle potential registry access errors
+                System.Diagnostics.Debug.WriteLine("Failed to read startup registry entry");
+            }
+            return false;
+        }
+
+        public static void RemoveStartupEntry()
+        {
+            try
+            {
+                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, true))
+                {
+                    if (key != null)
+                    {
+                        key.DeleteValue(AppName, false);
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                // Silently handle potential registry access errors
+                System.Diagnostics.Debug.WriteLine("Failed to remove startup registry entry");
             }
         }
     }

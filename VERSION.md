@@ -2,9 +2,33 @@
 
 This file tracks version information and release notes for CursorCloak.
 
-## Current Version: 1.0.0 - Professional Release
+## Current Version: 1.0.1 - Patch Release
 
 ### Release Date: August 7, 2025
+
+## Previous Versions:
+
+## Current Version: 1.0.1 - Patch Release
+
+### Release Date: August 7, 2025
+
+### What's New in v1.0.1:
+- 🔧 **Fixed "Start with Windows" functionality**: Now properly saves settings when toggled
+- 🗑️ **Professional Uninstaller**: Complete cleanup including registry entries and user data
+- ✅ **Enhanced Registry Management**: Improved startup entry handling
+- 🔒 **Better Error Handling**: More robust registry access and file operations
+- 📋 **Comprehensive Cleanup**: Uninstaller removes all traces of the application
+
+### Patch Fixes:
+- ✅ Fixed startup checkbox not persisting settings
+- ✅ Added proper registry cleanup on uninstall
+- ✅ Enhanced uninstaller to remove user configuration data
+- ✅ Improved error handling for registry operations
+- ✅ Added startup verification functionality
+
+## Previous Versions:
+
+### Version 1.0.0 - Professional Release (August 7, 2025)
 
 ### What's New in v1.0.0:
 - ✅ **Professional Cursor Management**: Hide and show mouse cursor with global hotkeys

@@ -1,5 +1,5 @@
 ; ===================================================================
-;  Inno Setup Script for CursorCloak v1.0.0 - Self-Contained Release
+;  Inno Setup Script for CursorCloak v1.0.1 - Self-Contained Release
 ;  SmartScreen-optimized installer with NO .NET dependency
 ; ===================================================================
 
@@ -7,8 +7,8 @@
 ; App identification
 AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
 AppName=CursorCloak
-AppVersion=1.0.0
-AppVerName=CursorCloak v1.0.0 - Self-Contained Edition
+AppVersion=1.0.1
+AppVerName=CursorCloak v1.0.1 - Self-Contained Edition
 AppPublisher=CursorCloak Development Team
 AppPublisherURL=https://github.com/JAMPANIKOMAL/CursorCloak
 AppSupportURL=https://github.com/JAMPANIKOMAL/CursorCloak/issues
@@ -25,16 +25,16 @@ AllowNoIcons=yes
 
 ; SmartScreen mitigation - Enhanced publisher information  
 UninstallDisplayName=CursorCloak - Professional Cursor Management Utility (Self-Contained)
-VersionInfoVersion=1.0.0.0
+VersionInfoVersion=1.0.1.0
 VersionInfoProductName=CursorCloak Professional Edition (Self-Contained)
-VersionInfoProductVersion=1.0.0.0
+VersionInfoProductVersion=1.0.1.0
 VersionInfoCompany=CursorCloak Open Source Project
 VersionInfoDescription=Professional cursor utility with global hotkeys (No .NET required)
 VersionInfoCopyright=© 2025 CursorCloak Development Team (Open Source)
 
 ; Installer settings
 PrivilegesRequired=admin
-OutputBaseFilename=CursorCloak_Setup_v1.0.0_SelfContained
+OutputBaseFilename=CursorCloak_Setup_v1.0.1_SelfContained
 OutputDir=.\Installer
 Compression=lzma2/ultra64
 SolidCompression=yes
@@ -65,12 +65,12 @@ RestartIfNeededByRun=no
 
 [Messages]
 ; Custom messages for SmartScreen handling and professional presentation
-WelcomeLabel2=This installer will install CursorCloak v1.0.0 (Self-Contained) on your computer.%n%n✅ NO .NET REQUIRED: This version includes everything you need!%n%n🛡️ SECURITY NOTICE:%nThis is an open-source application. Windows may show a SmartScreen warning because this software is not commercially signed.%n%n📋 IF SMARTSCREEN APPEARS:%n1. Click "More info"%n2. Click "Run anyway"%n%n✅ CursorCloak is safe to install:%n• 100%% open source - view code on GitHub%n• No network access required%n• No data collection or telemetry%n• Transparent build process%n%n🔗 Source: https://github.com/JAMPANIKOMAL/CursorCloak
+WelcomeLabel2=This installer will install CursorCloak v1.0.1 (Self-Contained) on your computer.%n%n✅ NO .NET REQUIRED: This version includes everything you need!%n%n🛡️ SECURITY NOTICE:%nThis is an open-source application. Windows may show a SmartScreen warning because this software is not commercially signed.%n%n📋 IF SMARTSCREEN APPEARS:%n1. Click "More info"%n2. Click "Run anyway"%n%n✅ CursorCloak is safe to install:%n• 100%% open source - view code on GitHub%n• No network access required%n• No data collection or telemetry%n• Transparent build process%n%n🔗 Source: https://github.com/JAMPANIKOMAL/CursorCloak
 
 WizardInfoBefore=CursorCloak Self-Contained Information
-InfoBeforeLabel=CursorCloak v1.0.0 - Self-Contained Edition%n%n🎯 WHAT IS CURSORCLOAK?%nA lightweight utility that lets you hide and show your mouse cursor using simple keyboard shortcuts.%n%n✅ SELF-CONTAINED BENEFITS:%n• No .NET installation required%n• Works on any Windows 10/11 PC out of the box%n• Everything included in one package%n• Perfect for portable use%n%n🚀 KEY FEATURES:%n• Alt+H to hide cursor anywhere on Windows%n• Alt+S to show cursor again%n• Runs silently in background%n• No system tray clutter%n• Saves settings automatically%n• Works with all applications%n%n💻 TECHNICAL INFO:%n• Works on Windows 10/11 (x64)%n• Requires administrator privileges%n• Size: ~60MB (includes .NET runtime)%n• Clean, modern WPF interface%n%n⚙️ AFTER INSTALLATION:%n1. Launch CursorCloak as administrator%n2. Use Alt+H/Alt+S hotkeys anywhere%n3. Close window to run in background%n4. Settings persist between sessions%n%n📚 Full documentation in installation folder.
+InfoBeforeLabel=CursorCloak v1.0.1 - Self-Contained Edition%n%n🎯 WHAT IS CURSORCLOAK?%nA lightweight utility that lets you hide and show your mouse cursor using simple keyboard shortcuts.%n%n✅ SELF-CONTAINED BENEFITS:%n• No .NET installation required%n• Works on any Windows 10/11 PC out of the box%n• Everything included in one package%n• Perfect for portable use%n%n🚀 KEY FEATURES:%n• Alt+H to hide cursor anywhere on Windows%n• Alt+S to show cursor again%n• Runs silently in background%n• No system tray clutter%n• Saves settings automatically%n• Works with all applications%n%n💻 TECHNICAL INFO:%n• Works on Windows 10/11 (x64)%n• Requires administrator privileges%n• Size: ~60MB (includes .NET runtime)%n• Clean, modern WPF interface%n%n⚙️ AFTER INSTALLATION:%n1. Launch CursorCloak as administrator%n2. Use Alt+H/Alt+S hotkeys anywhere%n3. Close window to run in background%n4. Settings persist between sessions%n%n📚 Full documentation in installation folder.
 
-FinishedLabel=CursorCloak v1.0.0 (Self-Contained) has been successfully installed!%n%n🎉 READY TO USE:%n• Launch CursorCloak as administrator%n• Press Alt+H to hide cursor%n• Press Alt+S to show cursor%n• Close window to run in background%n%n✅ NO .NET REQUIRED: Everything is included!%n%n📚 NEED HELP?%n• Check README.md in installation folder%n• Visit: https://github.com/JAMPANIKOMAL/CursorCloak%n• Report issues on GitHub%n%n🔧 REMEMBER:%nAlways run as administrator for proper functionality!
+FinishedLabel=CursorCloak v1.0.1 (Self-Contained) has been successfully installed!%n%n🎉 READY TO USE:%n• Launch CursorCloak as administrator%n• Press Alt+H to hide cursor%n• Press Alt+S to show cursor%n• Close window to run in background%n%n✅ NO .NET REQUIRED: Everything is included!%n%n📚 NEED HELP?%n• Check README.md in installation folder%n• Visit: https://github.com/JAMPANIKOMAL/CursorCloak%n• Report issues on GitHub%n%n🔧 REMEMBER:%nAlways run as administrator for proper functionality!
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -112,11 +112,11 @@ procedure InitializeWizard();
 begin
   // Create a custom page to show application information
   InfoPage := CreateOutputMsgMemoPage(wpLicense,
-    'Application Information', 'CursorCloak v1.0.0 - Self-Contained Edition',
+    'Application Information', 'CursorCloak v1.0.1 - Self-Contained Edition',
     'Please review the information below about CursorCloak:', '');
     
   // Add application information
-  InfoPage.RichEditViewer.Lines.Add('🎯 CURSORCLOAK v1.0.0 - SELF-CONTAINED EDITION');
+  InfoPage.RichEditViewer.Lines.Add('🎯 CURSORCLOAK v1.0.1 - SELF-CONTAINED EDITION');
   InfoPage.RichEditViewer.Lines.Add('Release Date: August 7, 2025');
   InfoPage.RichEditViewer.Lines.Add('');
   InfoPage.RichEditViewer.Lines.Add('📋 WHAT IS CURSORCLOAK?');

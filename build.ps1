@@ -3,7 +3,7 @@ param(
     [switch]$CreateAllPackages
 )
 
-Write-Host "CursorCloak Build Script v1.0.0" -ForegroundColor Cyan
+Write-Host "CursorCloak Build Script v1.0.1" -ForegroundColor Cyan
 
 function Clear-BuildArtifacts {
     Write-Host "Cleaning build artifacts..." -ForegroundColor Yellow
@@ -15,7 +15,7 @@ function Clear-BuildArtifacts {
         ".\CursorCloak.Engine\obj",
         ".\publish",
         ".\Installer",
-        ".\CursorCloak-v1.0.0-*.zip"
+        ".\CursorCloak-v1.0.1-*.zip"
     )
     
     foreach ($path in $cleanPaths) {
@@ -74,14 +74,14 @@ function Create-ZipPackages {
     Write-Host "Creating ZIP packages..." -ForegroundColor Yellow
     
     # Framework-dependent ZIP
-    Compress-Archive -Path ".\publish\framework\ui\*" -DestinationPath "CursorCloak-v1.0.0-win-x64.zip" -CompressionLevel Optimal -Force
-    $frameworkSize = [math]::Round((Get-Item "CursorCloak-v1.0.0-win-x64.zip").Length / 1MB, 1)
-    Write-Host "   Created CursorCloak-v1.0.0-win-x64.zip ($frameworkSize MB)" -ForegroundColor Green
+    Compress-Archive -Path ".\publish\framework\ui\*" -DestinationPath "CursorCloak-v1.0.1-win-x64.zip" -CompressionLevel Optimal -Force
+    $frameworkSize = [math]::Round((Get-Item "CursorCloak-v1.0.1-win-x64.zip").Length / 1MB, 1)
+    Write-Host "   Created CursorCloak-v1.0.1-win-x64.zip ($frameworkSize MB)" -ForegroundColor Green
     
     # Self-contained ZIP
-    Compress-Archive -Path ".\publish\self-contained\ui\*" -DestinationPath "CursorCloak-v1.0.0-win-x64-selfcontained.zip" -CompressionLevel Optimal -Force
-    $selfContainedSize = [math]::Round((Get-Item "CursorCloak-v1.0.0-win-x64-selfcontained.zip").Length / 1MB, 1)
-    Write-Host "   Created CursorCloak-v1.0.0-win-x64-selfcontained.zip ($selfContainedSize MB)" -ForegroundColor Green
+    Compress-Archive -Path ".\publish\self-contained\ui\*" -DestinationPath "CursorCloak-v1.0.1-win-x64-selfcontained.zip" -CompressionLevel Optimal -Force
+    $selfContainedSize = [math]::Round((Get-Item "CursorCloak-v1.0.1-win-x64-selfcontained.zip").Length / 1MB, 1)
+    Write-Host "   Created CursorCloak-v1.0.1-win-x64-selfcontained.zip ($selfContainedSize MB)" -ForegroundColor Green
 }
 
 function Create-Installers {
@@ -116,27 +116,27 @@ function Show-Summary {
     Write-Host ""
     Write-Host "All packages created successfully with enhanced SmartScreen mitigation!" -ForegroundColor Green
     Write-Host "Files created:" -ForegroundColor Cyan
-    Write-Host "1. CursorCloak_Setup_v1.0.0.exe" -ForegroundColor Gray
-    Write-Host "2. CursorCloak-v1.0.0-win-x64.zip" -ForegroundColor Gray
-    Write-Host "3. CursorCloak_Setup_v1.0.0_SelfContained.exe" -ForegroundColor Gray
-    Write-Host "4. CursorCloak-v1.0.0-win-x64-selfcontained.zip" -ForegroundColor Gray
+    Write-Host "1. CursorCloak_Setup_v1.0.1.exe" -ForegroundColor Gray
+    Write-Host "2. CursorCloak-v1.0.1-win-x64.zip" -ForegroundColor Gray
+    Write-Host "3. CursorCloak_Setup_v1.0.1_SelfContained.exe" -ForegroundColor Gray
+    Write-Host "4. CursorCloak-v1.0.1-win-x64-selfcontained.zip" -ForegroundColor Gray
     
     Write-Host ""
     Write-Host "File sizes:" -ForegroundColor Yellow
-    if (Test-Path "CursorCloak-v1.0.0-win-x64.zip") {
-        $size = [math]::Round((Get-Item "CursorCloak-v1.0.0-win-x64.zip").Length / 1MB, 1)
+    if (Test-Path "CursorCloak-v1.0.1-win-x64.zip") {
+        $size = [math]::Round((Get-Item "CursorCloak-v1.0.1-win-x64.zip").Length / 1MB, 1)
         Write-Host "Framework ZIP: $size MB" -ForegroundColor White
     }
-    if (Test-Path "CursorCloak-v1.0.0-win-x64-selfcontained.zip") {
-        $size = [math]::Round((Get-Item "CursorCloak-v1.0.0-win-x64-selfcontained.zip").Length / 1MB, 1)
+    if (Test-Path "CursorCloak-v1.0.1-win-x64-selfcontained.zip") {
+        $size = [math]::Round((Get-Item "CursorCloak-v1.0.1-win-x64-selfcontained.zip").Length / 1MB, 1)
         Write-Host "Self-contained ZIP: $size MB" -ForegroundColor White
     }
-    if (Test-Path ".\Installer\CursorCloak_Setup_v1.0.0.exe") {
-        $size = [math]::Round((Get-Item ".\Installer\CursorCloak_Setup_v1.0.0.exe").Length / 1MB, 1)
+    if (Test-Path ".\Installer\CursorCloak_Setup_v1.0.1.exe") {
+        $size = [math]::Round((Get-Item ".\Installer\CursorCloak_Setup_v1.0.1.exe").Length / 1MB, 1)
         Write-Host "Framework Installer: $size MB" -ForegroundColor White
     }
-    if (Test-Path ".\Installer\CursorCloak_Setup_v1.0.0_SelfContained.exe") {
-        $size = [math]::Round((Get-Item ".\Installer\CursorCloak_Setup_v1.0.0_SelfContained.exe").Length / 1MB, 1)
+    if (Test-Path ".\Installer\CursorCloak_Setup_v1.0.1_SelfContained.exe") {
+        $size = [math]::Round((Get-Item ".\Installer\CursorCloak_Setup_v1.0.1_SelfContained.exe").Length / 1MB, 1)
         Write-Host "Self-contained Installer: $size MB" -ForegroundColor White
     }
 }
