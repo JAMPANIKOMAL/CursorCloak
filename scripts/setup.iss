@@ -1,9 +1,6 @@
-
 ;  Inno Setup Script for CursorCloak v1.0.2 - Enhanced Release
 ;  Enhanced uninstaller with comprehensive cleanup
 ; ===================================================================
-
-
 
 [Setup]
 ; App identification
@@ -67,12 +64,12 @@ RestartIfNeededByRun=no
 
 [Messages]
 ; Custom messages for SmartScreen handling and professional presentation
-WelcomeLabel2=This installer will install CursorCloak v1.0.2 on your computer.%n%n🛡️ SECURITY NOTICE:%nThis is an open-source application. Windows may show a SmartScreen warning because this software is not commercially signed.%n%n📋 IF SMARTSCREEN APPEARS:%n1. Click "More info"%n2. Click "Run anyway"%n%n✅ CursorCloak is safe to install:%n• 100%% open source - view code on GitHub%n• No network access required%n• No data collection or telemetry%n• Transparent build process%n%n🔗 Source: https://github.com/JAMPANIKOMAL/CursorCloak
+WelcomeLabel2=This installer will install CursorCloak v1.0.2 on your computer.%n%nSECURITY NOTICE:%nThis is an open-source application. Windows may show a SmartScreen warning because this software is not commercially signed.%n%nIF SMARTSCREEN APPEARS:%n1. Click "More info"%n2. Click "Run anyway"%n%nCursorCloak is safe to install:%n• 100%% open source - view code on GitHub%n• No network access required%n• No data collection or telemetry%n• Transparent build process%n%nSource: https://github.com/JAMPANIKOMAL/CursorCloak
 
 WizardInfoBefore=CursorCloak Information
-InfoBeforeLabel=CursorCloak v1.0.2 - Professional Cursor Management%n%n🎯 WHAT IS CURSORCLOAK?%nA lightweight utility that lets you hide and show your mouse cursor using simple keyboard shortcuts.%n%n🚀 KEY FEATURES:%n• Alt+H to hide cursor anywhere on Windows%n• Alt+S to show cursor again%n• Runs silently in background%n• No system tray clutter%n• Saves settings automatically%n• Works with all applications%n%n💻 TECHNICAL INFO:%n• Works on Windows 10/11%n• Requires administrator privileges%n• Two versions: Framework-dependent and Self-contained%n• Clean, modern WPF interface%n%n⚙️ AFTER INSTALLATION:%n1. Launch CursorCloak as administrator%n2. Use Alt+H/Alt+S hotkeys anywhere%n3. Close window to run in background%n4. Settings persist between sessions%n%n📚 Full documentation in installation folder.
+InfoBeforeLabel=CursorCloak v1.0.2 - Professional Cursor Management%n%nWHAT IS CURSORCLOAK?%nA lightweight utility that lets you hide and show your mouse cursor using simple keyboard shortcuts.%n%nKEY FEATURES:%n• Alt+H to hide cursor anywhere on Windows%n• Alt+S to show cursor again%n• Runs silently in background%n• No system tray clutter%n• Saves settings automatically%n• Works with all applications%n%nTECHNICAL INFO:%n• Works on Windows 10/11%n• Requires administrator privileges%n• Two versions: Framework-dependent and Self-contained%n• Clean, modern WPF interface%n%nAFTER INSTALLATION:%n1. Launch CursorCloak as administrator%n2. Use Alt+H/Alt+S hotkeys anywhere%n3. Close window to run in background%n4. Settings persist between sessions%n%nFull documentation in installation folder.
 
-FinishedLabel=CursorCloak v1.0.2 has been successfully installed!%n%n🎉 READY TO USE:%n• Launch CursorCloak as administrator%n• Press Alt+H to hide cursor%n• Press Alt+S to show cursor%n• Close window to run in background%n%n📚 NEED HELP?%n• Check README.md in installation folder%n• Visit: https://github.com/JAMPANIKOMAL/CursorCloak%n• Report issues on GitHub%n%n🔧 REMEMBER:%nAlways run as administrator for proper functionality!
+FinishedLabel=CursorCloak v1.0.2 has been successfully installed!%n%nREADY TO USE:%n- Launch CursorCloak as administrator%n- Press Alt+H to hide cursor%n- Press Alt+S to show cursor%n- Close window to run in background%n%nNEED HELP?%n- Check README.md in installation folder%n- Visit: https://github.com/JAMPANIKOMAL/CursorCloak%n- Report issues on GitHub%n%nREMEMBER:%nAlways run as administrator for proper functionality!
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -132,36 +129,36 @@ begin
     'Please review the information below about CursorCloak:', '');
 
   // Add application information
-  InfoPage.RichEditViewer.Lines.Add('🎯 CURSORCLOAK v1.0.2 - ENHANCED RELEASE');
+  InfoPage.RichEditViewer.Lines.Add('CURSORCLOAK v1.0.2 - ENHANCED RELEASE');
   InfoPage.RichEditViewer.Lines.Add('Release Date: August 7, 2025');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('✨ WHAT''S NEW IN v1.0.2:');
-  InfoPage.RichEditViewer.Lines.Add('• Enhanced CI/CD pipeline with improved InnoSetup handling');
-  InfoPage.RichEditViewer.Lines.Add('• Better release automation and version management');
-  InfoPage.RichEditViewer.Lines.Add('• Improved error handling and logging in build process');
-  InfoPage.RichEditViewer.Lines.Add('• More robust installer creation with fallback mechanisms');
-  InfoPage.RichEditViewer.Lines.Add('• Professional build system enhancements');
+  InfoPage.RichEditViewer.Lines.Add('WHAT''S NEW IN v1.0.2:');
+  InfoPage.RichEditViewer.Lines.Add('- Enhanced CI/CD pipeline with improved InnoSetup handling');
+  InfoPage.RichEditViewer.Lines.Add('- Better release automation and version management');
+  InfoPage.RichEditViewer.Lines.Add('- Improved error handling and logging in build process');
+  InfoPage.RichEditViewer.Lines.Add('- More robust installer creation with fallback mechanisms');
+  InfoPage.RichEditViewer.Lines.Add('- Professional build system enhancements');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('📋 WHAT IS CURSORCLOAK?');
+  InfoPage.RichEditViewer.Lines.Add('WHAT IS CURSORCLOAK?');
   InfoPage.RichEditViewer.Lines.Add('A professional Windows utility for hiding and showing the mouse cursor');
   InfoPage.RichEditViewer.Lines.Add('using global keyboard shortcuts. Perfect for presentations, screenshots,');
   InfoPage.RichEditViewer.Lines.Add('screen recordings, and distraction-free computing.');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('🚀 KEY FEATURES:');
-  InfoPage.RichEditViewer.Lines.Add('• ⌨️ Global Hotkeys: Alt+H to hide, Alt+S to show cursor');
-  InfoPage.RichEditViewer.Lines.Add('• 🔄 Background Mode: Continues running when window is closed');
-  InfoPage.RichEditViewer.Lines.Add('• 💾 Persistent Settings: Remembers preferences between sessions');
-  InfoPage.RichEditViewer.Lines.Add('• 🎯 No Tray Clutter: Clean operation without system tray icons');
-  InfoPage.RichEditViewer.Lines.Add('• 🔐 Admin Protection: Handles Windows privileges automatically');
-  InfoPage.RichEditViewer.Lines.Add('• 🎨 Modern Interface: Clean, dark-themed WPF design');
+  InfoPage.RichEditViewer.Lines.Add('KEY FEATURES:');
+  InfoPage.RichEditViewer.Lines.Add('- Global Hotkeys: Alt+H to hide, Alt+S to show cursor');
+  InfoPage.RichEditViewer.Lines.Add('- Background Mode: Continues running when window is closed');
+  InfoPage.RichEditViewer.Lines.Add('- Persistent Settings: Remembers preferences between sessions');
+  InfoPage.RichEditViewer.Lines.Add('- No Tray Clutter: Clean operation without system tray icons');
+  InfoPage.RichEditViewer.Lines.Add('- Admin Protection: Handles Windows privileges automatically');
+  InfoPage.RichEditViewer.Lines.Add('- Modern Interface: Clean, dark-themed WPF design');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('💻 SYSTEM REQUIREMENTS:');
-  InfoPage.RichEditViewer.Lines.Add('• Windows 10 or Windows 11 (x64)');
-  InfoPage.RichEditViewer.Lines.Add('• .NET 9.0 Runtime (will be prompted to install if missing)');
-  InfoPage.RichEditViewer.Lines.Add('• Administrator privileges for cursor manipulation');
-  InfoPage.RichEditViewer.Lines.Add('• Approximately 50MB disk space');
+  InfoPage.RichEditViewer.Lines.Add('SYSTEM REQUIREMENTS:');
+  InfoPage.RichEditViewer.Lines.Add('- Windows 10 or Windows 11 (x64)');
+  InfoPage.RichEditViewer.Lines.Add('- .NET 9.0 Runtime (will be prompted to install if missing)');
+  InfoPage.RichEditViewer.Lines.Add('- Administrator privileges for cursor manipulation');
+  InfoPage.RichEditViewer.Lines.Add('- Approximately 50MB disk space');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('📚 GETTING STARTED:');
+  InfoPage.RichEditViewer.Lines.Add('GETTING STARTED:');
   InfoPage.RichEditViewer.Lines.Add('1. Launch CursorCloak from Start Menu or Desktop');
   InfoPage.RichEditViewer.Lines.Add('2. Right-click and select "Run as administrator"');
   InfoPage.RichEditViewer.Lines.Add('3. Configure your preferences in the settings');
@@ -169,11 +166,11 @@ begin
   InfoPage.RichEditViewer.Lines.Add('5. Use Alt+S to show cursor again');
   InfoPage.RichEditViewer.Lines.Add('6. Close the window to run in background mode');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('🔗 SUPPORT & INFORMATION:');
-  InfoPage.RichEditViewer.Lines.Add('• Documentation: README.md (installed with application)');
-  InfoPage.RichEditViewer.Lines.Add('• Source Code: https://github.com/JAMPANIKOMAL/CursorCloak');
-  InfoPage.RichEditViewer.Lines.Add('• Bug Reports: GitHub Issues section');
-  InfoPage.RichEditViewer.Lines.Add('• Latest Updates: GitHub Releases page');
+  InfoPage.RichEditViewer.Lines.Add('SUPPORT & INFORMATION:');
+  InfoPage.RichEditViewer.Lines.Add('- Documentation: README.md (installed with application)');
+  InfoPage.RichEditViewer.Lines.Add('- Source Code: https://github.com/JAMPANIKOMAL/CursorCloak');
+  InfoPage.RichEditViewer.Lines.Add('- Bug Reports: GitHub Issues section');
+  InfoPage.RichEditViewer.Lines.Add('- Latest Updates: GitHub Releases page');
 end;
 
 procedure CursorMoveProc(X, Y: Integer);
