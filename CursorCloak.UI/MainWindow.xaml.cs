@@ -20,10 +20,21 @@ namespace CursorCloak.UI
         private HwndSource? _hwndSource;
         private bool _allowClose = false;
         private NotifyIcon? _notifyIcon;
+        
+        // Windows API imports for hiding from Alt+Tab
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
+        
+        [DllImport("user32.dll")]
+        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
+        
+        private const int GWL_EXSTYLE = -20;
+        private const int WS_EX_TOOLWINDOW = 0x00000080;
 
         public MainWindow()
         {
             InitializeComponent();
+            SetWindowIcon();
             LoadSettingsAndApply();
             InitializeSystemTray();
             
@@ -32,31 +43,57 @@ namespace CursorCloak.UI
             this.StateChanged += MainWindow_StateChanged;
         }
 
+        private void SetWindowIcon()
+        {
+            try
+            {
+                // Use pack URI for embedded resource
+                var iconUri = new Uri("pack://application:,,,/Resources/app-icon.ico");
+                this.Icon = new System.Windows.Media.Imaging.BitmapImage(iconUri);
+            }
+            catch (Exception ex)
+            {
+                // If icon loading fails, just continue without it
+                System.Diagnostics.Debug.WriteLine($"Failed to load window icon: {ex.Message}");
+            }
+        }
+
         private void InitializeSystemTray()
         {
             _notifyIcon = new NotifyIcon();
             
-            // Try to load the icon from resources or use a default system icon
+            // Try to load the icon from embedded resources first, then file system as fallback
             try
             {
-                var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "app-icon.ico");
-                if (File.Exists(iconPath))
+                // First try to load from embedded resources
+                var resourceStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/Resources/app-icon.ico"));
+                if (resourceStream != null)
                 {
-                    _notifyIcon.Icon = new System.Drawing.Icon(iconPath);
+                    _notifyIcon.Icon = new System.Drawing.Icon(resourceStream.Stream);
                 }
                 else
                 {
-                    // Use a default system icon if our icon file is not found
-                    _notifyIcon.Icon = SystemIcons.Application;
+                    // Fallback to file system path
+                    var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Resources", "app-icon.ico");
+                    if (File.Exists(iconPath))
+                    {
+                        _notifyIcon.Icon = new System.Drawing.Icon(iconPath);
+                    }
+                    else
+                    {
+                        // Use a default system icon if our icon file is not found
+                        _notifyIcon.Icon = SystemIcons.Application;
+                    }
                 }
             }
-            catch
+            catch (Exception ex)
             {
+                System.Diagnostics.Debug.WriteLine($"Failed to load tray icon: {ex.Message}");
                 _notifyIcon.Icon = SystemIcons.Application;
             }
             
             _notifyIcon.Text = "CursorCloak - Click to show";
-            _notifyIcon.Visible = false;
+            _notifyIcon.Visible = true; // Always show tray icon
             
             // Create context menu for tray icon
             var contextMenu = new ContextMenuStrip();
@@ -82,8 +119,17 @@ namespace CursorCloak.UI
             this.Show();
             this.WindowState = WindowState.Normal;
             this.ShowInTaskbar = true;
+            
+            // Remove WS_EX_TOOLWINDOW to make it appear in Alt+Tab again
+            if (_hwndSource != null)
+            {
+                IntPtr hwnd = _hwndSource.Handle;
+                int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+                SetWindowLong(hwnd, GWL_EXSTYLE, exStyle & ~WS_EX_TOOLWINDOW);
+            }
+            
             this.Activate();
-            _notifyIcon!.Visible = false;
+            _notifyIcon!.Visible = true; // Keep tray icon visible
         }
 
         private void ExitApplication()
@@ -98,12 +144,21 @@ namespace CursorCloak.UI
             if (this.WindowState == WindowState.Minimized)
             {
                 this.ShowInTaskbar = false;
+                
+                // Set WS_EX_TOOLWINDOW to hide from Alt+Tab task switcher
+                if (_hwndSource != null)
+                {
+                    IntPtr hwnd = _hwndSource.Handle;
+                    int exStyle = GetWindowLong(hwnd, GWL_EXSTYLE);
+                    SetWindowLong(hwnd, GWL_EXSTYLE, exStyle | WS_EX_TOOLWINDOW);
+                }
+                
                 this.Hide(); // Completely hide the window from Task View
                 _notifyIcon!.Visible = true;
                 
                 if (UserConfig.Load().ShowNotifications)
                 {
-                    _notifyIcon.ShowBalloonTip(2000, "CursorCloak", "Application minimized to system tray", ToolTipIcon.Info);
+                    _notifyIcon.ShowBalloonTip(2000, "CursorCloak", "Application minimized to system tray", System.Windows.Forms.ToolTipIcon.Info);
                 }
             }
         }

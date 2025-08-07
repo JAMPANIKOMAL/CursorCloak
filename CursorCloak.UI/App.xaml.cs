@@ -10,7 +10,7 @@ namespace CursorCloak.UI;
 /// <summary>
 /// Interaction logic for App.xaml
 /// </summary>
-public partial class App : Application
+public partial class App : System.Windows.Application
 {
     protected override void OnStartup(StartupEventArgs e)
     {
@@ -32,7 +32,7 @@ public partial class App : Application
 
             if (!isAdmin)
             {
-                MessageBox.Show("CursorCloak requires administrator privileges to function properly.\n\n" +
+                System.Windows.MessageBox.Show("CursorCloak requires administrator privileges to function properly.\n\n" +
                               "Please run the application as administrator.",
                               "Administrator Required", MessageBoxButton.OK, MessageBoxImage.Warning);
                 Environment.Exit(1);
@@ -52,7 +52,7 @@ public partial class App : Application
         {
             // Log startup failure
             System.Diagnostics.Debug.WriteLine($"Startup failed: {ex}");
-            MessageBox.Show($"Failed to start application: {ex.Message}", "Startup Error", 
+            System.Windows.MessageBox.Show($"Failed to start application: {ex.Message}", "Startup Error", 
                           MessageBoxButton.OK, MessageBoxImage.Error);
             Environment.Exit(1);
         }
@@ -62,7 +62,7 @@ public partial class App : Application
     {
         try
         {
-            MessageBox.Show($"An unexpected error occurred: {e.Exception.Message}\n\nThe application will continue to run.", 
+            System.Windows.MessageBox.Show($"An unexpected error occurred: {e.Exception.Message}\n\nThe application will continue to run.", 
                           "CursorCloak Error", MessageBoxButton.OK, MessageBoxImage.Warning);
             e.Handled = true;
         }
@@ -78,7 +78,7 @@ public partial class App : Application
         try
         {
             var exception = e.ExceptionObject as Exception;
-            MessageBox.Show($"A fatal error occurred: {exception?.Message ?? "Unknown error"}\n\nThe application will now close.", 
+            System.Windows.MessageBox.Show($"A fatal error occurred: {exception?.Message ?? "Unknown error"}\n\nThe application will now close.", 
                           "CursorCloak Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
         }
         catch
