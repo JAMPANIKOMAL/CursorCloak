@@ -9,7 +9,7 @@ on:
 
 env:
   DOTNET_VERSION: '9.0.x'
-  PROJECT_VERSION: '1.0.1'
+  PROJECT_VERSION: '1.0.2'
 
 jobs:
   build:
