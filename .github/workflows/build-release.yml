@@ -103,17 +103,19 @@ jobs:
         foreach ($path in $possiblePaths) {
           if (Test-Path $path) {
             Write-Host "InnoSetup found at: $path" -ForegroundColor Green
-            # Test execution - ISCC shows usage and exits with code 1 when no script provided (this is normal)
+            # Test execution - Use Start-Process for better control in CI environment
             try {
-              $output = & $path 2>&1
-              # If it runs and shows usage, it's working correctly
-              if ($output -match "Usage:|scriptfile\.iss" -or $LASTEXITCODE -eq 1) {
+              $process = Start-Process -FilePath $path -ArgumentList "-h" -Wait -PassThru -NoNewWindow -RedirectStandardOutput "$env:TEMP\iscc_test.out" -RedirectStandardError "$env:TEMP\iscc_test.err"
+              # ISCC returns 0 for help display, which means it's working
+              if ($process.ExitCode -eq 0 -or $process.ExitCode -eq 1) {
                 Write-Host "InnoSetup executable verified successfully" -ForegroundColor Green
                 $isccFound = $true
                 break
+              } else {
+                Write-Host "ISCC returned unexpected exit code: $($process.ExitCode)" -ForegroundColor Yellow
               }
             } catch {
-              Write-Host "Failed to execute ISCC at $path" -ForegroundColor Yellow
+              Write-Host "Failed to execute ISCC at $path : $($_.Exception.Message)" -ForegroundColor Yellow
             }
           }
         }
