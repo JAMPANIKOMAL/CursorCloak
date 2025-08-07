@@ -236,6 +236,7 @@ CursorCloak/
 ├── docs/                   # Documentation files
 │   ├── VERSION.md          # Version history and changelog
 │   ├── CONTRIBUTING.md     # Development guidelines
+│   ├── RELEASE-PROCESS.md  # Complete release process documentation
 │   └── SMARTSCREEN-INFO.md # Windows security guidance
 ├── assets/                 # Static assets and resources
 │   └── icons/              # Application icons (app-icon.ico, etc.)
@@ -261,6 +262,8 @@ CursorCloak/
 6. Test installer creation and deployment
 7. Update documentation for any changes
 8. Submit a pull request
+
+**📋 For Maintainers:** See [RELEASE-PROCESS.md](docs/RELEASE-PROCESS.md) for complete release management documentation.
 ## 🔐 Security Considerations
 
 - **Administrator Privileges**: Required for system cursor manipulation

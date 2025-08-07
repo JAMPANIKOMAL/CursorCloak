@@ -66,24 +66,58 @@ jobs:
         
         # Download and install Inno Setup 6.2.2 (latest stable)
         $url = "https://files.jrsoftware.org/is/6/innosetup-6.2.2.exe"
-        $output = "innosetup-installer.exe"
+        $output = "$env:TEMP\innosetup-installer.exe"
         
         Write-Host "Downloading InnoSetup from $url..." -ForegroundColor Yellow
-        Invoke-WebRequest -Uri $url -OutFile $output -UseBasicParsing
+        try {
+          Invoke-WebRequest -Uri $url -OutFile $output -UseBasicParsing -TimeoutSec 300
+          Write-Host "Download completed successfully" -ForegroundColor Green
+        } catch {
+          Write-Error "Failed to download InnoSetup: $($_.Exception.Message)"
+          exit 1
+        }
         
-        Write-Host "Installing InnoSetup..." -ForegroundColor Yellow
-        Start-Process -FilePath $output -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/SP-" -Wait
+        Write-Host "Installing InnoSetup silently..." -ForegroundColor Yellow
+        try {
+          $process = Start-Process -FilePath $output -ArgumentList "/VERYSILENT", "/SUPPRESSMSGBOXES", "/NORESTART", "/SP-" -Wait -PassThru
+          if ($process.ExitCode -eq 0) {
+            Write-Host "InnoSetup installed successfully" -ForegroundColor Green
+          } else {
+            Write-Error "InnoSetup installation failed with exit code: $($process.ExitCode)"
+            exit 1
+          }
+        } catch {
+          Write-Error "Failed to install InnoSetup: $($_.Exception.Message)"
+          exit 1
+        }
         
-        # Verify installation
-        $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-        if (Test-Path $isccPath) {
-          Write-Host "InnoSetup installed successfully at: $isccPath" -ForegroundColor Green
-          & $isccPath
-        } else {
-          Write-Host "InnoSetup installation verification failed" -ForegroundColor Red
+        # Verify installation with multiple possible paths
+        $possiblePaths = @(
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
+          "C:\Program Files\Inno Setup 6\ISCC.exe",
+          "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+          "$env:ProgramFiles\Inno Setup 6\ISCC.exe"
+        )
+        
+        $isccFound = $false
+        foreach ($path in $possiblePaths) {
+          if (Test-Path $path) {
+            Write-Host "InnoSetup found at: $path" -ForegroundColor Green
+            & $path 2>&1 | Out-Null  # Test execution
+            if ($LASTEXITCODE -eq 0 -or $LASTEXITCODE -eq 1) {  # ISCC returns 1 when no script provided
+              $isccFound = $true
+              break
+            }
+          }
+        }
+        
+        if (-not $isccFound) {
           Write-Host "Searching for InnoSetup installation..." -ForegroundColor Yellow
-          Get-ChildItem "C:\Program Files (x86)\" -Name "*nno*" -Recurse -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "Found: $_" }
-          Get-ChildItem "C:\Program Files\" -Name "*nno*" -Recurse -ErrorAction SilentlyContinue | ForEach-Object { Write-Host "Found: $_" }
+          Get-ChildItem "C:\Program Files*" -Name "*nno*" -Recurse -ErrorAction SilentlyContinue | ForEach-Object { 
+            Write-Host "Found: $_" -ForegroundColor Gray
+          }
+          Write-Error "InnoSetup verification failed - executable not found or not working"
+          exit 1
         }
       shell: powershell
       
@@ -91,28 +125,29 @@ jobs:
       run: |
         Write-Host "Building installers..." -ForegroundColor Cyan
         
-        $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
-        if (-not (Test-Path $isccPath)) {
-          Write-Warning "InnoSetup not found. Checking alternative locations..."
-          
-          # Check common alternative paths
-          $alternativePaths = @(
-            "C:\Program Files\Inno Setup 6\ISCC.exe",
-            "C:\tools\InnoSetup\ISCC.exe"
-          )
-          
-          foreach ($path in $alternativePaths) {
-            if (Test-Path $path) {
-              $isccPath = $path
-              Write-Host "Found InnoSetup at: $isccPath" -ForegroundColor Green
-              break
-            }
+        # Find InnoSetup executable
+        $possiblePaths = @(
+          "C:\Program Files (x86)\Inno Setup 6\ISCC.exe",
+          "C:\Program Files\Inno Setup 6\ISCC.exe",
+          "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe",
+          "$env:ProgramFiles\Inno Setup 6\ISCC.exe"
+        )
+        
+        $isccPath = $null
+        foreach ($path in $possiblePaths) {
+          if (Test-Path $path) {
+            $isccPath = $path
+            Write-Host "Using InnoSetup at: $isccPath" -ForegroundColor Green
+            break
           }
-          
-          if (-not (Test-Path $isccPath)) {
-            Write-Error "InnoSetup not found in any expected location. Skipping installer creation."
-            exit 1
+        }
+        
+        if (-not $isccPath) {
+          Write-Error "InnoSetup not found in any expected location"
+          Get-ChildItem "C:\Program Files*" -Name "*ISCC.exe" -Recurse -ErrorAction SilentlyContinue | ForEach-Object { 
+            Write-Host "Found ISCC at: $($_.FullName)" -ForegroundColor Gray
           }
+          exit 1
         }
         
         # Ensure output directory exists
@@ -121,29 +156,39 @@ jobs:
         try {
           # Build framework-dependent installer
           Write-Host "Building framework-dependent installer..." -ForegroundColor Yellow
-          & $isccPath "scripts\setup.iss"
+          $result1 = & $isccPath "scripts\setup.iss" 2>&1
           if ($LASTEXITCODE -eq 0) {
             Write-Host "Framework installer built successfully" -ForegroundColor Green
+            if (Test-Path ".\releases\CursorCloak_Setup_v${{ env.PROJECT_VERSION }}.exe") {
+              $size = [math]::Round((Get-Item ".\releases\CursorCloak_Setup_v${{ env.PROJECT_VERSION }}.exe").Length / 1MB, 1)
+              Write-Host "  Framework installer: $size MB" -ForegroundColor White
+            }
           } else {
-            Write-Error "Framework installer build failed with exit code $LASTEXITCODE"
+            Write-Warning "Framework installer build failed with exit code $LASTEXITCODE"
+            Write-Host "Output: $result1" -ForegroundColor Red
           }
           
           # Build self-contained installer
           Write-Host "Building self-contained installer..." -ForegroundColor Yellow
-          & $isccPath "scripts\setup-selfcontained.iss"
+          $result2 = & $isccPath "scripts\setup-selfcontained.iss" 2>&1
           if ($LASTEXITCODE -eq 0) {
             Write-Host "Self-contained installer built successfully" -ForegroundColor Green
+            if (Test-Path ".\releases\CursorCloak_Setup_v${{ env.PROJECT_VERSION }}_SelfContained.exe") {
+              $size = [math]::Round((Get-Item ".\releases\CursorCloak_Setup_v${{ env.PROJECT_VERSION }}_SelfContained.exe").Length / 1MB, 1)
+              Write-Host "  Self-contained installer: $size MB" -ForegroundColor White
+            }
           } else {
-            Write-Error "Self-contained installer build failed with exit code $LASTEXITCODE"
+            Write-Warning "Self-contained installer build failed with exit code $LASTEXITCODE"
+            Write-Host "Output: $result2" -ForegroundColor Red
           }
         } catch {
           Write-Error "Installer build failed: $($_.Exception.Message)"
           throw
         }
         
-        # List created files
-        Write-Host "Created installers:" -ForegroundColor Cyan
-        Get-ChildItem "./releases/*.exe" | ForEach-Object {
+        # List all created files
+        Write-Host "Created files in releases folder:" -ForegroundColor Cyan
+        Get-ChildItem "./releases" -File | ForEach-Object {
           $size = [math]::Round($_.Length / 1MB, 1)
           Write-Host "  $($_.Name) ($size MB)" -ForegroundColor White
         }
