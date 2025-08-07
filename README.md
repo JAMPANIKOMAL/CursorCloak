@@ -125,11 +125,9 @@ A professional Windows utility for **instant mouse cursor control** with global 
 ### Build Commands
 ```bash
 # Using the enhanced build script (recommended)
-.\build.ps1                                      # Basic build
-.\build.ps1 -Clean                              # Clean and build
-.\build.ps1 -Clean -Publish -SelfContained      # Self-contained deployment
-.\build.ps1 -Clean -Publish -CreateInstaller    # Build with installer
-.\build.ps1 -Clean -Publish -Test               # Build with tests
+.\scripts\build.ps1                                      # Basic build
+.\scripts\build.ps1 -Clean                              # Clean and build
+.\scripts\build.ps1 -Clean -AllPackages                 # Build with all packages
 
 # Manual build commands
 dotnet clean --configuration Release
@@ -137,13 +135,13 @@ dotnet restore
 dotnet build --configuration Release
 
 # Create self-contained deployment
-dotnet publish CursorCloak.UI\CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output .\publish\ui\
+dotnet publish src\CursorCloak.UI\CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output .\publish\ui\
 
 # Test the built application
-.\test.ps1
+.\scripts\test.ps1
 
 # Create installer (requires InnoSetup)
-# Compile setup.iss with InnoSetup Compiler
+# Compile scripts\setup.iss with InnoSetup Compiler
 ```
 
 ## ⚙️ Installation and Setup
@@ -227,14 +225,23 @@ CursorCloak/
 ├── .github/                 # GitHub workflows and templates
 │   ├── workflows/          # Automated CI/CD pipelines
 │   └── ISSUE_TEMPLATE/     # Bug report and feature request templates
-├── CursorCloak.UI/          # WPF application
-├── CursorCloak.Engine/      # Console engine
-├── build.ps1               # Enhanced build script with multiple options
-├── test.ps1                # Application testing script
-├── setup.iss               # InnoSetup installer script
+├── src/                    # Source code
+│   ├── CursorCloak.UI/     # WPF application
+│   └── CursorCloak.Engine/ # Console engine
+├── scripts/                # Build and installer scripts
+│   ├── build.ps1           # Enhanced build script with multiple options
+│   ├── test.ps1            # Application testing script
+│   ├── setup.iss           # InnoSetup installer script
+│   └── setup-selfcontained.iss # Self-contained installer script
+├── docs/                   # Documentation files
+│   ├── VERSION.md          # Version history and changelog
+│   ├── CONTRIBUTING.md     # Development guidelines
+│   └── SMARTSCREEN-INFO.md # Windows security guidance
+├── assets/                 # Static assets and resources
+│   └── icons/              # Application icons (app-icon.ico, etc.)
+├── tests/                  # Test projects (planned for future)
+├── releases/               # Generated deployment packages
 ├── LICENSE                 # MIT License
-├── VERSION.md              # Version tracking and release notes
-├── CONTRIBUTING.md         # Contribution guidelines
 └── README.md               # This file
 ```
 

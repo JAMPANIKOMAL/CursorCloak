@@ -2,9 +2,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursorCloak.Engine", "CursorCloak.Engine\CursorCloak.Engine.csproj", "{1E0E41FC-E116-0E0E-A298-56E4848D4075}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursorCloak.Engine", "src\CursorCloak.Engine\CursorCloak.Engine.csproj", "{1E0E41FC-E116-0E0E-A298-56E4848D4075}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursorCloak.UI", "CursorCloak.UI\CursorCloak.UI.csproj", "{2F1F42FC-F227-1F1F-B399-67F5959E5186}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CursorCloak.UI", "src\CursorCloak.UI\CursorCloak.UI.csproj", "{2F1F42FC-F227-1F1F-B399-67F5959E5186}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -33,11 +33,11 @@ jobs:
       run: |
         # Framework-dependent portable
         New-Item -ItemType Directory -Path "./publish/framework/ui" -Force
-        dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained false --output ./publish/framework/ui/
+        dotnet publish src/CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained false --output ./publish/framework/ui/
         
         # Self-contained portable  
         New-Item -ItemType Directory -Path "./publish/self-contained/ui" -Force
-        dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/self-contained/ui/
+        dotnet publish src/CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/self-contained/ui/
         
         # Create ZIP packages
         Compress-Archive -Path "./publish/framework/ui/*" -DestinationPath "./CursorCloak-v1.0.1-win-x64.zip" -Force
