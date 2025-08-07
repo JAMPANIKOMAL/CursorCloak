@@ -1,4 +1,3 @@
-
 ;  Inno Setup Script for CursorCloak v1.0.2 - Enhanced Release
 ;  Enhanced uninstaller with comprehensive cleanup
 ; ===================================================================
