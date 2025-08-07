@@ -1,9 +1,6 @@
 ;  Inno Setup Script for CursorCloak v1.0.2 - Enhanced Release
 ;  Enhanced uninstaller with comprehensive cleanup
 ; ===================================================================
-
-
-
 [Setup]
 ; App identification
 AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
