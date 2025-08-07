@@ -103,6 +103,16 @@ Filename: "{app}\CursorCloak.UI.exe"; Description: "{cm:LaunchProgram,CursorCloa
 [UninstallDelete]
 ; Clean up settings directory on uninstall
 Type: filesandordirs; Name: "{userappdata}\CursorCloak"
+; Clean up any log files that might have been created
+Type: files; Name: "{app}\*.log"
+; Clean up temporary files
+Type: files; Name: "{tmp}\CursorCloak*"
+
+[UninstallRun]
+; Remove startup registry entry before uninstalling
+Filename: "{cmd}"; Parameters: "/C reg delete ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"" /v ""CursorCloak"" /f"; Flags: runhidden; StatusMsg: "Removing startup entry..."
+; Terminate any running instances
+Filename: "{cmd}"; Parameters: "/C taskkill /f /im ""CursorCloak.UI.exe"" /t"; Flags: runhidden; StatusMsg: "Stopping CursorCloak..."
 
 [Code]
 var

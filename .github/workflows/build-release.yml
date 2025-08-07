@@ -29,18 +29,19 @@ jobs:
       run: dotnet test --configuration Release --no-build --verbosity normal
       continue-on-error: true
       
-    - name: Publish UI application (Self-Contained)
-      run: dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/ui/
-      
-    - name: Publish Engine application  
-      run: dotnet publish CursorCloak.Engine/CursorCloak.Engine.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/engine/
-      
     - name: Create portable packages
       run: |
-        # Self-contained portable
-        New-Item -ItemType Directory -Path "./portable" -Force
-        Copy-Item -Path "./publish/ui/*" -Destination "./portable/" -Recurse
-        Compress-Archive -Path "./portable/*" -DestinationPath "./CursorCloak-v1.0.0-win-x64.zip" -Force
+        # Framework-dependent portable
+        New-Item -ItemType Directory -Path "./publish/framework/ui" -Force
+        dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained false --output ./publish/framework/ui/
+        
+        # Self-contained portable  
+        New-Item -ItemType Directory -Path "./publish/self-contained/ui" -Force
+        dotnet publish CursorCloak.UI/CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output ./publish/self-contained/ui/
+        
+        # Create ZIP packages
+        Compress-Archive -Path "./publish/framework/ui/*" -DestinationPath "./CursorCloak-v1.0.1-win-x64.zip" -Force
+        Compress-Archive -Path "./publish/self-contained/ui/*" -DestinationPath "./CursorCloak-v1.0.1-win-x64-selfcontained.zip" -Force
       shell: powershell
       
     - name: Setup InnoSetup
@@ -59,12 +60,22 @@ jobs:
       run: |
         $isccPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
         if (Test-Path $isccPath) {
-          Write-Host "Building installer with Inno Setup..."
+          Write-Host "Building installers with Inno Setup..."
+          
+          # Build framework-dependent installer
           & $isccPath "setup.iss"
           if ($LASTEXITCODE -eq 0) {
-            Write-Host "Installer built successfully"
+            Write-Host "Framework installer built successfully"
           } else {
-            Write-Error "Installer build failed with exit code $LASTEXITCODE"
+            Write-Error "Framework installer build failed with exit code $LASTEXITCODE"
+          }
+          
+          # Build self-contained installer
+          & $isccPath "setup-selfcontained.iss"
+          if ($LASTEXITCODE -eq 0) {
+            Write-Host "Self-contained installer built successfully"
+          } else {
+            Write-Error "Self-contained installer build failed with exit code $LASTEXITCODE"
           }
         } else {
           Write-Warning "Inno Setup not found at expected location: $isccPath"
@@ -79,9 +90,10 @@ jobs:
         name: CursorCloak-Build
         path: |
           ./publish/
-          ./portable/
-          ./CursorCloak-v1.0.0-win-x64.zip
-          ./Installer/CursorCloak_Setup.exe
+          ./CursorCloak-v1.0.1-win-x64.zip
+          ./CursorCloak-v1.0.1-win-x64-selfcontained.zip
+          ./Installer/CursorCloak_Setup_v1.0.1.exe
+          ./Installer/CursorCloak_Setup_v1.0.1_SelfContained.exe
           
   release:
     needs: build
@@ -100,26 +112,41 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         files: |
-          ./CursorCloak-v1.0.0-win-x64.zip
-          ./Installer/CursorCloak_Setup.exe
+          ./CursorCloak-v1.0.1-win-x64.zip
+          ./CursorCloak-v1.0.1-win-x64-selfcontained.zip
+          ./Installer/CursorCloak_Setup_v1.0.1.exe
+          ./Installer/CursorCloak_Setup_v1.0.1_SelfContained.exe
         generate_release_notes: true
         draft: false
         prerelease: false
         body: |
-          ## CursorCloak Release
-          
-          ### Download Options:
-          - **Installer (Recommended)**: `CursorCloak_Setup.exe` - Full installer with shortcuts and uninstaller
-          - **Portable (Self-Contained)**: `CursorCloak-v1.0.0-win-x64.zip` - Includes .NET runtime (~60MB)
-          
-          ### Requirements:
-          - Windows 10/11
+          ## 🎯 CursorCloak v1.0.1 - Enhanced Patch Release
+
+          ### ✨ What's New:
+          - **🔧 Fixed 'Start with Windows' functionality** - Now properly saves and applies settings when toggled
+          - **🗑️ Professional Uninstaller** - Complete cleanup including registry entries and user data  
+          - **✅ Enhanced Registry Management** - Improved startup entry handling with validation
+          - **🛡️ Better Error Handling** - More robust registry access and file operations
+          - **📋 Comprehensive Cleanup** - Uninstaller removes all traces of the application
+
+          ### 📦 Download Options:
+          - **CursorCloak_Setup_v1.0.1.exe** - Framework-dependent installer (requires .NET 9.0) - ~2MB
+          - **CursorCloak_Setup_v1.0.1_SelfContained.exe** - Self-contained installer (no .NET required) - ~66MB
+          - **CursorCloak-v1.0.1-win-x64.zip** - Framework-dependent portable (requires .NET 9.0) - ~0.3MB
+          - **CursorCloak-v1.0.1-win-x64-selfcontained.zip** - Self-contained portable (no .NET required) - ~66MB
+
+          ### 🔧 Requirements:
+          - Windows 10/11 (x64)
           - Administrator privileges
-          
-          ### Usage:
-          - **Alt + H**: Hide cursor
-          - **Alt + S**: Show cursor
-          
-          Run as administrator for proper functionality.
+          - .NET 9.0 Runtime (for framework-dependent versions only)
+
+          ### 🚀 Usage:
+          - **Alt + H**: Hide cursor anywhere in Windows
+          - **Alt + S**: Show cursor again
+          - Close window to run in background mode
+
+          **🛡️ SmartScreen Notice:** Windows may show a security warning. Click "More info" → "Run anyway". This is normal for unsigned applications.
+
+          Always run as administrator for proper functionality.
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
