@@ -125,7 +125,7 @@ begin
   // Create a custom page to show application information
   InfoPage := CreateOutputMsgMemoPage(wpLicense,
     'Application Information', 'CursorCloak v1.0.2 - Enhanced Release',
-    'Please review the information below about CursorCloak:' '');
+    'Please review the information below about CursorCloak:');
 
   // Add application information
   InfoPage.RichEditViewer.Lines.Add('CURSORCLOAK v1.0.2 - ENHANCED RELEASE');
