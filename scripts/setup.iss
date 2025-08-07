@@ -3,7 +3,7 @@
 ; ===================================================================
 [Setup]
 ; App identification
-AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
+AppId={11e15daa-a0a7-437c-af53-73b31ab26d83}
 AppName=CursorCloak
 AppVersion=1.0.2
 AppVerName=CursorCloak v1.0.2 - Enhanced Release
@@ -131,7 +131,7 @@ begin
   InfoPage.RichEditViewer.Lines.Add('CURSORCLOAK v1.0.2 - ENHANCED RELEASE');
   InfoPage.RichEditViewer.Lines.Add('Release Date: August 7, 2025');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add("WHAT'S NEW IN v1.0.2:");
+  InfoPage.RichEditViewer.Lines.Add('WHAT''S NEW IN v1.0.2:');
   InfoPage.RichEditViewer.Lines.Add('- Enhanced CI/CD pipeline with improved InnoSetup handling');
   InfoPage.RichEditViewer.Lines.Add('- Better release automation and version management');
   InfoPage.RichEditViewer.Lines.Add('- Improved error handling and logging in build process');
@@ -185,11 +185,12 @@ begin
   // Check Windows version (Windows 10 or later required)
   if GetWindowsVersion < $0A000000 then
   begin
-    MsgBox('CursorCloak requires Windows 10 or later.' + #13#10 + 
+    MsgBox('CursorCloak requires Windows 10 or later.' + #13#10 +
            'Your current Windows version is not supported.' + #13#10 + #13#10 +
-           'Please upgrade to Windows 10 or Windows 11 to use CursorCloak.', 
+           'Please upgrade to Windows 10 or Windows 11 to use CursorCloak.',
            mbError, MB_OK);
     Result := False;
+    Exit;
   end;
   
   // Note: We don't check for .NET here as it will be handled during first run
