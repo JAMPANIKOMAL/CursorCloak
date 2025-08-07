@@ -1,5 +1,12 @@
-; ===================================================================
-;  Inno Setup Script for CursorCloak v1.0.1 - Patch Release
+; =================================================================[Messages]
+; Custom messages for SmartScreen handling and professional presentation
+WelcomeLabel2=This installer will install CursorCloak v1.0.2 on your computer.%n%n🛡️ SECURITY NOTICE:%nThis is an open-source application. Windows may show a SmartScreen warning because this software is not commercially signed.%n%n📋 IF SMARTSCREEN APPEARS:%n1. Click "More info"%n2. Click "Run anyway"%n%n✅ CursorCloak is safe to install:%n• 100%% open source - view code on GitHub%n• No network access required%n• No data collection or telemetry%n• Transparent build process%n%n🔗 Source: https://github.com/JAMPANIKOMAL/CursorCloak
+
+WizardInfoBefore=CursorCloak Information
+InfoBeforeLabel=CursorCloak v1.0.2 - Professional Cursor Management%n%n🎯 WHAT IS CURSORCLOAK?%nA lightweight utility that lets you hide and show your mouse cursor using simple keyboard shortcuts.%n%n🚀 KEY FEATURES:%n• Alt+H to hide cursor anywhere on Windows%n• Alt+S to show cursor again%n• Runs silently in background%n• No system tray clutter%n• Saves settings automatically%n• Works with all applications%n%n💻 TECHNICAL INFO:%n• Works on Windows 10/11%n• Requires administrator privileges%n• Two versions: Framework-dependent and Self-contained%n• Clean, modern WPF interface%n%n⚙️ AFTER INSTALLATION:%n1. Launch CursorCloak as administrator%n2. Use Alt+H/Alt+S hotkeys anywhere%n3. Close window to run in background%n4. Settings persist between sessions%n%n📚 Full documentation in installation folder.
+
+FinishedLabel=CursorCloak v1.0.2 has been successfully installed!%n%n🎉 READY TO USE:%n• Launch CursorCloak as administrator%n• Press Alt+H to hide cursor%n• Press Alt+S to show cursor%n• Close window to run in background%n%n📚 NEED HELP?%n• Check README.md in installation folder%n• Visit: https://github.com/JAMPANIKOMAL/CursorCloak%n• Report issues on GitHub%n%n🔧 REMEMBER:%nAlways run as administrator for proper functionality!=
+;  Inno Setup Script for CursorCloak v1.0.2 - Enhanced Release
 ;  Enhanced uninstaller with comprehensive cleanup
 ; ===================================================================
 
@@ -7,15 +14,15 @@
 ; App identification
 AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
 AppName=CursorCloak
-AppVersion=1.0.1
-AppVerName=CursorCloak v1.0.1 - Patch Release
+AppVersion=1.0.2
+AppVerName=CursorCloak v1.0.2 - Enhanced Release
 AppPublisher=CursorCloak Development Team
 AppPublisherURL=https://github.com/JAMPANIKOMAL/CursorCloak
 AppSupportURL=https://github.com/JAMPANIKOMAL/CursorCloak/issues
 AppUpdatesURL=https://github.com/JAMPANIKOMAL/CursorCloak/releases
 AppContact=https://github.com/JAMPANIKOMAL/CursorCloak/issues
 AppCopyright=© 2025 CursorCloak Project. All rights reserved.
-AppComments=Professional cursor management utility for Windows - Enhanced patch release
+AppComments=Professional cursor management utility for Windows - Enhanced release
 
 ; Installation directories
 DefaultDirName={autopf}\CursorCloak
@@ -25,7 +32,7 @@ AllowNoIcons=yes
 
 ; Installer settings
 PrivilegesRequired=admin
-OutputBaseFilename=CursorCloak_Setup_v1.0.1
+OutputBaseFilename=CursorCloak_Setup_v1.0.2
 OutputDir=..\releases
 Compression=lzma2/ultra64
 SolidCompression=yes
@@ -35,9 +42,9 @@ ArchitecturesInstallIn64BitMode=x64
 
 ; SmartScreen mitigation - Enhanced publisher information
 UninstallDisplayName=CursorCloak - Professional Cursor Management Utility
-VersionInfoVersion=1.0.1.0
+VersionInfoVersion=1.0.2.0
 VersionInfoProductName=CursorCloak Professional Edition
-VersionInfoProductVersion=1.0.1.0
+VersionInfoProductVersion=1.0.2.0
 VersionInfoCompany=CursorCloak Open Source Project
 VersionInfoDescription=Professional cursor hide/show utility with global hotkeys
 VersionInfoCopyright=© 2025 CursorCloak Development Team (Open Source)
@@ -126,19 +133,19 @@ procedure InitializeWizard();
 begin
   // Create a custom page to show application information
   InfoPage := CreateOutputMsgMemoPage(wpLicense,
-    'Application Information', 'CursorCloak v1.0.1 - Enhanced Patch Release',
+    'Application Information', 'CursorCloak v1.0.2 - Enhanced Release',
     'Please review the information below about CursorCloak:', '');
-    
+
   // Add application information
-  InfoPage.RichEditViewer.Lines.Add('🎯 CURSORCLOAK v1.0.1 - PATCH RELEASE');
+  InfoPage.RichEditViewer.Lines.Add('🎯 CURSORCLOAK v1.0.2 - ENHANCED RELEASE');
   InfoPage.RichEditViewer.Lines.Add('Release Date: August 7, 2025');
   InfoPage.RichEditViewer.Lines.Add('');
-  InfoPage.RichEditViewer.Lines.Add('✨ WHAT''S NEW IN v1.0.1:');
-  InfoPage.RichEditViewer.Lines.Add('• Fixed "Start with Windows" functionality - now properly saves settings');
-  InfoPage.RichEditViewer.Lines.Add('• Enhanced professional uninstaller with complete cleanup');
-  InfoPage.RichEditViewer.Lines.Add('• Improved registry management and error handling');
-  InfoPage.RichEditViewer.Lines.Add('• Better startup verification and user feedback');
-  InfoPage.RichEditViewer.Lines.Add('• Comprehensive removal of all application traces');
+  InfoPage.RichEditViewer.Lines.Add('✨ WHAT''S NEW IN v1.0.2:');
+  InfoPage.RichEditViewer.Lines.Add('• Enhanced CI/CD pipeline with improved InnoSetup handling');
+  InfoPage.RichEditViewer.Lines.Add('• Better release automation and version management');
+  InfoPage.RichEditViewer.Lines.Add('• Improved error handling and logging in build process');
+  InfoPage.RichEditViewer.Lines.Add('• More robust installer creation with fallback mechanisms');
+  InfoPage.RichEditViewer.Lines.Add('• Professional build system enhancements');
   InfoPage.RichEditViewer.Lines.Add('');
   InfoPage.RichEditViewer.Lines.Add('📋 WHAT IS CURSORCLOAK?');
   InfoPage.RichEditViewer.Lines.Add('A professional Windows utility for hiding and showing the mouse cursor');
