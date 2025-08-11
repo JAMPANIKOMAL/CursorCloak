@@ -63,8 +63,8 @@ A professional Windows utility for **instant mouse cursor control** with global 
 
 ### Option 1: Windows Installer (Recommended)
 1. Download the appropriate installer for your needs:
-   - **Framework-dependent**: `CursorCloak_Setup_v1.0.0.exe` (smaller, requires .NET 9.0)
-   - **Self-contained**: `CursorCloak_Setup_v1.0.0_SelfContained.exe` (larger, no .NET required)
+   - **Framework-dependent**: `CursorCloak_Setup_v1.0.2.exe` (smaller, requires .NET 9.0)
+   - **Self-contained**: `CursorCloak_Setup_v1.0.2_SelfContained.exe` (larger, no .NET required)
 2. Run the installer as administrator
 3. Follow the setup wizard (choose installation directory, shortcuts)
 4. Launch automatically after installation
@@ -72,8 +72,8 @@ A professional Windows utility for **instant mouse cursor control** with global 
 
 ### Option 2: Portable ZIP
 1. Download the appropriate ZIP for your needs:
-   - **Framework-dependent**: `CursorCloak-v1.0.0-win-x64.zip` (~5MB, requires .NET 9.0)
-   - **Self-contained**: `CursorCloak-v1.0.0-win-x64-selfcontained.zip` (~60MB, no .NET required)
+   - **Framework-dependent**: `CursorCloak-v1.0.2-win-x64.zip` (~5MB, requires .NET 9.0)
+   - **Self-contained**: `CursorCloak-v1.0.2-win-x64-selfcontained.zip` (~60MB, no .NET required)
 2. Extract the ZIP file to your preferred location
 3. Right-click `CursorCloak.UI.exe` and select "Run as administrator"
 4. Start using immediately - Alt+H to hide, Alt+S to show cursor!
