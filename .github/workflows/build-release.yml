@@ -225,7 +225,7 @@ jobs:
   release:
     needs: build
     runs-on: windows-latest
-    if: startsWith(github.ref, 'refs/tags/v') || (github.ref == 'refs/heads/main' && github.event_name == 'push')
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     
     steps:
     - name: Checkout repository
@@ -236,7 +236,69 @@ jobs:
       with:
         name: CursorCloak-v${{ env.PROJECT_VERSION }}-Build
         
-    - name: Create GitHub Release
+    - name: Update GitHub Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ env.PROJECT_VERSION }}
+        files: |
+          ./CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64.zip
+          ./CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64-selfcontained.zip
+          ./releases/CursorCloak_Setup_v${{ env.PROJECT_VERSION }}.exe
+          ./releases/CursorCloak_Setup_v${{ env.PROJECT_VERSION }}_SelfContained.exe
+        generate_release_notes: false
+        draft: false
+        prerelease: false
+        make_latest: true
+        body: |
+          ## 🎯 CursorCloak v${{ env.PROJECT_VERSION }} - Enhanced Patch Release
+
+          **📅 Last Updated:** ${{ github.event.head_commit.timestamp }} (Build #${{ github.run_number }})
+          **🔄 Auto-updated** from latest main branch push
+
+          ### ✨ What's New:
+          - **🔧 Fixed 'Start with Windows' functionality** - Now properly saves and applies settings when toggled
+          - **🗑️ Professional Uninstaller** - Complete cleanup including registry entries and user data  
+          - **✅ Enhanced Registry Management** - Improved startup entry handling with validation
+          - **🛡️ Better Error Handling** - More robust registry access and file operations
+          - **📋 Comprehensive Cleanup** - Uninstaller removes all traces of the application
+
+          ### 📦 Download Options:
+          - **CursorCloak_Setup_v${{ env.PROJECT_VERSION }}.exe** - Framework-dependent installer (requires .NET 9.0) - ~2MB
+          - **CursorCloak_Setup_v${{ env.PROJECT_VERSION }}_SelfContained.exe** - Self-contained installer (no .NET required) - ~66MB
+          - **CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64.zip** - Framework-dependent portable (requires .NET 9.0) - ~0.3MB
+          - **CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64-selfcontained.zip** - Self-contained portable (no .NET required) - ~66MB
+
+          ### 🔧 Requirements:
+          - Windows 10/11 (x64)
+          - Administrator privileges
+          - .NET 9.0 Runtime (for framework-dependent versions only)
+
+          ### 🚀 Usage:
+          - **Alt + H**: Hide cursor anywhere in Windows
+          - **Alt + S**: Show cursor again
+          - Close window to run in background mode
+
+          **🛡️ SmartScreen Notice:** Windows may show a security warning. Click "More info" → "Run anyway". This is normal for unsigned applications.
+
+          Always run as administrator for proper functionality.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  create_new_release:
+    needs: build
+    runs-on: windows-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: CursorCloak-v${{ env.PROJECT_VERSION }}-Build
+        
+    - name: Create New GitHub Release
       uses: softprops/action-gh-release@v1
       with:
         files: |
@@ -248,9 +310,9 @@ jobs:
         draft: false
         prerelease: false
         body: |
-          ## 🎯 CursorCloak v${{ env.PROJECT_VERSION }} - Enhanced Patch Release
+          ## 🎯 CursorCloak v${{ env.PROJECT_VERSION }} - New Release
 
-          ### ✨ What's New:
+          ### ✨ What's New in this Version:
           - **🔧 Fixed 'Start with Windows' functionality** - Now properly saves and applies settings when toggled
           - **🗑️ Professional Uninstaller** - Complete cleanup including registry entries and user data  
           - **✅ Enhanced Registry Management** - Improved startup entry handling with validation
