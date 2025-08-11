@@ -240,6 +240,7 @@ jobs:
       uses: softprops/action-gh-release@v1
       with:
         tag_name: v${{ env.PROJECT_VERSION }}
+        name: "CursorCloak v${{ env.PROJECT_VERSION }} - Enhanced Patch Release"
         files: |
           ./CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64.zip
           ./CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64-selfcontained.zip
@@ -249,6 +250,7 @@ jobs:
         draft: false
         prerelease: false
         make_latest: true
+        append_body: false
         body: |
           ## 🎯 CursorCloak v${{ env.PROJECT_VERSION }} - Enhanced Patch Release
 
