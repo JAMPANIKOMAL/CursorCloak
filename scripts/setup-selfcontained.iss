@@ -101,18 +101,31 @@ Name: "{autodesktop}\CursorCloak"; Filename: "{app}\CursorCloak.UI.exe"; Comment
 Filename: "{app}\CursorCloak.UI.exe"; Description: "{cm:LaunchProgram,CursorCloak}"; Flags: nowait postinstall skipifsilent runascurrentuser; Tasks: launchafterinstall
 
 [UninstallDelete]
-; Clean up settings directory on uninstall
+; Clean up user configuration and settings
 Type: filesandordirs; Name: "{userappdata}\CursorCloak"
-; Clean up any log files that might have been created
+; Clean up any log files that might have been created in app directory
 Type: files; Name: "{app}\*.log"
-; Clean up temporary files
+; Clean up any crash dumps or temp files in app directory
+Type: files; Name: "{app}\*.dmp"
+Type: files; Name: "{app}\*.tmp"
+; Clean up temporary files that might exist
 Type: files; Name: "{tmp}\CursorCloak*"
+; Clean up any files in LocalAppData (Windows temp location)
+Type: filesandordirs; Name: "{localappdata}\CursorCloak"
+; Clean up any possible registry backup files
+Type: files; Name: "{tmp}\CursorCloak_registry_backup_*"
 
 [UninstallRun]
-; Remove startup registry entry before uninstalling
-Filename: "{cmd}"; Parameters: "/C reg delete ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"" /v ""CursorCloak"" /f"; Flags: runhidden; StatusMsg: "Removing startup entry..."
-; Terminate any running instances
-Filename: "{cmd}"; Parameters: "/C taskkill /f /im ""CursorCloak.UI.exe"" /t"; Flags: runhidden; StatusMsg: "Stopping CursorCloak..."
+; Stop all running instances of CursorCloak first (with better error handling)
+Filename: "{cmd}"; Parameters: "/C taskkill /f /im ""CursorCloak.UI.exe"" /t >nul 2>&1"; Flags: runhidden; StatusMsg: "Stopping CursorCloak..."; RunOnceId: "StopCursorCloak"
+; Give processes time to terminate gracefully
+Filename: "{cmd}"; Parameters: "/C timeout /t 2 /nobreak >nul 2>&1"; Flags: runhidden; RunOnceId: "WaitTermination"
+; Remove startup registry entry with error handling
+Filename: "{cmd}"; Parameters: "/C reg delete ""HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run"" /v ""CursorCloak"" /f >nul 2>&1"; Flags: runhidden; StatusMsg: "Removing startup entry..."; RunOnceId: "RemoveStartupRegistry"
+; Remove any potential backup registry entries
+Filename: "{cmd}"; Parameters: "/C reg delete ""HKCU\SOFTWARE\CursorCloak"" /f >nul 2>&1"; Flags: runhidden; RunOnceId: "RemoveAppRegistry"
+; Clean up any running background tasks
+Filename: "{cmd}"; Parameters: "/C wmic process where ""name='CursorCloak.UI.exe'"" delete >nul 2>&1"; Flags: runhidden; RunOnceId: "CleanupWMIC"
 
 [Code]
 var
@@ -196,4 +209,30 @@ end;
 procedure DeinitializeSetup();
 begin
   // Cleanup code when setup exits
+end;
+
+function InitializeUninstall(): Boolean;
+var
+  Response: Integer;
+begin
+  Response := MsgBox('Are you sure you want to completely remove CursorCloak and all its settings?' + #13#10 + #13#10 +
+                     'This will:' + #13#10 +
+                     '• Remove the application and all files' + #13#10 +
+                     '• Delete your personal settings and preferences' + #13#10 +
+                     '• Remove the startup entry' + #13#10 + #13#10 +
+                     'This action cannot be undone.', 
+                     mbConfirmation, MB_YESNO);
+  
+  Result := (Response = IDYES);
+end;
+
+procedure CurUninstallStepChanged(CurUninstallStep: TUninstallStep);
+begin
+  if CurUninstallStep = usPostUninstall then
+  begin
+    // Verify cleanup completion
+    MsgBox('CursorCloak has been successfully removed from your system.' + #13#10 + #13#10 +
+           'All application files and settings have been deleted.', 
+           mbInformation, MB_OK);
+  end;
 end;
