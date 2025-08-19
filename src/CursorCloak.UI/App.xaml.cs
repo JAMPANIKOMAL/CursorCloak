@@ -4,6 +4,7 @@ using System.Data;
 using System.Security.Principal;
 using System.Windows;
 using System.Windows.Threading;
+using CursorCloak.UI;
 
 namespace CursorCloak.UI;
 
@@ -45,7 +46,16 @@ public partial class App : System.Windows.Application
             
             // Add diagnostic logging
             System.Diagnostics.Debug.WriteLine("CursorCloak.UI starting...");
-            
+
+            // Install the global mouse hook ONCE for the whole app lifetime
+            GlobalMouseHook.Install(() =>
+            {
+                if (CursorCloak.UI.MainWindow.CurrentInstance != null)
+                {
+                    CursorCloak.UI.MainWindow.CurrentInstance.OnGlobalMouseMove();
+                }
+            });
+
             base.OnStartup(e);
         }
         catch (Exception ex)
@@ -56,6 +66,12 @@ public partial class App : System.Windows.Application
                           MessageBoxButton.OK, MessageBoxImage.Error);
             Environment.Exit(1);
         }
+    }
+
+    protected override void OnExit(ExitEventArgs e)
+    {
+        GlobalMouseHook.Uninstall();
+        base.OnExit(e);
     }
 
     private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

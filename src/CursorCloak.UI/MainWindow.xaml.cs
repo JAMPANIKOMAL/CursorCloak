@@ -1,8 +1,4 @@
-﻿/* =================================================================================== */
-/* FILE 2: MainWindow.xaml.cs (Milestone 3 - Persistence Logic)                       */
-/* This file now contains the logic for saving/loading settings and UI interaction.   */
-/* =================================================================================== */
-using System;
+﻿using System;
 using System.IO;
 using System.Reflection;
 using System.Runtime.InteropServices;
@@ -15,17 +11,17 @@ using System.Drawing; // Required for SystemIcons
 
 namespace CursorCloak.UI
 {
-    using System.Windows.Controls;
-
     public partial class MainWindow : Window
     {
-
+        public static MainWindow? CurrentInstance { get; private set; }
         private System.Windows.Threading.DispatcherTimer? _autoHideTimer;
         private DateTime _lastMouseMove = DateTime.Now;
+        private bool _isCursorHidden = false;
         private HwndSource? _hwndSource;
         private bool _allowClose = false;
         private NotifyIcon? _notifyIcon;
-        // Windows API imports for hiding from Alt+Tab
+
+        // Win32 API for hiding from Alt+Tab
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
         [DllImport("user32.dll")]
@@ -35,6 +31,7 @@ namespace CursorCloak.UI
 
         public MainWindow()
         {
+            CurrentInstance = this;
             InitializeComponent();
             SetWindowIcon();
             LoadSettingsAndApply();
@@ -42,9 +39,24 @@ namespace CursorCloak.UI
 
             // Mouse move event for auto hide
             this.MouseMove += MainWindow_MouseMove;
+            // Install global mouse hook via static helper
+            //GlobalMouseHook.Install(OnGlobalMouseMove);
             // Handle background mode - minimize to system tray when closed
             this.Closing += MainWindow_Closing;
             this.StateChanged += MainWindow_StateChanged;
+        }
+
+        public void OnGlobalMouseMove()
+        {
+            if (AutoHideToggle.IsChecked == true)
+            {
+                _lastMouseMove = DateTime.Now;
+                if (_isCursorHidden)
+                {
+                    CursorEngine.ShowSystemCursor();
+                    _isCursorHidden = false;
+                }
+            }
         }
 
         private void AutoHideToggle_Click(object sender, RoutedEventArgs e)
@@ -65,11 +77,7 @@ namespace CursorCloak.UI
 
         private void MainWindow_MouseMove(object? sender, System.Windows.Input.MouseEventArgs e)
         {
-            if (AutoHideToggle.IsChecked == true)
-            {
-                _lastMouseMove = DateTime.Now;
-                CursorEngine.ShowSystemCursor();
-            }
+            // No-op: logic now handled by global mouse hook
         }
 
         private void StartAutoHideTimer()
@@ -95,7 +103,11 @@ namespace CursorCloak.UI
             {
                 if ((DateTime.Now - _lastMouseMove).TotalSeconds >= Math.Max(1, timeout))
                 {
-                    CursorEngine.HideSystemCursor();
+                        if (!_isCursorHidden)
+                        {
+                            CursorEngine.HideSystemCursor();
+                            _isCursorHidden = true;
+                        }
                 }
             }
         }
@@ -113,7 +125,7 @@ namespace CursorCloak.UI
                 // If icon loading fails, just continue without it
                 System.Diagnostics.Debug.WriteLine($"Failed to load window icon: {ex.Message}");
             }
-        }
+    }
 
         private void InitializeSystemTray()
         {
@@ -248,6 +260,7 @@ namespace CursorCloak.UI
             _hwndSource?.RemoveHook(HwndHook);
             HotKeyManager.UnregisterHotKeys(_hwndSource?.Handle ?? IntPtr.Zero);
             _notifyIcon?.Dispose();
+            //GlobalMouseHook.Uninstall();
             base.OnClosed(e);
         }
 
@@ -409,34 +422,29 @@ namespace CursorCloak.UI
                     {
                         if (isEnabled)
                         {
-                            // Use AppContext.BaseDirectory for single-file compatibility
-                            string exePath = Path.Combine(AppContext.BaseDirectory, "CursorCloak.UI.exe");
-                            if (!File.Exists(exePath))
+                            string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty;
+                            if (!string.IsNullOrEmpty(exePath) && File.Exists(exePath))
                             {
-                                // Alternative for development builds - use Process.GetCurrentProcess
-                                try
-                                {
-                                    exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? exePath;
-                                }
-                                catch
-                                {
-                                    // Ultimate fallback - assume current directory
-                                    exePath = Path.Combine(Environment.CurrentDirectory, "CursorCloak.UI.exe");
-                                }
+                                string quotedPath = $"\"{exePath}\"";
+                                key.SetValue(AppName, quotedPath);
+                                System.Diagnostics.Debug.WriteLine($"[StartupManager] Set registry: {quotedPath}");
                             }
-                            key.SetValue(AppName, $"\"{exePath}\"");
+                            else
+                            {
+                                System.Diagnostics.Debug.WriteLine($"[StartupManager] Could not resolve exe path for startup.");
+                            }
                         }
                         else
                         {
                             key.DeleteValue(AppName, false);
+                            System.Diagnostics.Debug.WriteLine("[StartupManager] Startup registry entry removed.");
                         }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Silently handle potential registry access errors
-                System.Diagnostics.Debug.WriteLine("Failed to modify startup registry entry");
+                System.Diagnostics.Debug.WriteLine($"Failed to modify startup registry entry: {ex.Message}");
             }
         }
 
@@ -449,14 +457,20 @@ namespace CursorCloak.UI
                     if (key != null)
                     {
                         object? value = key.GetValue(AppName);
-                        return value != null;
+                        if (value is string regPath)
+                        {
+                            string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty;
+                            string quotedExePath = $"\"{exePath}\"";
+                            bool match = string.Equals(regPath.Trim(), quotedExePath, StringComparison.OrdinalIgnoreCase);
+                            System.Diagnostics.Debug.WriteLine($"[StartupManager] Registry value: {regPath}, Current exe: {quotedExePath}, Match: {match}");
+                            return match;
+                        }
                     }
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                // Silently handle potential registry access errors
-                System.Diagnostics.Debug.WriteLine("Failed to read startup registry entry");
+                System.Diagnostics.Debug.WriteLine($"Failed to read startup registry entry: {ex.Message}");
             }
             return false;
         }
