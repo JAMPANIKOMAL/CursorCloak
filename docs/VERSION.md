@@ -11,6 +11,20 @@ This document tracks all version releases and their notes for CursorCloak.
 **Release Date:** August 11, 2025
 
 ### What's New in v1.0.2
+
+## Current Version: v1.1.0
+
+**Release Date:** 2024-XX-XX
+
+### What's New in v1.1.0
+- 🖱️ **Auto Hide Cursor**: Cursor automatically hides after user inactivity (timeout configurable in UI)
+- 🟢 **Auto Hide Toggle**: New toggle in the UI to enable/disable auto-hide feature
+- ⏱️ **Custom Timeout**: Set the number of seconds before the cursor auto-hides
+- ✅ All previous enhancements and fixes
+
+## Previous Versions
+
+### v1.0.2
 - 🔧 **Enhanced CI/CD Pipeline** - Improved build automation and reliability
 - 💻 **Better InnoSetup Handling** - More robust installer creation process
 - 🛡️ **Improved Error Handling** - Enhanced logging and fallback mechanisms
@@ -20,7 +34,9 @@ This document tracks all version releases and their notes for CursorCloak.
 - 📋 **Registry Management** - Enhanced startup settings persistence
 - ⚡ **Memory Optimization** - Better resource cleanup and leak prevention
 
-#### Download Options
+### v1.0.1
+**Release Date:** August 7, 2025
+... (older notes)
 - CursorCloak_Setup_v1.0.2.exe - Framework-dependent installer (requires .NET 9.0) - ~2MB
 - CursorCloak_Setup_v1.0.2_SelfContained.exe - Self-contained installer (no .NET required) - ~66MB
 - CursorCloak-v1.0.2-win-x64.zip - Framework-dependent portable (requires .NET 9.0) - ~0.3MB

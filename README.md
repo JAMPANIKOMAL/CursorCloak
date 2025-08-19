@@ -22,25 +22,26 @@ A professional Windows utility for **instant mouse cursor control** with global 
 
 ## 📥 Download
 
-### Latest Release v1.0.2 - Enhanced Release
+
+### Latest Release v1.1.0 - Feature Release
 [![Download Latest](https://img.shields.io/badge/Download-Latest%20Release-blue?style=for-the-badge)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
 
-**🆕 What's New in v1.0.2:**
-- ✅ **Enhanced CI/CD Pipeline** - Improved build automation and reliability
-- 🔧 **Better InnoSetup Handling** - More robust installer creation process
-- 🛡️ **Improved Error Handling** - Enhanced logging and fallback mechanisms
-- ✨ **Version Management** - Centralized version control across all components
-- 📦 **Professional Release Process** - Automated GitHub release creation
+**🆕 What's New in v1.1.0:**
+- 🖱️ **Auto Hide Cursor**: Automatically hides the mouse cursor after inactivity (user-configurable timeout)
+- � **Toggle for Auto Hide**: New UI toggle to enable/disable auto-hide feature
+- ⏱️ **Custom Timeout**: Set the number of seconds before the cursor auto-hides
+- ✅ **All previous enhancements and fixes**
 
 **Choose Your Installation Method (4 Options Available):**
 
 **🔧 Windows Installers:**
-1. [**CursorCloak_Setup_v1.0.2.exe**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.2/CursorCloak_Setup_v1.0.2.exe) - Framework-dependent installer (requires .NET 9.0)
-2. [**CursorCloak_Setup_v1.0.2_SelfContained.exe**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.2/CursorCloak_Setup_v1.0.2_SelfContained.exe) - Self-contained installer (no .NET required)
+
+1. [**CursorCloak_Setup_v1.1.0.exe**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.1.0/CursorCloak_Setup_v1.1.0.exe) - Framework-dependent installer (requires .NET 9.0)
+2. [**CursorCloak_Setup_v1.1.0_SelfContained.exe**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.1.0/CursorCloak_Setup_v1.1.0_SelfContained.exe) - Self-contained installer (no .NET required)
 
 **📦 Portable Versions:**
-3. [**CursorCloak-v1.0.2-win-x64.zip**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.2/CursorCloak-v1.0.2-win-x64.zip) - Framework-dependent portable (~5MB, requires .NET 9.0)
-4. [**CursorCloak-v1.0.2-win-x64-selfcontained.zip**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.0.2/CursorCloak-v1.0.2-win-x64-selfcontained.zip) - Self-contained portable (~60MB, no .NET required)
+3. [**CursorCloak-v1.1.0-win-x64.zip**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.1.0/CursorCloak-v1.1.0-win-x64.zip) - Framework-dependent portable (~5MB, requires .NET 9.0)
+4. [**CursorCloak-v1.1.0-win-x64-selfcontained.zip**](https://github.com/JAMPANIKOMAL/CursorCloak/releases/download/v1.1.0/CursorCloak-v1.1.0-win-x64-selfcontained.zip) - Self-contained portable (~60MB, no .NET required)
 
 **🛡️ SmartScreen Notice:** Windows may show a security warning because this app isn't commercially signed. Click "More info" → "Run anyway". See [SMARTSCREEN-INFO.md](SMARTSCREEN-INFO.md) for details.
 
@@ -63,8 +64,8 @@ A professional Windows utility for **instant mouse cursor control** with global 
 
 ### Option 1: Windows Installer (Recommended)
 1. Download the appropriate installer for your needs:
-   - **Framework-dependent**: `CursorCloak_Setup_v1.0.2.exe` (smaller, requires .NET 9.0)
-   - **Self-contained**: `CursorCloak_Setup_v1.0.2_SelfContained.exe` (larger, no .NET required)
+   - **Framework-dependent**: `CursorCloak_Setup_v1.1.0.exe` (smaller, requires .NET 9.0)
+   - **Self-contained**: `CursorCloak_Setup_v1.1.0_SelfContained.exe` (larger, no .NET required)
 2. Run the installer as administrator
 3. Follow the setup wizard (choose installation directory, shortcuts)
 4. Launch automatically after installation
@@ -72,8 +73,8 @@ A professional Windows utility for **instant mouse cursor control** with global 
 
 ### Option 2: Portable ZIP
 1. Download the appropriate ZIP for your needs:
-   - **Framework-dependent**: `CursorCloak-v1.0.2-win-x64.zip` (~5MB, requires .NET 9.0)
-   - **Self-contained**: `CursorCloak-v1.0.2-win-x64-selfcontained.zip` (~60MB, no .NET required)
+   - **Framework-dependent**: `CursorCloak-v1.1.0-win-x64.zip` (~5MB, requires .NET 9.0)
+   - **Self-contained**: `CursorCloak-v1.1.0-win-x64-selfcontained.zip` (~60MB, no .NET required)
 2. Extract the ZIP file to your preferred location
 3. Right-click `CursorCloak.UI.exe` and select "Run as administrator"
 4. Start using immediately - Alt+H to hide, Alt+S to show cursor!

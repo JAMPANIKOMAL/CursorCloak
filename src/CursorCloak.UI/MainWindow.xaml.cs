@@ -15,19 +15,21 @@ using System.Drawing; // Required for SystemIcons
 
 namespace CursorCloak.UI
 {
+    using System.Windows.Controls;
+
     public partial class MainWindow : Window
     {
+
+        private System.Windows.Threading.DispatcherTimer? _autoHideTimer;
+        private DateTime _lastMouseMove = DateTime.Now;
         private HwndSource? _hwndSource;
         private bool _allowClose = false;
         private NotifyIcon? _notifyIcon;
-        
         // Windows API imports for hiding from Alt+Tab
         [DllImport("user32.dll", SetLastError = true)]
         private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-        
         [DllImport("user32.dll")]
         private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-        
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_TOOLWINDOW = 0x00000080;
 
@@ -37,10 +39,65 @@ namespace CursorCloak.UI
             SetWindowIcon();
             LoadSettingsAndApply();
             InitializeSystemTray();
-            
+
+            // Mouse move event for auto hide
+            this.MouseMove += MainWindow_MouseMove;
             // Handle background mode - minimize to system tray when closed
             this.Closing += MainWindow_Closing;
             this.StateChanged += MainWindow_StateChanged;
+        }
+
+        private void AutoHideToggle_Click(object sender, RoutedEventArgs e)
+        {
+            bool enabled = AutoHideToggle.IsChecked == true;
+            AutoHideTimeoutBox.IsEnabled = enabled;
+            SaveSettings();
+            if (enabled)
+            {
+                StartAutoHideTimer();
+            }
+            else
+            {
+                StopAutoHideTimer();
+                CursorEngine.ShowSystemCursor();
+            }
+        }
+
+        private void MainWindow_MouseMove(object? sender, System.Windows.Input.MouseEventArgs e)
+        {
+            if (AutoHideToggle.IsChecked == true)
+            {
+                _lastMouseMove = DateTime.Now;
+                CursorEngine.ShowSystemCursor();
+            }
+        }
+
+        private void StartAutoHideTimer()
+        {
+            if (_autoHideTimer == null)
+            {
+                _autoHideTimer = new System.Windows.Threading.DispatcherTimer();
+                _autoHideTimer.Interval = TimeSpan.FromSeconds(1);
+                _autoHideTimer.Tick += AutoHideTimer_Tick;
+            }
+            _lastMouseMove = DateTime.Now;
+            _autoHideTimer.Start();
+        }
+
+        private void StopAutoHideTimer()
+        {
+            _autoHideTimer?.Stop();
+        }
+
+        private void AutoHideTimer_Tick(object? sender, EventArgs e)
+        {
+            if (AutoHideToggle.IsChecked == true && int.TryParse(AutoHideTimeoutBox.Text, out int timeout))
+            {
+                if ((DateTime.Now - _lastMouseMove).TotalSeconds >= Math.Max(1, timeout))
+                {
+                    CursorEngine.HideSystemCursor();
+                }
+            }
         }
 
         private void SetWindowIcon()
@@ -233,11 +290,19 @@ namespace CursorCloak.UI
             var settings = SettingsManager.Load();
             MainToggle.IsChecked = settings.IsHidingEnabled;
             StartupCheck.IsChecked = settings.StartWithWindows;
+            AutoHideToggle.IsChecked = settings.AutoHideCursor;
+            AutoHideTimeoutBox.Text = settings.AutoHideTimeoutSeconds.ToString();
+            AutoHideTimeoutBox.IsEnabled = settings.AutoHideCursor;
 
             if (settings.IsHidingEnabled)
             {
                 // We delay the actual hiding until the window is initialized
                 this.SourceInitialized += (s, a) => CursorEngine.HideSystemCursor();
+            }
+
+            if (settings.AutoHideCursor)
+            {
+                StartAutoHideTimer();
             }
         }
 
@@ -246,7 +311,9 @@ namespace CursorCloak.UI
             var settings = new Settings
             {
                 IsHidingEnabled = MainToggle.IsChecked == true,
-                StartWithWindows = StartupCheck.IsChecked == true
+                StartWithWindows = StartupCheck.IsChecked == true,
+                AutoHideCursor = AutoHideToggle.IsChecked == true,
+                AutoHideTimeoutSeconds = int.TryParse(AutoHideTimeoutBox.Text, out int t) ? Math.Max(1, t) : 5
             };
             SettingsManager.Save(settings);
         }
@@ -276,8 +343,10 @@ namespace CursorCloak.UI
     // --- Settings Management ---
     public class Settings
     {
-        public bool IsHidingEnabled { get; set; }
-        public bool StartWithWindows { get; set; }
+    public bool IsHidingEnabled { get; set; }
+    public bool StartWithWindows { get; set; }
+    public bool AutoHideCursor { get; set; }
+    public int AutoHideTimeoutSeconds { get; set; } = 5;
     }
 
     public static class SettingsManager
