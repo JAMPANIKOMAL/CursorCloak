@@ -6,8 +6,8 @@
 ; App identification
 AppId={{11e15daa-a0a7-437c-af53-73b31ab26d83}
 AppName=CursorCloak
-AppVersion=1.1.0
-AppVerName=CursorCloak v1.1.0 - Feature Release
+AppVersion=2.0.0
+AppVerName=CursorCloak v2.0.0 - Professional Release
 AppPublisher=CursorCloak Development Team
 AppPublisherURL=https://github.com/JAMPANIKOMAL/CursorCloak
 AppSupportURL=https://github.com/JAMPANIKOMAL/CursorCloak/issues
@@ -24,7 +24,7 @@ AllowNoIcons=yes
 
 ; Installer settings
 PrivilegesRequired=admin
-OutputBaseFilename=CursorCloak_Setup_v1.1.0
+OutputBaseFilename=CursorCloak_Setup_v2.0.0
 OutputDir=..\releases
 Compression=lzma2/ultra64
 SolidCompression=yes
@@ -34,9 +34,9 @@ ArchitecturesInstallIn64BitMode=x64
 
 ; SmartScreen mitigation - Enhanced publisher information
 UninstallDisplayName=CursorCloak - Professional Cursor Management Utility
-VersionInfoVersion=1.1.0.0
+VersionInfoVersion=2.0.0.0
 VersionInfoProductName=CursorCloak Professional Edition
-VersionInfoProductVersion=1.1.0.0
+VersionInfoProductVersion=2.0.0.0
 VersionInfoCompany=CursorCloak Open Source Project
 VersionInfoDescription=Professional cursor hide/show utility with global hotkeys
 VersionInfoCopyright=© 2025 CursorCloak Development Team (Open Source)

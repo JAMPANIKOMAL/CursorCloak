@@ -4,6 +4,9 @@ using System.Text.Json;
 
 namespace CursorCloak.UI.Models
 {
+    /// <summary>
+    /// Represents user-specific configuration and metadata.
+    /// </summary>
     public class UserConfig
     {
         public string UserName { get; set; } = Environment.UserName;
@@ -22,6 +25,10 @@ namespace CursorCloak.UI.Models
             "user-config.json"
         );
 
+        /// <summary>
+        /// Loads the user configuration from disk.
+        /// </summary>
+        /// <returns>The loaded configuration or a new instance if not found.</returns>
         public static UserConfig Load()
         {
             try
@@ -42,6 +49,9 @@ namespace CursorCloak.UI.Models
             return new UserConfig();
         }
 
+        /// <summary>
+        /// Saves the current configuration to disk.
+        /// </summary>
         public void Save()
         {
             try

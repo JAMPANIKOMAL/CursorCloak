@@ -1,216 +1,74 @@
-# 🎯 CursorCloak - Professional Mouse Cursor Management for Windows
+# CursorCloak
 
-**Hide and show your mouse cursor instantly with global hotkeys (Alt+H/Alt+S)**
+CursorCloak is a Windows utility designed to provide system-wide control over mouse cursor visibility. It allows users to hide and show the cursor using global hotkeys, making it suitable for screen recording, presentations, and distraction-free environments.
 
-[![Windows](https://img.shields.io/badge/Windows-10%20%7C%2011-blue?logo=windows&logoColor=white)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
-[![.NET](https://img.shields.io/badge/.NET-9.0-purple?logo=dotnet)](https://dotnet.microsoft.com/download)
-[![License](https://img.shields.io/badge/License-MIT-green?logo=opensourceinitiative&logoColor=white)](LICENSE)
-[![Release](https://img.shields.io/github/v/release/JAMPANIKOMAL/CursorCloak?logo=github)](https://github.com/JAMPANIKOMAL/CursorCloak/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/JAMPANIKOMAL/CursorCloak/total?logo=github&color=brightgreen)](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+## Features
 
-A professional Windows utility for **instant mouse cursor control** with global hotkeys. Perfect for presentations, screen recordings, focus work, and accessibility needs. Features **background running mode** and **seamless Windows integration**. 
+- **Global Hotkeys**: Toggle cursor visibility system-wide using `Alt+H` (Hide) and `Alt+S` (Show).
+- **Auto-Hide**: Automatically hides the cursor after a user-configurable period of inactivity.
+- **Background Operation**: Runs silently in the background without cluttering the taskbar.
+- **Persistent Settings**: Saves user preferences and startup configuration between sessions.
+- **Single Instance**: Ensures only one instance of the application runs to prevent conflicts.
 
-**🔥 Key Features:**
-- 🖱️ **Instant Cursor Control**: Alt+H to hide, Alt+S to show
-- 🎯 **Global Hotkeys**: Works system-wide in any application
-- 🔄 **Background Mode**: Runs silently without UI clutter
-- ⚡ **Zero Performance Impact**: Lightweight and efficient
-- 🛡️ **Professional Build**: Enhanced SmartScreen compatibility
-- 📦 **Multiple Deployment Options**: Choose what works for you
+## Installation
 
-dotnet clean --configuration Release
-dotnet restore
-dotnet build --configuration Release
+### Prerequisites
+- Windows 10 or Windows 11 (64-bit)
+- .NET 9.0 Desktop Runtime
 
-# Create self-contained deployment
-dotnet publish src\CursorCloak.UI\CursorCloak.UI.csproj --configuration Release --runtime win-x64 --self-contained true --output .\publish\ui\
+### Installation Methods
 
-# Test the built application
-.\scripts\test.ps1
+#### Installer (Recommended)
+1. Download the latest `CursorCloak_Setup_v2.0.0.exe` from the [Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases) page.
+2. Run the installer and follow the on-screen instructions.
+3. The application will launch automatically upon completion.
 
-# Create installer (requires InnoSetup)
-# Compile scripts\setup.iss with InnoSetup Compiler
-```
+#### Portable Version
+1. Download `CursorCloak-v2.0.0-win-x64.zip`.
+2. Extract the contents to a preferred location.
+3. Run `CursorCloak.UI.exe`.
 
-## ⚙️ Installation and Setup
+## Usage
 
-### Using the Installer
-1. Run `CursorCloak_Setup.exe` as administrator
-2. Choose installation directory (default: `C:\Program Files\CursorCloak`)
-3. Select optional shortcuts (desktop, start menu)
-4. Complete installation
-5. Launch automatically if selected
+1. **Launch**: Run CursorCloak from the Start Menu or installation directory.
+2. **Hide Cursor**: Press `Alt+H` to hide the cursor.
+3. **Show Cursor**: Press `Alt+S` to restore the cursor.
+4. **Auto-Hide**: Enable the "Auto-Hide" toggle in the main window to hide the cursor after inactivity.
+5. **Configuration**: Adjust the inactivity timeout in the UI.
 
-### Manual Installation
-1. Copy built files to desired directory
-2. Ensure all .dll files are in the same directory as the .exe
-3. Run as administrator for first-time setup
-4. Configure startup options through the UI
+## Architecture
 
-## 🗑️ Uninstallation
+The project follows a clean architecture pattern with a separation of concerns:
 
-### Using the Uninstaller (Recommended)
-CursorCloak v1.0.1+ includes a professional uninstaller that completely removes all traces:
+- **CursorCloak.UI**: The main WPF application handling user interaction and visual presentation.
+  - **Services**: Contains business logic (`CursorEngine`, `HotKeyManager`, `StartupManager`).
+  - **Models**: Defines data structures (`Settings`, `UserConfig`).
+- **CursorCloak.Engine**: A low-level library for Windows API interactions (P/Invoke).
 
-1. **Windows Settings**: Go to Settings → Apps → CursorCloak → Uninstall
-2. **Control Panel**: Programs and Features → CursorCloak → Uninstall
-3. **Start Menu**: CursorCloak folder → "Uninstall CursorCloak"
+## Building from Source
 
-**What the uninstaller removes:**
-- ✅ All application files and folders
-- ✅ Windows startup registry entries
-- ✅ User settings and configuration files (`%APPDATA%\CursorCloak`)
-- ✅ Desktop and Start Menu shortcuts
-- ✅ Stops any running instances
-- ✅ Complete registry cleanup
+### Requirements
+- Visual Studio 2022 or JetBrains Rider
+- .NET 9.0 SDK
 
-### Manual Removal (if needed)
-If using portable version or for manual cleanup:
+### Build Steps
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/JAMPANIKOMAL/CursorCloak.git
+   ```
+2. Navigate to the solution directory:
+   ```bash
+   cd CursorCloak
+   ```
+3. Build the solution:
+   ```bash
+   dotnet build --configuration Release
+   ```
 
-1. **Stop the application**: Close CursorCloak completely
-2. **Remove startup entry**: Run as admin: `reg delete "HKCU\SOFTWARE\Microsoft\Windows\CurrentVersion\Run" /v "CursorCloak" /f`
-3. **Delete application folder**: Remove the CursorCloak installation directory
-4. **Remove user data**: Delete `%APPDATA%\CursorCloak` folder
-5. **Remove shortcuts**: Check Desktop and Start Menu for any remaining shortcuts
+## Contributing
 
-## 🔧 Configuration
+We welcome contributions to CursorCloak. Please refer to [CONTRIBUTING.md](docs/CONTRIBUTING.md) for detailed guidelines on coding standards, pull requests, and the development process.
 
-Settings are stored in:
-```
-%APPDATA%\CursorCloak\settings.json
-```
+## License
 
-Configuration options:
-- **IsHidingEnabled**: Whether cursor hiding is active
-- **StartWithWindows**: Launch automatically on Windows startup
-
-## 🐛 Troubleshooting
-
-### Common Issues
-
-**Error 0xc000041d (Fatal Exception)**
-- Ensure running as administrator
-- Verify .NET 9.0 runtime is installed
-- Check Windows Event Viewer for detailed errors
-
-**Hotkeys Not Working**
-- Check for conflicts with other applications
-- Ensure application has proper focus
-- Verify administrator privileges
-
-**Cursor Won't Hide/Show**
-- Some applications override cursor visibility
-- Try moving mouse to refresh state
-- Restart application if cursor gets stuck
-
-For more help, check our [Issues page](https://github.com/JAMPANIKOMAL/CursorCloak/issues) or create a new issue.
-
-## 👨‍💻 Development
-
-### Project Structure
-```
-CursorCloak/
-├── .github/                 # GitHub workflows and templates
-│   ├── workflows/          # Automated CI/CD pipelines
-│   └── ISSUE_TEMPLATE/     # Bug report and feature request templates
-├── src/                    # Source code
-│   ├── CursorCloak.UI/     # WPF application
-│   └── CursorCloak.Engine/ # Console engine
-├── scripts/                # Build and installer scripts
-│   ├── build.ps1           # Enhanced build script with multiple options
-│   ├── test.ps1            # Application testing script
-│   ├── setup.iss           # InnoSetup installer script
-│   └── setup-selfcontained.iss # Self-contained installer script
-├── docs/                   # Documentation files
-│   ├── VERSION.md          # Version history and changelog
-│   ├── CONTRIBUTING.md     # Development guidelines
-│   ├── RELEASE-PROCESS.md  # Complete release process documentation
-│   └── SMARTSCREEN-INFO.md # Windows security guidance
-├── assets/                 # Static assets and resources
-│   └── icons/              # Application icons (app-icon.ico, etc.)
-├── tests/                  # Test projects (planned for future)
-├── releases/               # Generated deployment packages
-├── LICENSE                 # MIT License
-└── README.md               # This file
-```
-
-### Code Quality
-- Comprehensive error handling throughout
-- Resource management for GDI objects
-- Thread-safe operations
-- Memory leak prevention
-- Administrator privilege checking
-
-### Contributing
-1. Fork the repository
-2. Create a feature branch
-3. Ensure builds pass without warnings
-4. Test on clean Windows installation
-5. Verify administrator privilege handling
-6. Test installer creation and deployment
-7. Update documentation for any changes
-8. Submit a pull request
-
-**📋 For Maintainers:** See [RELEASE-PROCESS.md](docs/RELEASE-PROCESS.md) for complete release management documentation.
-## 🔐 Security Considerations
-
-- **Administrator Privileges**: Required for system cursor manipulation
-- **Code Signing**: Consider signing executables for production distribution
-- **Antivirus**: May flag cursor manipulation as suspicious behavior
-- **System Integration**: Modifies global cursor state
-
-## 🤝 Community & Security
-
-- **Code of Conduct**: We are committed to providing a welcoming community. Please read our [Code of Conduct](.github/CODE_OF_CONDUCT.md).
-- **Security Policy**: For reporting vulnerabilities, please see our [Security Policy](.github/SECURITY.md).
-- **Contributing**: Check out our [Contributing Guide](docs/CONTRIBUTING.md) for details on how to help out.
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📊 Version History
-
-### v1.0.0 - Initial Release
-- ✅ Fixed fatal crash issues (error 0xc000041d)
-- ✅ Added administrator privilege checking  
-- ✅ Improved resource management and memory leak prevention
-- ✅ Enhanced build and deployment process
-- ✅ Comprehensive error handling throughout
-- ✅ Thread-safe operations and proper cleanup
-
-### Recent Improvements
-- ✅ Enhanced dispatcher unhandled exception handling
-- ✅ Fixed memory leaks in cursor handling
-- ✅ Added proper cleanup for GDI objects and icons
-- ✅ Implemented thread-safe initialization with locks
-- ✅ Added comprehensive error checking for Windows API calls
-- ✅ Fixed nullable reference warnings and null checks
-- ✅ Protected against race conditions during startup
-
-## 🤝 Support
-
-- **Bug Reports**: [Create an issue](https://github.com/JAMPANIKOMAL/CursorCloak/issues/new?assignees=&labels=bug&template=bug_report.md)
-- **Feature Requests**: [Request a feature](https://github.com/JAMPANIKOMAL/CursorCloak/issues/new?assignees=&labels=enhancement&template=feature_request.md)
-- **Questions**: [Start a discussion](https://github.com/JAMPANIKOMAL/CursorCloak/discussions)
-
-## 📈 Project Stats
-
-![GitHub release (latest by date)](https://img.shields.io/github/v/release/JAMPANIKOMAL/CursorCloak?style=flat-square)
-![GitHub downloads](https://img.shields.io/github/downloads/JAMPANIKOMAL/CursorCloak/total?style=flat-square)
-![GitHub issues](https://img.shields.io/github/issues/JAMPANIKOMAL/CursorCloak?style=flat-square)
-![GitHub license](https://img.shields.io/github/license/JAMPANIKOMAL/CursorCloak?style=flat-square)
-![GitHub stars](https://img.shields.io/github/stars/JAMPANIKOMAL/CursorCloak?style=flat-square)
-![GitHub forks](https://img.shields.io/github/forks/JAMPANIKOMAL/CursorCloak?style=flat-square)
-
-### 🤖 AI-Enhanced Development
-This project has been enhanced with **GitHub Copilot** assistance to ensure:
-- Optimal code quality and performance
-- Best practices implementation
-- Comprehensive error handling
-- Memory management and resource cleanup
-- Modern C# and WPF patterns
-
----
-
-*Made with ❤️ and 🤖 AI assistance for Windows users who need cursor control*
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.

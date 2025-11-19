@@ -4,11 +4,18 @@ using Microsoft.Win32;
 
 namespace CursorCloak.UI.Services
 {
+    /// <summary>
+    /// Manages the application's startup configuration via the Windows Registry.
+    /// </summary>
     public static class StartupManager
     {
         private const string RegistryKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
         private const string AppName = "CursorCloak";
 
+        /// <summary>
+        /// Enables or disables the application to start automatically with Windows.
+        /// </summary>
+        /// <param name="isEnabled">True to enable startup; false to disable.</param>
         public static void SetStartup(bool isEnabled)
         {
             try
@@ -45,6 +52,10 @@ namespace CursorCloak.UI.Services
             }
         }
 
+        /// <summary>
+        /// Checks if the application is configured to start with Windows.
+        /// </summary>
+        /// <returns>True if startup is enabled; otherwise, false.</returns>
         public static bool IsStartupEnabled()
         {
             try
@@ -72,6 +83,9 @@ namespace CursorCloak.UI.Services
             return false;
         }
 
+        /// <summary>
+        /// Removes the startup entry from the registry.
+        /// </summary>
         public static void RemoveStartupEntry()
         {
             try
