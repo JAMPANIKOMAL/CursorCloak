@@ -9,12 +9,12 @@ param(
     [string]$ReleaseType  # Format: "Enhanced Patch Release"
 )
 
-Write-Host "🔧 Updating CursorCloak to version $NewVersion ($ReleaseType)" -ForegroundColor Cyan
+Write-Host "Updating CursorCloak to version $NewVersion ($ReleaseType)" -ForegroundColor Cyan
 Write-Host ""
 
 # Validate version format
 if ($NewVersion -notmatch '^\d+\.\d+\.\d+$') {
-    Write-Error "Invalid version format. Use X.Y.Z (e.g., 1.0.3)"
+    Write-Error "Invalid version format. Use X.Y.Z"
     exit 1
 }
 
@@ -23,19 +23,19 @@ function Update-FileContent {
     param($FilePath, $SearchPattern, $ReplaceWith, $Description)
     
     if (Test-Path $FilePath) {
-        Write-Host "  📝 Updating $Description..." -ForegroundColor Gray
+        Write-Host "  Updating $Description..." -ForegroundColor Gray
         try {
             (Get-Content $FilePath -Raw) -replace $SearchPattern, $ReplaceWith | Set-Content $FilePath -NoNewline
-            Write-Host "    ✅ $FilePath updated" -ForegroundColor Green
+            Write-Host "    $FilePath updated" -ForegroundColor Green
         } catch {
-            Write-Host "    ❌ Failed to update $FilePath : $_" -ForegroundColor Red
+            Write-Host "    Failed to update $FilePath : $_" -ForegroundColor Red
         }
     } else {
-        Write-Host "    ⚠️  File not found: $FilePath" -ForegroundColor Yellow
+        Write-Host "    File not found: $FilePath" -ForegroundColor Yellow
     }
 }
 
-Write-Host "1️⃣  Updating Core Application Files..." -ForegroundColor Yellow
+Write-Host "1. Updating Core Application Files..." -ForegroundColor Yellow
 
 # Update CursorCloak.UI.csproj
 Update-FileContent `
@@ -58,7 +58,7 @@ Update-FileContent `
     "App Manifest Version"
 
 Write-Host ""
-Write-Host "2️⃣  Updating CI/CD Workflow..." -ForegroundColor Yellow
+Write-Host "2. Updating CI/CD Workflow..." -ForegroundColor Yellow
 
 # Update GitHub workflow
 Update-FileContent `
@@ -68,7 +68,7 @@ Update-FileContent `
     "CI/CD Project Version"
 
 Write-Host ""
-Write-Host "3️⃣  Updating Build Scripts..." -ForegroundColor Yellow
+Write-Host "3. Updating Build Scripts..." -ForegroundColor Yellow
 
 # Update build.ps1
 Update-FileContent `
@@ -90,7 +90,7 @@ Update-FileContent `
     "Build Script Installer Names"
 
 Write-Host ""
-Write-Host "4️⃣  Updating Installer Scripts..." -ForegroundColor Yellow
+Write-Host "4. Updating Installer Scripts..." -ForegroundColor Yellow
 
 # Update setup.iss
 Update-FileContent `
@@ -149,7 +149,7 @@ Update-FileContent `
     "Self-Contained Installer Output Name"
 
 Write-Host ""
-Write-Host "5️⃣  Updating Documentation..." -ForegroundColor Yellow
+Write-Host "5. Updating Documentation..." -ForegroundColor Yellow
 
 # Update README.md
 Update-FileContent `
@@ -196,7 +196,7 @@ Update-FileContent `
     "SmartScreen ZIP References"
 
 Write-Host ""
-Write-Host "✅ Version update completed!" -ForegroundColor Green
+Write-Host "Version update completed!" -ForegroundColor Green
 Write-Host ""
 Write-Host "📋 Next Steps:" -ForegroundColor Cyan
 Write-Host "1. Review all changed files for accuracy" -ForegroundColor White

@@ -25,21 +25,6 @@
 3.  **Single Instance**: Enforced via named Mutex `CursorCloak_SingleInstance_Mutex`.
 
 ---
-
-## 2. Release Process (The Only Way)
-
-**NEVER** manually edit version numbers in random files. Use the automated process.
-
-### **Step 1: Update Version**
-Run the automation script (create this if missing):
-```powershell
-.\scripts\update-version.ps1 -NewVersion "2.0.1"
-```
-*If script is missing, manually update:*
-1.  `CursorCloak.UI.csproj` (`AssemblyVersion`, `FileVersion`)
-2.  `app.manifest` (`assemblyIdentity`)
-3.  `build-release.yml` (`env: PROJECT_VERSION`)
-4.  `setup.iss` & `setup-selfcontained.iss` (`AppVersion`, `OutputBaseFilename`)
 5.  `build.ps1` (File paths)
 6.  `README.md` (Download links)
 
