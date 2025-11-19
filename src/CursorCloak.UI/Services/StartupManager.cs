@@ -68,9 +68,13 @@ namespace CursorCloak.UI.Services
                         if (value is string regPath)
                         {
                             string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty;
-                            string quotedExePath = $"\"{exePath}\"";
-                            bool match = string.Equals(regPath.Trim(), quotedExePath, StringComparison.OrdinalIgnoreCase);
-                            System.Diagnostics.Debug.WriteLine($"[StartupManager] Registry value: {regPath}, Current exe: {quotedExePath}, Match: {match}");
+                            
+                            // Normalize paths for comparison (handle quotes and case)
+                            string normalizedReg = regPath.Trim().Trim('"');
+                            string normalizedExe = exePath.Trim().Trim('"');
+                            
+                            bool match = string.Equals(normalizedReg, normalizedExe, StringComparison.OrdinalIgnoreCase);
+                            System.Diagnostics.Debug.WriteLine($"[StartupManager] Registry: {normalizedReg}, Current: {normalizedExe}, Match: {match}");
                             return match;
                         }
                     }

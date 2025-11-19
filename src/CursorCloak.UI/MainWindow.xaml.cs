@@ -6,8 +6,6 @@ using System.Text.Json;
 using System.Windows;
 using System.Windows.Interop;
 using Microsoft.Win32;
-using System.Windows.Forms; // Required for NotifyIcon
-using System.Drawing; // Required for SystemIcons
 using CursorCloak.UI.Services;
 using CursorCloak.UI.Models;
 
@@ -15,7 +13,7 @@ namespace CursorCloak.UI
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml.
-    /// Handles the main UI window, system tray integration, and user settings.
+    /// Handles the main UI window and user settings.
     /// </summary>
     public partial class MainWindow : Window
     {
@@ -31,9 +29,9 @@ namespace CursorCloak.UI
         private bool _isCursorHidden = false;
         private HwndSource? _hwndSource;
         private bool _allowClose = false;
-        private NotifyIcon? _notifyIcon;
+        private TrayService? _trayService;
 
-        // Win32 API constants and imports for window styling
+        // Win32 API constants
         private const int GWL_EXSTYLE = -20;
         private const int WS_EX_TOOLWINDOW = 0x00000080;
 
@@ -56,7 +54,7 @@ namespace CursorCloak.UI
             InitializeComponent();
             SetWindowIcon();
             LoadSettingsAndApply();
-            InitializeSystemTray();
+            InitializeTray();
 
             // Event subscriptions
             this.MouseMove += MainWindow_MouseMove;
@@ -238,57 +236,22 @@ namespace CursorCloak.UI
         }
 
         /// <summary>
-        /// Initializes the system tray icon and context menu.
+        /// Initializes the system tray service.
         /// </summary>
-        private void InitializeSystemTray()
+        private void InitializeTray()
         {
-            _notifyIcon = new NotifyIcon();
-            
-            try
-            {
-                var resourceStream = System.Windows.Application.GetResourceStream(new Uri("pack://application:,,,/app-icon.ico"));
-                if (resourceStream != null)
-                {
-                    _notifyIcon.Icon = new System.Drawing.Icon(resourceStream.Stream);
+            _trayService = new TrayService(
+                onShowRequest: ShowWindow,
+                onExitRequest: ExitApplication,
+                onHideCursorRequest: () => {
+                    CursorEngine.HideSystemCursor();
+                    MainToggle.IsChecked = true;
+                },
+                onShowCursorRequest: () => {
+                    CursorEngine.ShowSystemCursor();
+                    MainToggle.IsChecked = false;
                 }
-                else
-                {
-                    var iconPath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "assets", "icons", "app-icon.ico");
-                    if (File.Exists(iconPath))
-                    {
-                        _notifyIcon.Icon = new System.Drawing.Icon(iconPath);
-                    }
-                    else
-                    {
-                        _notifyIcon.Icon = SystemIcons.Application;
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to load tray icon: {ex.Message}");
-                _notifyIcon.Icon = SystemIcons.Application;
-            }
-            
-            _notifyIcon.Text = "CursorCloak - Click to show";
-            _notifyIcon.Visible = true;
-            
-            var contextMenu = new ContextMenuStrip();
-            contextMenu.Items.Add("Show CursorCloak", null, (s, e) => ShowWindow());
-            contextMenu.Items.Add("-");
-            contextMenu.Items.Add("Hide Cursor (Alt+H)", null, (s, e) => {
-                CursorEngine.HideSystemCursor();
-                MainToggle.IsChecked = true;
-            });
-            contextMenu.Items.Add("Show Cursor (Alt+S)", null, (s, e) => {
-                CursorEngine.ShowSystemCursor();
-                MainToggle.IsChecked = false;
-            });
-            contextMenu.Items.Add("-");
-            contextMenu.Items.Add("Exit", null, (s, e) => ExitApplication());
-            
-            _notifyIcon.ContextMenuStrip = contextMenu;
-            _notifyIcon.DoubleClick += (s, e) => ShowWindow();
+            );
         }
 
         /// <summary>
@@ -308,7 +271,6 @@ namespace CursorCloak.UI
             }
             
             this.Activate();
-            _notifyIcon!.Visible = true;
         }
 
         /// <summary>
@@ -317,7 +279,7 @@ namespace CursorCloak.UI
         private void ExitApplication()
         {
             _allowClose = true;
-            _notifyIcon?.Dispose();
+            _trayService?.Dispose();
             System.Windows.Application.Current.Shutdown();
         }
         
@@ -335,11 +297,10 @@ namespace CursorCloak.UI
                 }
                 
                 this.Hide();
-                _notifyIcon!.Visible = true;
                 
                 if (UserConfig.Load().ShowNotifications)
                 {
-                    _notifyIcon.ShowBalloonTip(2000, "CursorCloak", "Application minimized to system tray", System.Windows.Forms.ToolTipIcon.Info);
+                    _trayService?.ShowNotification("CursorCloak", "Application minimized to system tray");
                 }
             }
         }
@@ -361,7 +322,7 @@ namespace CursorCloak.UI
             SaveSettings();
             _hwndSource?.RemoveHook(HwndHook);
             HotKeyManager.UnregisterHotKeys(_hwndSource?.Handle ?? IntPtr.Zero);
-            _notifyIcon?.Dispose();
+            _trayService?.Dispose();
             base.OnClosed(e);
         }
 

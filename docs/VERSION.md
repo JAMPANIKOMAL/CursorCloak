@@ -7,7 +7,17 @@ This document tracks all version releases and their notes for CursorCloak.
 
 ---
 
-## Current Version: v2.0.0 (Professional Release)
+## Current Version: v2.0.1 (Patch Release)
+**Release Date:** November 19, 2025
+
+### What's New in v2.0.1
+- **Bug Fix**: Fixed "Start with Windows" functionality by improving registry path detection and handling.
+- **Installer Fixes**: Corrected version numbers and text formatting in both installer and uninstaller.
+- **Maintenance**: General stability improvements.
+
+## Previous Versions
+
+### v2.0.0 (Professional Release)
 **Release Date:** November 19, 2025
 
 ### What's New in v2.0.0

@@ -122,6 +122,7 @@ namespace CursorCloak.UI
         /// <param name="e">Exit event arguments.</param>
         protected override void OnExit(ExitEventArgs e)
         {
+            CursorEngine.Cleanup();
             _mutex?.ReleaseMutex();
             _mutex?.Dispose();
             base.OnExit(e);

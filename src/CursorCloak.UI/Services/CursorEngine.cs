@@ -6,6 +6,7 @@ namespace CursorCloak.UI.Services
     /// <summary>
     /// Provides low-level cursor manipulation using Windows API.
     /// Handles hiding and showing the system cursor by replacing it with a transparent icon.
+    /// Implements caching to prevent GDI object leaks.
     /// </summary>
     public static class CursorEngine
     {
@@ -29,6 +30,12 @@ namespace CursorCloak.UI.Services
         [DllImport("user32.dll", SetLastError = true)]
         private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern bool DestroyIcon(IntPtr hIcon);
+
+        [DllImport("gdi32.dll", SetLastError = true)]
+        private static extern bool DeleteObject(IntPtr hObject);
+
         #endregion
 
         #region Constants & Fields
@@ -39,60 +46,40 @@ namespace CursorCloak.UI.Services
         private const uint SPI_SETCURSORS = 0x0057;
         private const uint SPIF_SENDWININICHANGE = 0x02;
 
-        private static IntPtr _originalNormalCursor;
-        private static IntPtr _originalIBeamCursor;
-        private static IntPtr _originalHandCursor;
         private static bool _isInitialized = false;
+        private static IntPtr _cachedBlankCursor = IntPtr.Zero;
 
         #endregion
 
         /// <summary>
-        /// Initializes the cursor engine by backing up the original system cursors.
-        /// This method should be called once at application startup.
+        /// Initializes the cursor engine.
         /// </summary>
         public static void Initialize()
         {
             if (_isInitialized) return;
-
-            // Backup original cursors
-            _originalNormalCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_NORMAL));
-            _originalIBeamCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_IBEAM));
-            _originalHandCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_HAND));
-            
             _isInitialized = true;
         }
 
         /// <summary>
-        /// Hides the system cursor by replacing standard cursors with a transparent icon.
+        /// Hides the system cursor by replacing standard cursors with a cached transparent icon.
         /// </summary>
         public static void HideSystemCursor()
         {
             if (!_isInitialized) Initialize();
 
-            // Create a transparent cursor
-            var andMask = new byte[32 * 4];
-            var xorMask = new byte[32 * 4];
-            for (int i = 0; i < andMask.Length; i++) 
-            { 
-                andMask[i] = 0xFF; 
-                xorMask[i] = 0x00; 
+            // Use cached cursor if available, otherwise create it once
+            if (_cachedBlankCursor == IntPtr.Zero)
+            {
+                _cachedBlankCursor = CreateTransparentCursor();
             }
 
-            ICONINFO iconInfo = new ICONINFO 
-            { 
-                fIcon = false, 
-                xHotspot = 0, 
-                yHotspot = 0, 
-                hbmMask = CreateBitmap(32, 32, 1, 1, andMask), 
-                hbmColor = CreateBitmap(32, 32, 1, 32, xorMask) 
-            };
-
-            IntPtr blankCursorHandle = CreateIconIndirect(ref iconInfo);
-
-            // Replace system cursors
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_NORMAL);
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_IBEAM);
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_HAND);
+            if (_cachedBlankCursor != IntPtr.Zero)
+            {
+                // SetSystemCursor destroys the cursor passed to it, so we must pass a COPY
+                SetSystemCursor(CopyIcon(_cachedBlankCursor), OCR_NORMAL);
+                SetSystemCursor(CopyIcon(_cachedBlankCursor), OCR_IBEAM);
+                SetSystemCursor(CopyIcon(_cachedBlankCursor), OCR_HAND);
+            }
         }
 
         /// <summary>
@@ -100,20 +87,73 @@ namespace CursorCloak.UI.Services
         /// </summary>
         public static void ShowSystemCursor()
         {
-            if (!_isInitialized) Initialize();
-            
             // Reset system cursors to default
             SystemParametersInfo(SPI_SETCURSORS, 0, IntPtr.Zero, SPIF_SENDWININICHANGE);
         }
 
+        /// <summary>
+        /// Creates a 32x32 transparent cursor.
+        /// Caller is responsible for cleaning up GDI objects used during creation.
+        /// </summary>
+        private static IntPtr CreateTransparentCursor()
+        {
+            IntPtr hBitmapMask = IntPtr.Zero;
+            IntPtr hBitmapColor = IntPtr.Zero;
+            IntPtr hIcon = IntPtr.Zero;
+
+            try
+            {
+                var andMask = new byte[32 * 4];
+                var xorMask = new byte[32 * 4];
+                for (int i = 0; i < andMask.Length; i++)
+                {
+                    andMask[i] = 0xFF;
+                    xorMask[i] = 0x00;
+                }
+
+                hBitmapMask = CreateBitmap(32, 32, 1, 1, andMask);
+                hBitmapColor = CreateBitmap(32, 32, 1, 32, xorMask);
+
+                ICONINFO iconInfo = new ICONINFO
+                {
+                    fIcon = false,
+                    xHotspot = 0,
+                    yHotspot = 0,
+                    hbmMask = hBitmapMask,
+                    hbmColor = hBitmapColor
+                };
+
+                hIcon = CreateIconIndirect(ref iconInfo);
+                return hIcon;
+            }
+            finally
+            {
+                // Clean up the bitmaps immediately after creating the icon
+                if (hBitmapMask != IntPtr.Zero) DeleteObject(hBitmapMask);
+                if (hBitmapColor != IntPtr.Zero) DeleteObject(hBitmapColor);
+            }
+        }
+
+        /// <summary>
+        /// Cleans up the cached blank cursor when the application exits.
+        /// </summary>
+        public static void Cleanup()
+        {
+            if (_cachedBlankCursor != IntPtr.Zero)
+            {
+                DestroyIcon(_cachedBlankCursor);
+                _cachedBlankCursor = IntPtr.Zero;
+            }
+        }
+
         [StructLayout(LayoutKind.Sequential)]
-        public struct ICONINFO 
-        { 
-            public bool fIcon; 
-            public int xHotspot; 
-            public int yHotspot; 
-            public IntPtr hbmMask; 
-            public IntPtr hbmColor; 
+        public struct ICONINFO
+        {
+            public bool fIcon;
+            public int xHotspot;
+            public int yHotspot;
+            public IntPtr hbmMask;
+            public IntPtr hbmColor;
         }
     }
 }

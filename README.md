@@ -19,12 +19,12 @@ CursorCloak is a Windows utility designed to provide system-wide control over mo
 ### Installation Methods
 
 #### Installer (Recommended)
-1. Download the latest `CursorCloak_Setup_v2.0.0.exe` from the [Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases) page.
+1. Download the latest `CursorCloak_Setup_v2.0.1.exe` from the [Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases) page.
 2. Run the installer and follow the on-screen instructions.
 3. The application will launch automatically upon completion.
 
 #### Portable Version
-1. Download `CursorCloak-v2.0.0-win-x64.zip`.
+1. Download `CursorCloak-v2.0.1-win-x64.zip`.
 2. Extract the contents to a preferred location.
 3. Run `CursorCloak.UI.exe`.
 
