@@ -272,6 +272,12 @@ CursorCloak/
 - **Antivirus**: May flag cursor manipulation as suspicious behavior
 - **System Integration**: Modifies global cursor state
 
+## 🤝 Community & Security
+
+- **Code of Conduct**: We are committed to providing a welcoming community. Please read our [Code of Conduct](CODE_OF_CONDUCT.md).
+- **Security Policy**: For reporting vulnerabilities, please see our [Security Policy](SECURITY.md).
+- **Contributing**: Check out our [Contributing Guide](docs/CONTRIBUTING.md) for details on how to help out.
+
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
