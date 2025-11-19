@@ -23,124 +23,49 @@ This document provides a complete guide for creating new releases of CursorCloak
 
 ## 🔢 **Version Update Process**
 
-### **Files to Update for New Version (e.g., 1.0.X → 1.0.Y)**
+## 🤖 **Automated Version Update (Recommended)**
 
-#### **1. Core Application Files**
-```xml
-<!-- src/CursorCloak.UI/CursorCloak.UI.csproj -->
-<AssemblyVersion>1.0.Y.0</AssemblyVersion>
-<FileVersion>1.0.Y.0</FileVersion>
-```
+We have created a PowerShell script to automate updating version numbers across all files.
 
-```xml
-<!-- src/CursorCloak.UI/app.manifest -->
-<assemblyIdentity version="1.0.Y.0" name="CursorCloak.UI"/>
-```
-
-#### **2. CI/CD Workflow**
-```yaml
-# .github/workflows/build-release.yml
-env:
-  DOTNET_VERSION: '9.0.x'
-  PROJECT_VERSION: '1.0.Y'
-```
-
-#### **3. Installer Scripts**
-```iss
-; scripts/setup.iss
-AppVersion=1.0.Y
-AppVerName=CursorCloak v1.0.Y - [Release Type]
-OutputBaseFilename=CursorCloak_Setup_v1.0.Y
-VersionInfoVersion=1.0.Y.0
-VersionInfoProductVersion=1.0.Y.0
-
-; Update all UI text references from v1.0.X to v1.0.Y
-```
-
-```iss
-; scripts/setup-selfcontained.iss
-AppVersion=1.0.Y
-AppVerName=CursorCloak v1.0.Y - Self-Contained Edition
-OutputBaseFilename=CursorCloak_Setup_v1.0.Y_SelfContained
-VersionInfoVersion=1.0.Y.0
-VersionInfoProductVersion=1.0.Y.0
-
-; Update all UI text references from v1.0.X to v1.0.Y
-```
-
-#### **4. Build Scripts**
+### **Step 1: Run the Update Script**
 ```powershell
-# scripts/build.ps1
-Write-Host "CursorCloak Build Script v1.0.Y" -ForegroundColor Cyan
-
-# Update all file paths:
-".\releases\CursorCloak-v1.0.Y-*.zip"
-".\releases\CursorCloak-v1.0.Y-win-x64.zip"
-".\releases\CursorCloak-v1.0.Y-win-x64-selfcontained.zip"
-".\releases\CursorCloak_Setup_v1.0.Y.exe"
-".\releases\CursorCloak_Setup_v1.0.Y_SelfContained.exe"
+# Usage: .\scripts\update-version.ps1 -NewVersion "X.Y.Z" -ReleaseType "Release Name"
+.\scripts\update-version.ps1 -NewVersion "2.0.1" -ReleaseType "Patch Release"
 ```
 
-#### **5. Documentation**
-```markdown
-<!-- README.md -->
-### Latest Release v1.0.Y - [Release Type]
+**This script automatically updates:**
+- `src/CursorCloak.UI/CursorCloak.UI.csproj`
+- `src/CursorCloak.UI/app.manifest`
+- `.github/workflows/build-release.yml`
+- `scripts/build.ps1`
+- `scripts/setup.iss`
+- `scripts/setup-selfcontained.iss`
+- `README.md`
+- `docs/SMARTSCREEN-INFO.md`
 
-**🆕 What's New in v1.0.Y:**
-[Update with new features/fixes]
+### **Step 2: Manual Updates (Required)**
+The script will remind you to manually update these files:
+1.  **`docs/VERSION.md`**: Move current version to history and add new version details.
+2.  **`CHANGELOG.md`**: Add the new version entry at the top.
 
-Download links:
-- CursorCloak_Setup_v1.0.Y.exe
-- CursorCloak_Setup_v1.0.Y_SelfContained.exe
-- CursorCloak-v1.0.Y-win-x64.zip
-- CursorCloak-v1.0.Y-win-x64-selfcontained.zip
-```
-
-## 🛠️ **Release Commands**
-
-### **Step 1: Local Verification**
+### **Step 3: Verify & Commit**
 ```bash
-# Navigate to project directory
-cd c:\Users\[YourName]\Documents\CursorCloak
-
-# Clean and test build
-dotnet clean
-dotnet restore
-dotnet build --configuration Release
-
-# Test the application
-.\src\CursorCloak.UI\bin\Release\net9.0-windows\CursorCloak.UI.exe
-```
-
-### **Step 2: Version Update**
-```bash
-# Create new version files using search and replace
-# Use your IDE or PowerShell to update all version references
-
-# Verify all files updated
-git status
+# Verify changes
 git diff
-```
 
-### **Step 3: Commit Changes**
-```bash
-# Stage all changes
+# Commit
 git add .
-
-# Commit with descriptive message
-git commit -m "v1.0.Y - [Release Type]: [Brief description of changes]"
-
-# Push to main branch
-git push origin main
+git commit -m "chore: Release v2.0.1"
 ```
 
-### **Step 4: Create Release Tag**
+### **Step 4: Tag & Push**
 ```bash
-# Create annotated tag
-git tag -a v1.0.Y -m "CursorCloak v1.0.Y - [Release Type]: [Detailed description]"
+# Push commit first
+git push origin main
 
-# Push tag to trigger release workflow
-git push origin v1.0.Y
+# Create and push tag
+git tag v2.0.1
+git push origin v2.0.1
 ```
 
 ## 🔍 **Quality Assurance Checklist**

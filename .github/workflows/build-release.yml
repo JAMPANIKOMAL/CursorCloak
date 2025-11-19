@@ -252,35 +252,35 @@ jobs:
         make_latest: true
         append_body: false
         body: |
-          ## 🎯 CursorCloak v${{ env.PROJECT_VERSION }} - Enhanced Patch Release
+          ## CursorCloak v${{ env.PROJECT_VERSION }} - Professional Release
 
-          **📅 Last Updated:** ${{ github.event.head_commit.timestamp }} (Build #${{ github.run_number }})
-          **🔄 Auto-updated** from latest main branch push
+          **Last Updated:** ${{ github.event.head_commit.timestamp }} (Build #${{ github.run_number }})
+          **Auto-updated** from latest main branch push
 
-          ### ✨ What's New:
-          - **🔧 Fixed 'Start with Windows' functionality** - Now properly saves and applies settings when toggled
-          - **🗑️ Professional Uninstaller** - Complete cleanup including registry entries and user data  
-          - **✅ Enhanced Registry Management** - Improved startup entry handling with validation
-          - **🛡️ Better Error Handling** - More robust registry access and file operations
-          - **📋 Comprehensive Cleanup** - Uninstaller removes all traces of the application
+          ### What's New:
+          - **Minimalist UI**: Complete redesign with a professional dark theme and iOS-style toggles.
+          - **Codebase Restructuring**: Architecture refactored into Services and Models for better maintainability.
+          - **Documentation Overhaul**: Comprehensive XML documentation and professional README/CHANGELOG.
+          - **Security Enhancements**: Added Security Policy, Code of Conduct, and improved single-instance enforcement.
+          - **Release Pipeline**: Fully automated GitHub Actions workflow for reliable releases.
 
-          ### 📦 Download Options:
+          ### Download Options:
           - **CursorCloak_Setup_v${{ env.PROJECT_VERSION }}.exe** - Framework-dependent installer (requires .NET 9.0) - ~2MB
           - **CursorCloak_Setup_v${{ env.PROJECT_VERSION }}_SelfContained.exe** - Self-contained installer (no .NET required) - ~66MB
           - **CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64.zip** - Framework-dependent portable (requires .NET 9.0) - ~0.3MB
           - **CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64-selfcontained.zip** - Self-contained portable (no .NET required) - ~66MB
 
-          ### 🔧 Requirements:
+          ### Requirements:
           - Windows 10/11 (x64)
           - Administrator privileges
           - .NET 9.0 Runtime (for framework-dependent versions only)
 
-          ### 🚀 Usage:
+          ### Usage:
           - **Alt + H**: Hide cursor anywhere in Windows
           - **Alt + S**: Show cursor again
           - Close window to run in background mode
 
-          **🛡️ SmartScreen Notice:** Windows may show a security warning. Click "More info" → "Run anyway". This is normal for unsigned applications.
+          **SmartScreen Notice:** Windows may show a security warning. Click "More info" -> "Run anyway". This is normal for unsigned applications.
 
           Always run as administrator for proper functionality.
       env:
@@ -312,32 +312,32 @@ jobs:
         draft: false
         prerelease: false
         body: |
-          ## 🎯 CursorCloak v${{ env.PROJECT_VERSION }} - New Release
+          ## CursorCloak v${{ env.PROJECT_VERSION }} - Professional Release
 
-          ### ✨ What's New in this Version:
-          - **🔧 Fixed 'Start with Windows' functionality** - Now properly saves and applies settings when toggled
-          - **🗑️ Professional Uninstaller** - Complete cleanup including registry entries and user data  
-          - **✅ Enhanced Registry Management** - Improved startup entry handling with validation
-          - **🛡️ Better Error Handling** - More robust registry access and file operations
-          - **📋 Comprehensive Cleanup** - Uninstaller removes all traces of the application
+          ### What's New in this Version:
+          - **Minimalist UI**: Complete redesign with a professional dark theme and iOS-style toggles.
+          - **Codebase Restructuring**: Architecture refactored into Services and Models for better maintainability.
+          - **Documentation Overhaul**: Comprehensive XML documentation and professional README/CHANGELOG.
+          - **Security Enhancements**: Added Security Policy, Code of Conduct, and improved single-instance enforcement.
+          - **Release Pipeline**: Fully automated GitHub Actions workflow for reliable releases.
 
-          ### 📦 Download Options:
+          ### Download Options:
           - **CursorCloak_Setup_v${{ env.PROJECT_VERSION }}.exe** - Framework-dependent installer (requires .NET 9.0) - ~2MB
           - **CursorCloak_Setup_v${{ env.PROJECT_VERSION }}_SelfContained.exe** - Self-contained installer (no .NET required) - ~66MB
           - **CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64.zip** - Framework-dependent portable (requires .NET 9.0) - ~0.3MB
           - **CursorCloak-v${{ env.PROJECT_VERSION }}-win-x64-selfcontained.zip** - Self-contained portable (no .NET required) - ~66MB
 
-          ### 🔧 Requirements:
+          ### Requirements:
           - Windows 10/11 (x64)
           - Administrator privileges
           - .NET 9.0 Runtime (for framework-dependent versions only)
 
-          ### 🚀 Usage:
+          ### Usage:
           - **Alt + H**: Hide cursor anywhere in Windows
           - **Alt + S**: Show cursor again
           - Close window to run in background mode
 
-          **🛡️ SmartScreen Notice:** Windows may show a security warning. Click "More info" → "Run anyway". This is normal for unsigned applications.
+          **SmartScreen Notice:** Windows may show a security warning. Click "More info" -> "Run anyway". This is normal for unsigned applications.
 
           Always run as administrator for proper functionality.
       env:

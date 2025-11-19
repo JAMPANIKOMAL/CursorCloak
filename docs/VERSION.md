@@ -7,21 +7,16 @@ This document tracks all version releases and their notes for CursorCloak.
 
 ---
 
-## Current Version: 1.0.2 (Enhanced Patch Release)
-**Release Date:** August 11, 2025
-
-### What's New in v1.0.2
-
 ## Current Version: v2.0.0 (Professional Release)
 **Release Date:** November 19, 2025
 
 ### What's New in v2.0.0
-- 🎨 **Major UI Overhaul**: Complete redesign with a minimalist, professional aesthetic.
-- 🏗️ **Codebase Restructuring**: Professional architecture with separated Services and Models.
-- 📝 **Documentation**: Comprehensive XML documentation and professional README/CHANGELOG.
-- 🛡️ **Security**: Added Security Policy and Code of Conduct.
-- 🐛 **Bug Fixes**: Fixed single-instance enforcement and startup reliability.
-- ⚙️ **Release Pipeline**: Automated GitHub Actions workflow for reliable releases.
+- **Major UI Overhaul**: Complete redesign with a minimalist, professional aesthetic.
+- **Codebase Restructuring**: Professional architecture with separated Services and Models.
+- **Documentation**: Comprehensive XML documentation and professional README/CHANGELOG.
+- **Security**: Added Security Policy and Code of Conduct.
+- **Bug Fixes**: Fixed single-instance enforcement and startup reliability.
+- **Release Pipeline**: Automated GitHub Actions workflow for reliable releases.
 
 ## Previous Versions
 
@@ -29,23 +24,23 @@ This document tracks all version releases and their notes for CursorCloak.
 **Release Date:** August 19, 2025
 
 #### What's New in v1.1.0
-- 🖱️ **Auto Hide Cursor**: Cursor automatically hides after user inactivity (timeout configurable in UI)
-- 🛠️ **Bugfix:** "Start with Windows" now works reliably on all Windows 10/11 systems (improved registry handling, robust path detection, and admin support)
-- 🟢 **Auto Hide Toggle**: New toggle in the UI to enable/disable auto-hide feature
-- ⏱️ **Custom Timeout**: Set the number of seconds before the cursor auto-hides
-- ✅ All previous enhancements and fixes
+- **Auto Hide Cursor**: Cursor automatically hides after user inactivity (timeout configurable in UI)
+- **Bugfix:** "Start with Windows" now works reliably on all Windows 10/11 systems (improved registry handling, robust path detection, and admin support)
+- **Auto Hide Toggle**: New toggle in the UI to enable/disable auto-hide feature
+- **Custom Timeout**: Set the number of seconds before the cursor auto-hides
+- All previous enhancements and fixes
 
 ## Previous Versions
 
 ### v1.0.2
-- 🔧 **Enhanced CI/CD Pipeline** - Improved build automation and reliability
-- 💻 **Better InnoSetup Handling** - More robust installer creation process
-- 🛡️ **Improved Error Handling** - Enhanced logging and fallback mechanisms
-- ✨ **Version Management** - Centralized version control across all components
-- 📦 **Professional Release Process** - Automated GitHub release creation
-- 🎯 **System Tray Improvements** - Better tray icon resource management
-- 📋 **Registry Management** - Enhanced startup settings persistence
-- ⚡ **Memory Optimization** - Better resource cleanup and leak prevention
+- **Enhanced CI/CD Pipeline** - Improved build automation and reliability
+- **Better InnoSetup Handling** - More robust installer creation process
+- **Improved Error Handling** - Enhanced logging and fallback mechanisms
+- **Version Management** - Centralized version control across all components
+- **Professional Release Process** - Automated GitHub release creation
+- **System Tray Improvements** - Better tray icon resource management
+- **Registry Management** - Enhanced startup settings persistence
+- **Memory Optimization** - Better resource cleanup and leak prevention
 
 ### v1.0.1
 **Release Date:** August 7, 2025
@@ -76,11 +71,11 @@ Windows may show a security warning. Click "More info" then "Run anyway". This i
 **Release Date:** August 7, 2025
 
 #### What's New in v1.0.1
-- 🔧 **Fixed "Start with Windows" functionality** - Now properly saves and applies settings when toggled
-- 🗑️ **Professional Uninstaller** - Complete cleanup including registry entries and user data
-- ✅ **Enhanced Registry Management** - Improved startup entry handling with validation
-- 🛡️ **Better Error Handling** - More robust registry access and file operations
-- 📋 **Comprehensive Cleanup** - Uninstaller removes all traces of the application
+- **Fixed "Start with Windows" functionality** - Now properly saves and applies settings when toggled
+- **Professional Uninstaller** - Complete cleanup including registry entries and user data
+- **Enhanced Registry Management** - Improved startup entry handling with validation
+- **Better Error Handling** - More robust registry access and file operations
+- **Comprehensive Cleanup** - Uninstaller removes all traces of the application
 
 #### Bug Fixes
 - Fixed startup checkbox not persisting settings properly
@@ -107,13 +102,13 @@ Windows may show a security warning. Click "More info" then "Run anyway". This i
 **Release Date:** August 6, 2025
 
 #### What's New in v1.0.0
-- 🎯 **Professional Cursor Management** - Hide and show mouse cursor with global hotkeys
-- 🔄 **Background Mode** - Continues running when window is closed
-- ⌨️ **Global Hotkeys** - Alt+H to hide, Alt+S to show cursor anywhere in Windows
-- 💾 **Persistent Settings** - Automatically saves and restores user preferences
-- 🛡️ **Smart Administrator Handling** - Automatic privilege management with user guidance
-- 🎨 **Modern Interface** - Professional WPF design with dark theme
-- 📦 **Multiple Deployment Options** - Framework-dependent and self-contained builds
+- **Professional Cursor Management** - Hide and show mouse cursor with global hotkeys
+- **Background Mode** - Continues running when window is closed
+- **Global Hotkeys** - Alt+H to hide, Alt+S to show cursor anywhere in Windows
+- **Persistent Settings** - Automatically saves and restores user preferences
+- **Smart Administrator Handling** - Automatic privilege management with user guidance
+- **Modern Interface** - Professional WPF design with dark theme
+- **Multiple Deployment Options** - Framework-dependent and self-contained builds
 
 #### Core Features
 - **Global Hotkey Support** - Works system-wide in any application
