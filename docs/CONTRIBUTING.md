@@ -116,4 +116,4 @@ Thank you for your interest in contributing to CursorCloak! This document provid
 
 Contributors will be recognized in release notes and may be added to a contributors list.
 
-Thank you for contributing! 🎉
+Thank you for contributing!
