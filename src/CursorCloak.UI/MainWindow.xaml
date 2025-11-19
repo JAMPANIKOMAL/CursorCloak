@@ -1,99 +1,167 @@
-﻿<!-- =================================================================================== -->
-<!--  FILE 1: MainWindow.xaml (The NEW UI Design)                                        -->
-<!--  This file defines the layout and appearance of our application window.               -->
-<!-- =================================================================================== -->
-<Window x:Class="CursorCloak.UI.MainWindow"
+﻿<Window x:Class="CursorCloak.UI.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="CursorCloak" Height="350" Width="360"
-        WindowStyle="SingleBorderWindow" ResizeMode="CanMinimize"
-        Background="#0e1218" Foreground="#e6edf3"
-        FontFamily="Segoe UI"
-        WindowStartupLocation="CenterScreen">
+        Title="CursorCloak" Height="400" Width="320"
+        WindowStyle="None" AllowsTransparency="True" Background="Transparent"
+        ResizeMode="CanMinimize"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI">
 
     <Window.Resources>
-        <!-- Style for our custom ToggleSwitch -->
-        <Style x:Key="StyledToggleSwitch" TargetType="{x:Type CheckBox}">
+        <!-- Minimalist Toggle Switch Style -->
+        <Style x:Key="MinimalistToggle" TargetType="{x:Type CheckBox}">
+            <Setter Property="Cursor" Value="Hand"/>
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type CheckBox}">
-                        <Border x:Name="border" Width="44" Height="22" CornerRadius="11" 
-                                Background="#2A2E37" BorderBrush="#444952" BorderThickness="1"
-                                SnapsToDevicePixels="True">
-                            <Ellipse x:Name="dot" Fill="#7d8590" Width="14" Height="14" 
-                                     HorizontalAlignment="Left" Margin="3,0,0,0"/>
-                        </Border>
+                        <Grid Background="Transparent">
+                            <Border x:Name="Border" 
+                                    Width="40" Height="24" 
+                                    CornerRadius="12" 
+                                    Background="#333333"
+                                    BorderThickness="0">
+                                <Ellipse x:Name="Dot" 
+                                         Width="20" Height="20" 
+                                         Fill="#FFFFFF" 
+                                         HorizontalAlignment="Left" 
+                                         Margin="2,0,0,0">
+                                    <Ellipse.Effect>
+                                        <DropShadowEffect ShadowDepth="1" Direction="270" Color="Black" Opacity="0.2" BlurRadius="2"/>
+                                    </Ellipse.Effect>
+                                </Ellipse>
+                            </Border>
+                        </Grid>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsChecked" Value="True">
-                                <Setter TargetName="border" Property="Background" Value="#0078D7"/>
-                                <Setter TargetName="border" Property="BorderBrush" Value="#0078D7"/>
-                                <Setter TargetName="dot" Property="HorizontalAlignment" Value="Right"/>
-                                <Setter TargetName="dot" Property="Fill" Value="White"/>
+                                <Setter TargetName="Border" Property="Background" Value="#34C759"/> <!-- iOS Green -->
+                                <Setter TargetName="Dot" Property="HorizontalAlignment" Value="Right"/>
+                                <Setter TargetName="Dot" Property="Margin" Value="0,0,2,0"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter TargetName="Border" Property="Opacity" Value="0.5"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <!-- Window Control Button Style -->
+        <Style x:Key="WindowButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Foreground" Value="#888888"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#333333"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        
+        <Style x:Key="CloseButtonStyle" TargetType="Button" BasedOn="{StaticResource WindowButtonStyle}">
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#E81123"/>
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
     </Window.Resources>
 
-    <!-- Main Grid with a thin blue line at the top -->
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
+    <!-- Main Container with Rounded Corners and Border -->
+    <Border Background="#1A1A1A" CornerRadius="8" BorderBrush="#333333" BorderThickness="1">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="32"/> <!-- Title Bar -->
+                <RowDefinition Height="*"/>  <!-- Content -->
+            </Grid.RowDefinitions>
 
-        <!-- Thin blue accent line -->
-        <Border Grid.Row="0" Height="2" Background="#0078D7" VerticalAlignment="Top"/>
-
-        <!-- Main Content Area -->
-        <StackPanel Grid.Row="1" Margin="25" VerticalAlignment="Center">
-
-            <!-- Main Toggle Section -->
-            <Grid Margin="0,0,0,40">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="CURSOR HIDING" Foreground="#ccc" FontWeight="SemiBold" 
-                           VerticalAlignment="Center" FontSize="14"/>
-                <CheckBox Grid.Column="1" x:Name="MainToggle" Style="{StaticResource StyledToggleSwitch}" 
-                          HorizontalAlignment="Right" Click="MainToggle_Click"/>
-            </Grid>
-
-            <!-- Auto Hide Mouse Section -->
-            <Grid Margin="0,0,0,40">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="Auto"/>
-                </Grid.ColumnDefinitions>
-                <TextBlock Grid.Column="0" Text="AUTO HIDE CURSOR" Foreground="#ccc" FontWeight="SemiBold" 
-                           VerticalAlignment="Center" FontSize="14"/>
-                <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
-                    <CheckBox x:Name="AutoHideToggle" Style="{StaticResource StyledToggleSwitch}" Margin="0,0,8,0" Click="AutoHideToggle_Click"/>
-                    <TextBox x:Name="AutoHideTimeoutBox" Width="40" Height="22" Margin="0,0,0,0" VerticalContentAlignment="Center" TextAlignment="Center" FontSize="13" Text="5" IsEnabled="False"/>
-                    <TextBlock Text="s" Foreground="#888" FontSize="13" Margin="2,0,0,0" VerticalAlignment="Center"/>
+            <!-- Custom Title Bar -->
+            <Grid Grid.Row="0" Background="Transparent" MouseLeftButtonDown="TitleBar_MouseLeftButtonDown">
+                <TextBlock Text="CursorCloak" Foreground="#888888" FontSize="12" VerticalAlignment="Center" Margin="12,0,0,0"/>
+                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                    <Button Content="&#xE921;" Style="{StaticResource WindowButtonStyle}" Click="MinimizeButton_Click"/>
+                    <Button Content="&#xE8BB;" Style="{StaticResource CloseButtonStyle}" Click="CloseButton_Click"/>
                 </StackPanel>
             </Grid>
 
-            <!-- Hotkey Settings -->
-            <StackPanel Margin="0,0,0,40">
-                <TextBlock Text="HOTKEY" Foreground="#888" FontWeight="SemiBold" Margin="0,0,0,10"/>
-                <TextBlock x:Name="HotkeyTextBlock" Text="Alt + H / Alt + S" 
-                           TextAlignment="Center" FontSize="16" Foreground="#ccc"
-                           Background="#1C2026" Padding="12">
-                    <TextBlock.Resources>
-                        <Style TargetType="Border">
-                            <Setter Property="CornerRadius" Value="6"/>
-                        </Style>
-                    </TextBlock.Resources>
-                </TextBlock>
-            </StackPanel>
+            <!-- Content Area -->
+            <StackPanel Grid.Row="1" Margin="24,10,24,24">
+                
+                <!-- Header -->
+                <TextBlock Text="Settings" Foreground="White" FontSize="24" FontWeight="SemiBold" Margin="0,0,0,24"/>
 
-            <!-- Startup Option -->
-            <CheckBox x:Name="StartupCheck" Content="Start with Windows" 
-                      Foreground="#ccc" FontSize="14" Click="StartupCheck_Click"/>
-        </StackPanel>
-    </Grid>
+                <!-- Main Toggle -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Hide Cursor" Foreground="White" FontSize="14"/>
+                        <TextBlock Text="Alt + H to hide, Alt + S to show" Foreground="#888888" FontSize="12" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <CheckBox x:Name="MainToggle" Grid.Column="1" Style="{StaticResource MinimalistToggle}" Click="MainToggle_Click"/>
+                </Grid>
+
+                <Border Height="1" Background="#333333" Margin="0,0,0,20"/>
+
+                <!-- Auto Hide -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Auto-Hide" Foreground="White" FontSize="14"/>
+                        <TextBlock Text="Hide after inactivity" Foreground="#888888" FontSize="12" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <CheckBox x:Name="AutoHideToggle" Grid.Column="1" Style="{StaticResource MinimalistToggle}" Click="AutoHideToggle_Click"/>
+                </Grid>
+
+                <!-- Timeout Input (Only visible if AutoHide is on) -->
+                <Grid Margin="0,0,0,20">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock Text="Inactivity Timeout (s)" Foreground="#888888" FontSize="13" VerticalAlignment="Center"/>
+                    <TextBox x:Name="AutoHideTimeoutBox" Grid.Column="1" Width="50" Height="24" 
+                             Background="#252525" Foreground="White" BorderBrush="#444444" BorderThickness="1"
+                             VerticalContentAlignment="Center" TextAlignment="Center"
+                             Text="5" IsEnabled="False"/>
+                </Grid>
+
+                <Border Height="1" Background="#333333" Margin="0,0,0,20"/>
+
+                <!-- Startup -->
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0">
+                        <TextBlock Text="Start with Windows" Foreground="White" FontSize="14"/>
+                        <TextBlock Text="Launch automatically" Foreground="#888888" FontSize="12" Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <CheckBox x:Name="StartupCheck" Grid.Column="1" Style="{StaticResource MinimalistToggle}" Click="StartupCheck_Click"/>
+                </Grid>
+
+            </StackPanel>
+        </Grid>
+    </Border>
 </Window>

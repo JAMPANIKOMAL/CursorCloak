@@ -8,6 +8,8 @@ using System.Windows.Interop;
 using Microsoft.Win32; // Required for Registry access
 using System.Windows.Forms; // Required for NotifyIcon
 using System.Drawing; // Required for SystemIcons
+using CursorCloak.UI.Services;
+using CursorCloak.UI.Models;
 
 namespace CursorCloak.UI
 {
@@ -331,6 +333,24 @@ namespace CursorCloak.UI
             SettingsManager.Save(settings);
         }
 
+        private void TitleBar_MouseLeftButtonDown(object sender, System.Windows.Input.MouseButtonEventArgs e)
+        {
+            if (e.ButtonState == System.Windows.Input.MouseButtonState.Pressed)
+            {
+                this.DragMove();
+            }
+        }
+
+        private void MinimizeButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.WindowState = WindowState.Minimized;
+        }
+
+        private void CloseButton_Click(object sender, RoutedEventArgs e)
+        {
+            this.Close();
+        }
+
         private IntPtr HwndHook(IntPtr hwnd, int msg, IntPtr wParam, IntPtr lParam, ref bool handled)
         {
             const int WM_HOTKEY = 0x0312;
@@ -350,237 +370,6 @@ namespace CursorCloak.UI
                 handled = true;
             }
             return IntPtr.Zero;
-        }
-    }
-
-    // --- Settings Management ---
-    public class Settings
-    {
-    public bool IsHidingEnabled { get; set; }
-    public bool StartWithWindows { get; set; }
-    public bool AutoHideCursor { get; set; }
-    public int AutoHideTimeoutSeconds { get; set; } = 5;
-    }
-
-    public static class SettingsManager
-    {
-        private static readonly string _settingsFilePath = Path.Combine(
-            Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
-            "CursorCloak", "settings.json");
-
-        public static void Save(Settings settings)
-        {
-            try
-            {
-                var directoryPath = Path.GetDirectoryName(_settingsFilePath);
-                if (!string.IsNullOrEmpty(directoryPath))
-                {
-                    Directory.CreateDirectory(directoryPath);
-                }
-                string json = JsonSerializer.Serialize(settings);
-                File.WriteAllText(_settingsFilePath, json);
-            }
-            catch (Exception)
-            {
-                // Silently handle potential saving errors
-                System.Diagnostics.Debug.WriteLine("Failed to save settings");
-            }
-        }
-
-        public static Settings Load()
-        {
-            try
-            {
-                if (File.Exists(_settingsFilePath))
-                {
-                    string json = File.ReadAllText(_settingsFilePath);
-                    return JsonSerializer.Deserialize<Settings>(json) ?? new Settings();
-                }
-            }
-            catch (Exception)
-            {
-                // Silently handle potential loading errors
-                System.Diagnostics.Debug.WriteLine("Failed to load settings");
-            }
-            return new Settings(); // Return default settings if file doesn't exist or is corrupt
-        }
-    }
-
-    // --- Startup Management ---
-    public static class StartupManager
-    {
-        private const string RegistryKeyPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Run";
-        private const string AppName = "CursorCloak";
-
-        public static void SetStartup(bool isEnabled)
-        {
-            try
-            {
-                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, true))
-                {
-                    if (key != null)
-                    {
-                        if (isEnabled)
-                        {
-                            string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty;
-                            if (!string.IsNullOrEmpty(exePath) && File.Exists(exePath))
-                            {
-                                string quotedPath = $"\"{exePath}\"";
-                                key.SetValue(AppName, quotedPath);
-                                System.Diagnostics.Debug.WriteLine($"[StartupManager] Set registry: {quotedPath}");
-                            }
-                            else
-                            {
-                                System.Diagnostics.Debug.WriteLine($"[StartupManager] Could not resolve exe path for startup.");
-                            }
-                        }
-                        else
-                        {
-                            key.DeleteValue(AppName, false);
-                            System.Diagnostics.Debug.WriteLine("[StartupManager] Startup registry entry removed.");
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to modify startup registry entry: {ex.Message}");
-            }
-        }
-
-        public static bool IsStartupEnabled()
-        {
-            try
-            {
-                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, false))
-                {
-                    if (key != null)
-                    {
-                        object? value = key.GetValue(AppName);
-                        if (value is string regPath)
-                        {
-                            string exePath = System.Diagnostics.Process.GetCurrentProcess().MainModule?.FileName ?? string.Empty;
-                            string quotedExePath = $"\"{exePath}\"";
-                            bool match = string.Equals(regPath.Trim(), quotedExePath, StringComparison.OrdinalIgnoreCase);
-                            System.Diagnostics.Debug.WriteLine($"[StartupManager] Registry value: {regPath}, Current exe: {quotedExePath}, Match: {match}");
-                            return match;
-                        }
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                System.Diagnostics.Debug.WriteLine($"Failed to read startup registry entry: {ex.Message}");
-            }
-            return false;
-        }
-
-        public static void RemoveStartupEntry()
-        {
-            try
-            {
-                using (RegistryKey? key = Registry.CurrentUser.OpenSubKey(RegistryKeyPath, true))
-                {
-                    if (key != null)
-                    {
-                        key.DeleteValue(AppName, false);
-                    }
-                }
-            }
-            catch (Exception)
-            {
-                // Silently handle potential registry access errors
-                System.Diagnostics.Debug.WriteLine("Failed to remove startup registry entry");
-            }
-        }
-    }
-
-    // --- Engine and Hotkey Manager ---
-    public static class CursorEngine
-    {
-        // --- API Imports ---
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr LoadCursor(IntPtr hInstance, int lpCursorName);
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern IntPtr SetSystemCursor(IntPtr hcur, uint id);
-        [DllImport("user32.dll")]
-        public static extern IntPtr CreateIconIndirect(ref ICONINFO piconinfo);
-        [DllImport("gdi32.dll")]
-        public static extern IntPtr CreateBitmap(int nWidth, int nHeight, uint cPlanes, uint cBitsPerPel, byte[] lpvBits);
-        [DllImport("user32.dll")]
-        public static extern IntPtr CopyIcon(IntPtr hIcon);
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool SystemParametersInfo(uint uiAction, uint uiParam, IntPtr pvParam, uint fWinIni);
-
-        private const uint OCR_NORMAL = 32512;
-        private const uint OCR_IBEAM = 32513;
-        private const uint OCR_HAND = 32649;
-        private const uint SPI_SETCURSORS = 0x0057;
-        private const uint SPIF_SENDWININICHANGE = 0x02;
-
-        // *** FIX: Removed readonly and initialized in a separate method ***
-        private static IntPtr originalNormalCursor;
-        private static IntPtr originalIBeamCursor;
-        private static IntPtr originalHandCursor;
-        private static bool isInitialized = false;
-
-        public static void Initialize()
-        {
-            if (isInitialized) return;
-            originalNormalCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_NORMAL));
-            originalIBeamCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_IBEAM));
-            originalHandCursor = CopyIcon(LoadCursor(IntPtr.Zero, (int)OCR_HAND));
-            isInitialized = true;
-        }
-
-        public static void HideSystemCursor()
-        {
-            if (!isInitialized) Initialize();
-            var andMask = new byte[32 * 4];
-            var xorMask = new byte[32 * 4];
-            for (int i = 0; i < andMask.Length; i++) { andMask[i] = 0xFF; xorMask[i] = 0x00; }
-
-            ICONINFO iconInfo = new ICONINFO { fIcon = false, xHotspot = 0, yHotspot = 0, hbmMask = CreateBitmap(32, 32, 1, 1, andMask), hbmColor = CreateBitmap(32, 32, 1, 32, xorMask) };
-            IntPtr blankCursorHandle = CreateIconIndirect(ref iconInfo);
-
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_NORMAL);
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_IBEAM);
-            SetSystemCursor(CopyIcon(blankCursorHandle), OCR_HAND);
-        }
-
-        public static void ShowSystemCursor()
-        {
-            if (!isInitialized) Initialize();
-            SystemParametersInfo(SPI_SETCURSORS, 0, IntPtr.Zero, SPIF_SENDWININICHANGE);
-        }
-
-        [StructLayout(LayoutKind.Sequential)]
-        public struct ICONINFO { public bool fIcon; public int xHotspot; public int yHotspot; public IntPtr hbmMask; public IntPtr hbmColor; }
-    }
-
-    public static class HotKeyManager
-    {
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool RegisterHotKey(IntPtr hWnd, int id, uint fsModifiers, uint vk);
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern bool UnregisterHotKey(IntPtr hWnd, int id);
-
-        public const int HIDE_HOTKEY_ID = 9000;
-        public const int SHOW_HOTKEY_ID = 9001;
-        private const uint MOD_ALT = 0x0001;
-        private const uint VK_H = 0x48;
-        private const uint VK_S = 0x53;
-
-        public static void RegisterHotKeys(IntPtr handle)
-        {
-            RegisterHotKey(handle, HIDE_HOTKEY_ID, MOD_ALT, VK_H);
-            RegisterHotKey(handle, SHOW_HOTKEY_ID, MOD_ALT, VK_S);
-        }
-
-        public static void UnregisterHotKeys(IntPtr handle)
-        {
-            UnregisterHotKey(handle, HIDE_HOTKEY_ID);
-            UnregisterHotKey(handle, SHOW_HOTKEY_ID);
         }
     }
 }

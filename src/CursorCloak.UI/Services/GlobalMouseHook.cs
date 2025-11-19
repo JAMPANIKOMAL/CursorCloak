@@ -2,7 +2,7 @@ using System;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
-namespace CursorCloak.UI
+namespace CursorCloak.UI.Services
 {
     public static class GlobalMouseHook
     {

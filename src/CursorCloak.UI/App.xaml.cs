@@ -1,110 +1,100 @@
 ﻿using System;
-using System.Configuration;
-using System.Data;
+using System.Diagnostics;
 using System.Security.Principal;
+using System.Threading;
 using System.Windows;
-using System.Windows.Threading;
-using CursorCloak.UI;
+using CursorCloak.UI.Services;
 
-namespace CursorCloak.UI;
-
-/// <summary>
-/// Interaction logic for App.xaml
-/// </summary>
-public partial class App : System.Windows.Application
+namespace CursorCloak.UI
 {
-    protected override void OnStartup(StartupEventArgs e)
+    public partial class App : System.Windows.Application
     {
-        try
-        {
-            // Check if running as administrator
-            bool isAdmin = false;
-            try
-            {
-                var identity = WindowsIdentity.GetCurrent();
-                var principal = new WindowsPrincipal(identity);
-                isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
-            }
-            catch
-            {
-                // If we can't check, assume not admin
-                isAdmin = false;
-            }
+        private static Mutex? _mutex = null;
 
-            if (!isAdmin)
+        protected override void OnStartup(StartupEventArgs e)
+        {
+            const string appName = "CursorCloak_SingleInstance_Mutex";
+            bool createdNew;
+
+            _mutex = new Mutex(true, appName, out createdNew);
+
+            if (!createdNew)
             {
-                System.Windows.MessageBox.Show("CursorCloak requires administrator privileges to function properly.\n\n" +
-                              "Please run the application as administrator.",
-                              "Administrator Required", MessageBoxButton.OK, MessageBoxImage.Warning);
-                Environment.Exit(1);
+                // App is already running! Exiting the application
+                System.Windows.MessageBox.Show("CursorCloak is already running.", "CursorCloak", MessageBoxButton.OK, MessageBoxImage.Information);
+                Environment.Exit(0);
                 return;
             }
 
-            // Set up global exception handlers
-            this.DispatcherUnhandledException += App_DispatcherUnhandledException;
-            AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
-            
-            // Add diagnostic logging
-            System.Diagnostics.Debug.WriteLine("CursorCloak.UI starting...");
-
-            // Install the global mouse hook ONCE for the whole app lifetime
-            GlobalMouseHook.Install(() =>
+            try
             {
-                if (CursorCloak.UI.MainWindow.CurrentInstance != null)
+                // Check if running as administrator
+                bool isAdmin = false;
+                try
                 {
-                    CursorCloak.UI.MainWindow.CurrentInstance.OnGlobalMouseMove();
+                    var identity = WindowsIdentity.GetCurrent();
+                    var principal = new WindowsPrincipal(identity);
+                    isAdmin = principal.IsInRole(WindowsBuiltInRole.Administrator);
                 }
-            });
+                catch
+                {
+                    // If we can't check, assume not admin
+                    isAdmin = false;
+                }
 
-            base.OnStartup(e);
-        }
-        catch (Exception ex)
-        {
-            // Log startup failure
-            System.Diagnostics.Debug.WriteLine($"Startup failed: {ex}");
-            System.Windows.MessageBox.Show($"Failed to start application: {ex.Message}", "Startup Error", 
-                          MessageBoxButton.OK, MessageBoxImage.Error);
-            Environment.Exit(1);
-        }
-    }
+                if (!isAdmin)
+                {
+                    System.Windows.MessageBox.Show("CursorCloak requires administrator privileges to function properly.\n\n" +
+                                       "Please run the application as administrator.",
+                                       "Administrator Required", MessageBoxButton.OK, MessageBoxImage.Warning);
+                    Environment.Exit(1);
+                    return;
+                }
 
-    protected override void OnExit(ExitEventArgs e)
-    {
-        GlobalMouseHook.Uninstall();
-        base.OnExit(e);
-    }
+                // Set up global exception handlers
+                this.DispatcherUnhandledException += App_DispatcherUnhandledException;
+                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                
+                // Add diagnostic logging
+                System.Diagnostics.Debug.WriteLine("CursorCloak.UI starting...");
 
-    private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)
-    {
-        try
-        {
-            System.Windows.MessageBox.Show($"An unexpected error occurred: {e.Exception.Message}\n\nThe application will continue to run.", 
-                          "CursorCloak Error", MessageBoxButton.OK, MessageBoxImage.Warning);
-            e.Handled = true;
-        }
-        catch
-        {
-            // If we can't even show a message box, just log and exit gracefully
-            Environment.Exit(1);
-        }
-    }
+                // Install the global mouse hook ONCE for the whole app lifetime
+                GlobalMouseHook.Install(() =>
+                {
+                    if (CursorCloak.UI.MainWindow.CurrentInstance != null)
+                    {
+                        CursorCloak.UI.MainWindow.CurrentInstance.OnGlobalMouseMove();
+                    }
+                });
 
-    private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
-    {
-        try
-        {
-            var exception = e.ExceptionObject as Exception;
-            System.Windows.MessageBox.Show($"A fatal error occurred: {exception?.Message ?? "Unknown error"}\n\nThe application will now close.", 
-                          "CursorCloak Fatal Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                base.OnStartup(e);
+            }
+            catch (Exception ex)
+            {
+                // Log startup failure
+                System.Diagnostics.Debug.WriteLine($"Startup failed: {ex}");
+                System.Windows.MessageBox.Show($"Failed to start application: {ex.Message}", "Startup Error", 
+                              MessageBoxButton.OK, MessageBoxImage.Error);
+                Environment.Exit(1);
+            }
         }
-        catch
+
+        private void App_DispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
         {
-            // Silent exit if we can't show message
+            System.Diagnostics.Debug.WriteLine($"Dispatcher exception: {e.Exception}");
+            e.Handled = true; // Prevent crash if possible
         }
-        finally
+
+        private void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
-            Environment.Exit(1);
+            System.Diagnostics.Debug.WriteLine($"Domain exception: {e.ExceptionObject}");
+        }
+
+        protected override void OnExit(ExitEventArgs e)
+        {
+            _mutex?.ReleaseMutex();
+            _mutex?.Dispose();
+            base.OnExit(e);
         }
     }
 }
-

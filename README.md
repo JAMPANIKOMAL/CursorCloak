@@ -274,8 +274,8 @@ CursorCloak/
 
 ## 🤝 Community & Security
 
-- **Code of Conduct**: We are committed to providing a welcoming community. Please read our [Code of Conduct](CODE_OF_CONDUCT.md).
-- **Security Policy**: For reporting vulnerabilities, please see our [Security Policy](SECURITY.md).
+- **Code of Conduct**: We are committed to providing a welcoming community. Please read our [Code of Conduct](.github/CODE_OF_CONDUCT.md).
+- **Security Policy**: For reporting vulnerabilities, please see our [Security Policy](.github/SECURITY.md).
 - **Contributing**: Check out our [Contributing Guide](docs/CONTRIBUTING.md) for details on how to help out.
 
 ## 📄 License
