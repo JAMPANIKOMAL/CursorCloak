@@ -11,7 +11,7 @@ Windows SmartScreen is a security feature that helps protect your PC by checking
 ## How to Install CursorCloak Safely
 
 ### Method 1: Framework-Dependent Installer (Recommended)
-1. Download `CursorCloak_Setup_v1.0.2.exe` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+1. Download `CursorCloak_Setup_v2.0.0.exe` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
 2. Right-click the installer → **Properties** → **Digital Signatures** tab (to verify it's from the correct source)
 3. Run the installer as administrator
 4. If SmartScreen appears:
@@ -20,19 +20,19 @@ Windows SmartScreen is a security feature that helps protect your PC by checking
 5. Follow the installation wizard
 
 ### Method 2: Self-Contained Installer (No .NET Required)
-1. Download `CursorCloak_Setup_v1.0.2_SelfContained.exe` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+1. Download `CursorCloak_Setup_v2.0.0_SelfContained.exe` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
 2. This version includes everything needed - no .NET runtime required
 3. Run as administrator
 4. If SmartScreen appears, follow steps 4-5 from Method 1
 
 ### Method 3: Portable Framework-Dependent Version
-1. Download `CursorCloak-v1.0.2-win-x64.zip` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+1. Download `CursorCloak-v2.0.0-win-x64.zip` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
 2. Extract to any folder
 3. Install .NET 9.0 Runtime: `winget install Microsoft.DotNet.Runtime.9`
 4. Right-click `CursorCloak.UI.exe` → **"Run as administrator"**
 
 ### Method 4: Portable Self-Contained Version (Recommended for USB/Portable Use)
-1. Download `CursorCloak-v1.0.2-win-x64-selfcontained.zip` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
+1. Download `CursorCloak-v2.0.0-win-x64-selfcontained.zip` from [GitHub Releases](https://github.com/JAMPANIKOMAL/CursorCloak/releases)
 2. Extract to any folder (no .NET required)
 3. Right-click `CursorCloak.UI.exe` → **"Run as administrator"**
 

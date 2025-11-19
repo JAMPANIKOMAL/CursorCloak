@@ -12,11 +12,23 @@ This document tracks all version releases and their notes for CursorCloak.
 
 ### What's New in v1.0.2
 
-## Current Version: v1.1.0
+## Current Version: v2.0.0 (Professional Release)
+**Release Date:** November 19, 2025
 
+### What's New in v2.0.0
+- 🎨 **Major UI Overhaul**: Complete redesign with a minimalist, professional aesthetic.
+- 🏗️ **Codebase Restructuring**: Professional architecture with separated Services and Models.
+- 📝 **Documentation**: Comprehensive XML documentation and professional README/CHANGELOG.
+- 🛡️ **Security**: Added Security Policy and Code of Conduct.
+- 🐛 **Bug Fixes**: Fixed single-instance enforcement and startup reliability.
+- ⚙️ **Release Pipeline**: Automated GitHub Actions workflow for reliable releases.
+
+## Previous Versions
+
+### v1.1.0
 **Release Date:** August 19, 2025
 
-### What's New in v1.1.0
+#### What's New in v1.1.0
 - 🖱️ **Auto Hide Cursor**: Cursor automatically hides after user inactivity (timeout configurable in UI)
 - 🛠️ **Bugfix:** "Start with Windows" now works reliably on all Windows 10/11 systems (improved registry handling, robust path detection, and admin support)
 - 🟢 **Auto Hide Toggle**: New toggle in the UI to enable/disable auto-hide feature
